@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delta Experiences — Estúdio de Propostas</title>
+  <meta name="description" content="Sistema editorial de geração de propostas comerciais premium da Delta Experiences.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/proposal.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar__brand">
+        <span class="mark"><em>Δ</em><span id="brand-name">Delta Experiences</span></span>
+        <span class="tagline" id="brand-tagline">A curadoria do extraordinário</span>
+      </div>
+      <div class="topbar__meta">
+        ESTÚDIO EDITORIAL · BRAND <code id="brand-hash">DX-…</code>
+      </div>
+    </header>
+
+    <aside class="panel-form">
+      <h2>Dados da proposta</h2>
+      <p class="lead">O conteúdo aqui é a fonte de verdade — a IA editorial apenas o diagrama.</p>
+
+      <!-- Metadados -->
+      <details open>
+        <summary>Metadados</summary>
+        <div class="row-2">
+          <div class="field">
+            <label for="f-codigo">Código</label>
+            <input id="f-codigo" type="text" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="f-data">Data de envio</label>
+            <input id="f-data" type="date">
+          </div>
+        </div>
+      </details>
+
+      <!-- Cliente -->
+      <details open>
+        <summary>Cliente</summary>
+        <div class="field">
+          <label for="f-cliente-nome">Nome completo / família / empresa</label>
+          <input id="f-cliente-nome" type="text" autocomplete="off">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="f-cliente-primeiro">Nome na carta</label>
+            <input id="f-cliente-primeiro" type="text" autocomplete="off">
+            <span class="hint">Primeiro nome usado na saudação.</span>
+          </div>
+          <div class="field">
+            <label for="f-cliente-email">E-mail</label>
+            <input id="f-cliente-email" type="email" autocomplete="off">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-cliente-tel">Telefone</label>
+          <input id="f-cliente-tel" type="tel" autocomplete="off">
+        </div>
+      </details>
+
+      <!-- Experiência -->
+      <details open>
+        <summary>Experiência</summary>
+        <div class="field">
+          <label for="f-titulo">Título editorial</label>
+          <input id="f-titulo" type="text" autocomplete="off">
+          <span class="hint">Como se fosse uma manchete de revista. Ex.: "O Deserto Branco".</span>
+        </div>
+        <div class="field">
+          <label for="f-subtitulo">Subtítulo</label>
+          <input id="f-subtitulo" type="text" autocomplete="off">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="f-destino">Destino (uso interno)</label>
+            <input id="f-destino" type="text" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="f-destino-titulo">Destino (chamada)</label>
+            <input id="f-destino-titulo" type="text" autocomplete="off">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-destino-sub">Destino (linha fina)</label>
+          <input id="f-destino-sub" type="text" autocomplete="off">
+        </div>
+        <div class="row-3">
+          <div class="field">
+            <label for="f-duracao">Duração</label>
+            <input id="f-duracao" type="text" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="f-convidados">Convidados</label>
+            <input id="f-convidados" type="text" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="f-epoca">Época</label>
+            <input id="f-epoca" type="text" autocomplete="off">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-contexto">Contexto da carta de abertura</label>
+          <textarea id="f-contexto" rows="3"></textarea>
+          <span class="hint">Uma linha ou duas que lembre o cliente da conversa que gerou esta proposta.</span>
+        </div>
+        <div class="field">
+          <label for="f-narrativa">Narrativa (3 parágrafos, separados por linha em branco)</label>
+          <textarea id="f-narrativa" rows="8"></textarea>
+        </div>
+        <div class="field">
+          <label for="f-pullquote">Pull quote</label>
+          <input id="f-pullquote" type="text" autocomplete="off">
+          <span class="hint">Uma frase que capture o espírito da experiência.</span>
+        </div>
+      </details>
+
+      <!-- Programa -->
+      <details>
+        <summary>Programa dia-a-dia</summary>
+        <div class="field">
+          <label for="f-programa">Um dia por linha · formato: Título | destaque | destaque | ...</label>
+          <textarea id="f-programa" rows="10"></textarea>
+        </div>
+      </details>
+
+      <!-- Inclusões -->
+      <details>
+        <summary>Inclusões exclusivas</summary>
+        <div class="field">
+          <label for="f-inclusoes">Uma inclusão por linha · formato: Nome — descrição</label>
+          <textarea id="f-inclusoes" rows="8"></textarea>
+        </div>
+      </details>
+
+      <!-- Investimento -->
+      <details>
+        <summary>Investimento</summary>
+        <div class="row-3">
+          <div class="field">
+            <label for="f-valor">Valor total</label>
+            <input id="f-valor" type="number" min="0" step="1000">
+          </div>
+          <div class="field">
+            <label for="f-moeda">Moeda</label>
+            <select id="f-moeda">
+              <option value="BRL">BRL</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-por-conv">Por convidado</label>
+            <input id="f-por-conv" type="number" min="0" step="100">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-parcelas">Parcelas · formato: Descrição | %</label>
+          <textarea id="f-parcelas" rows="4"></textarea>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="f-inc">Inclui (um por linha)</label>
+            <textarea id="f-inc" rows="5"></textarea>
+          </div>
+          <div class="field">
+            <label for="f-naoinc">Não inclui (um por linha)</label>
+            <textarea id="f-naoinc" rows="5"></textarea>
+          </div>
+        </div>
+      </details>
+
+      <!-- Condições -->
+      <details>
+        <summary>Condições</summary>
+        <div class="field">
+          <label for="f-validade">Validade da proposta</label>
+          <input id="f-validade" type="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="f-pagamento">Pagamento</label>
+          <textarea id="f-pagamento" rows="2"></textarea>
+        </div>
+        <div class="field">
+          <label for="f-cancelamento">Cancelamento</label>
+          <textarea id="f-cancelamento" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label for="f-sigilo">Sigilo</label>
+          <textarea id="f-sigilo" rows="2"></textarea>
+        </div>
+      </details>
+
+      <!-- Equipe -->
+      <details>
+        <summary>Equipe Delta</summary>
+        <div class="row-2">
+          <div class="field">
+            <label for="f-assin-nome">Assinante da carta</label>
+            <input id="f-assin-nome" type="text" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="f-assin-cargo">Cargo</label>
+            <input id="f-assin-cargo" type="text" autocomplete="off">
+          </div>
+        </div>
+        <div class="row-3">
+          <div class="field">
+            <label for="f-cont-nome">Contato</label>
+            <input id="f-cont-nome" type="text" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="f-cont-email">E-mail</label>
+            <input id="f-cont-email" type="email" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="f-cont-tel">Telefone</label>
+            <input id="f-cont-tel" type="tel" autocomplete="off">
+          </div>
+        </div>
+      </details>
+    </aside>
+
+    <main class="panel-preview">
+      <div class="toolbar">
+        <h3>Pré-visualização editorial</h3>
+        <button class="btn btn--primary" id="btn-copy-prompt" title="Copiar o prompt completo para colar na IA">Copiar prompt IA</button>
+        <button class="btn" id="btn-export-prompt" title="Baixar o prompt completo em markdown">Prompt .md</button>
+        <button class="btn btn--ghost" id="btn-export-prompt-curto" title="Versão enxuta para modelos pequenos">Prompt curto</button>
+        <button class="btn" id="btn-export-html">Preview .html</button>
+        <button class="btn btn--ghost" id="btn-export-json">Dados .json</button>
+        <button class="btn btn--ghost" id="btn-save-local">Salvar rascunho</button>
+        <button class="btn btn--ghost" id="btn-load-local">Abrir rascunho</button>
+        <button class="btn btn--ghost" id="btn-reset">Exemplo</button>
+      </div>
+      <div id="preview"></div>
+    </main>
+  </div>
+
+  <div id="flash" role="status" aria-live="polite"></div>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+{
+  "codigo_proposta": "DX-2026-0147",
+  "data_envio": "2026-10-05",
+  "titulo": "O Deserto Branco",
+  "subtitulo": "Nove dias entre as dunas do Lençóis e a costa de Jericoacoara",
+  "cliente": {
+    "nome": "Família Albuquerque",
+    "primeiro_nome": "Helena",
+    "email": "helena@albuquerque.co",
+    "telefone": "+55 11 9 9999 0000"
+  },
+  "assinante": {
+    "nome": "Mariana Delfim",
+    "cargo": "Direção de Curadoria, Delta Experiences"
+  },
+  "contexto_abertura": "Quando conversamos em agosto, você falou de um aniversário que não quer celebrar — mas marcar. Oito pessoas, nenhum palco, muito silêncio. E, por favor, nada de velas em bolo.",
+  "destino": "Lençóis Maranhenses e Jericoacoara",
+  "destino_titulo": "Entre lagoas e vento",
+  "destino_subtitulo": "Nordeste do Brasil · Julho de 2026",
+  "narrativa": [
+    "Começa pelo que não se vê: o som dos pés na areia molhada antes do amanhecer, a luz chegando lateral, cortando o deserto em dois tons. Três noites num refúgio de dez quartos, aberto apenas para o grupo, com um chef que cozinha o que o mangue traz naquele dia.",
+    "Na travessia para Jericoacoara, um buggy, uma balsa e trinta minutos de carro — ou um bimotor privado em quarenta e oito minutos, se preferir pular o roteiro de postal. Em Jeri, uma casa de frente para o vento, chef próprio, iate à disposição.",
+    "Nenhuma passagem comercial. Nenhum restaurante aberto ao público. Nenhum guia que você não tenha aprovado antes."
+  ],
+  "pull_quote": "O luxo, aqui, é a hora em que você escolhe acordar.",
+  "duracao": "9 dias / 8 noites",
+  "convidados": "8 adultos",
+  "epoca": "Julho de 2026 — pós-chuvas, lagoas cheias",
+  "programa": [
+    { "dia": 1, "titulo": "Chegada em São Luís",      "destaques": ["Transfer executivo", "Jantar no casarão restaurado"] },
+    { "dia": 2, "titulo": "Travessia aos Lençóis",    "destaques": ["Voo privado", "Welcome dinner nas dunas"] },
+    { "dia": 3, "titulo": "Lagoas Azuis",             "destaques": ["Trilha privativa de 6km", "Almoço na Lagoa Bonita"] },
+    { "dia": 4, "titulo": "Silêncio",                 "destaques": ["Dia livre", "Spa itinerante", "Observação de estrelas"] },
+    { "dia": 5, "titulo": "Travessia a Jericoacoara", "destaques": ["Bimotor privado", "Chegada ao casarão de frente para o mar"] },
+    { "dia": 6, "titulo": "Vento",                    "destaques": ["Vela com instrutor particular", "Pôr do sol na Duna"] },
+    { "dia": 7, "titulo": "Mar",                      "destaques": ["Iate dia inteiro", "Almoço em Mangue Seco"] },
+    { "dia": 8, "titulo": "O aniversário",            "destaques": ["Jantar privado na praia", "Projeção de 8mm"] },
+    { "dia": 9, "titulo": "Retorno",                  "destaques": ["Transfer para Fortaleza", "Lounge privativo"] }
+  ],
+  "inclusoes": [
+    { "nome": "Hospedagem exclusiva",   "descricao": "Dois refúgios privados, uso integral do grupo." },
+    { "nome": "Transporte aéreo privado", "descricao": "Bimotor com piloto dedicado para transferências internas." },
+    { "nome": "Chef residente",          "descricao": "Dois chefs dedicados, cardápios desenhados com você." },
+    { "nome": "Equipe de produção",      "descricao": "Gerente de experiência 24/7 no destino." },
+    { "nome": "Fotógrafo editorial",     "descricao": "Documentação discreta, entregue em caixa de arquivo." },
+    { "nome": "Spa itinerante",          "descricao": "Terapeuta à disposição em dias selecionados." },
+    { "nome": "Transfer executivo",      "descricao": "Todos os deslocamentos em frota blindada opcional." },
+    { "nome": "Seguro premium",          "descricao": "Cobertura internacional, assistência médica a bordo." }
+  ],
+  "investimento": {
+    "valor": 487000,
+    "moeda": "BRL",
+    "por_convidado": 60875,
+    "parcelas": [
+      { "descricao": "Sinal, na assinatura", "percentual": 30 },
+      { "descricao": "60 dias antes",        "percentual": 40 },
+      { "descricao": "No início da viagem",  "percentual": 30 }
+    ],
+    "inclui":     ["Hospedagem", "Alimentação", "Transfers internos e aéreos privados", "Equipe de produção", "Seguro premium"],
+    "nao_inclui": ["Passagens aéreas internacionais", "Compras pessoais", "Gorjetas"]
+  },
+  "condicoes": {
+    "validade": "15 dias",
+    "pagamento": "Transferência bancária ou cartão. Pagamentos em USD ou EUR sob solicitação.",
+    "cancelamento": "Até 90 dias da data de início: 20% de retenção. Entre 90 e 45 dias: 50%. Menos de 45 dias: 100%. Reagendamento sem custo até 60 dias antes, uma vez.",
+    "sigilo": "Esta proposta, todos os parceiros envolvidos e os detalhes operacionais são confidenciais."
+  },
+  "contato": {
+    "nome": "Mariana Delfim",
+    "email": "mariana@delta.exp",
+    "telefone": "+55 11 3000 0147"
+  }
+}

@@ -1,0 +1,583 @@
+/* Delta Experiences — Diagramação editorial da proposta
+   Esta folha de estilo é o espelho simplificado da identidade.
+   A IA de design editorial deve usá-la como referência mínima,
+   não como teto. */
+
+:root {
+  --p-midnight: #0E1A2B;
+  --p-bone:     #F4EFE6;
+  --p-paper:    #FBF8F2;
+  --p-gold:     #B59162;
+  --p-charcoal: #2B2E33;
+  --p-mist:     #D8D2C7;
+  --p-wine:     #6B2A3A;
+}
+
+/* Página A4 em preview */
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  background: var(--p-paper);
+  color: var(--p-charcoal);
+  box-shadow: 0 2px 2px rgba(14,26,43,0.04), 0 20px 50px -20px rgba(14,26,43,0.25);
+  position: relative;
+  padding: 22mm 20mm 25mm;
+  font-family: "Cormorant Garamond", "Georgia", serif;
+  font-size: 11pt;
+  line-height: 1.55;
+  overflow: hidden;
+}
+.page::before {
+  /* número de página romano no canto superior externo */
+  content: "";
+  position: absolute;
+  top: 10mm;
+  right: 20mm;
+  font: 500 9pt/1 "Inter", sans-serif;
+  letter-spacing: 0.25em;
+  color: var(--p-gold);
+}
+.page:nth-of-type(1)::before  { content: ""; }
+.page:nth-of-type(2)::before  { content: "II"; }
+.page:nth-of-type(3)::before  { content: "III"; }
+.page:nth-of-type(4)::before  { content: "IV"; }
+.page:nth-of-type(5)::before  { content: "V"; }
+.page:nth-of-type(6)::before  { content: "VI"; }
+.page:nth-of-type(7)::before  { content: "VII"; }
+.page:nth-of-type(8)::before  { content: "VIII"; }
+.page:nth-of-type(9)::before  { content: "IX"; }
+.page:nth-of-type(10)::before { content: "X"; }
+.page:nth-of-type(11)::before { content: "XI"; }
+.page:nth-of-type(12)::before { content: "XII"; }
+.page:nth-of-type(13)::before { content: "XIII"; }
+.page:nth-of-type(14)::before { content: "XIV"; }
+.page:nth-of-type(15)::before { content: "XV"; }
+.page:nth-of-type(16)::before { content: "XVI"; }
+.page:nth-of-type(17)::before { content: "XVII"; }
+
+/* ---- Capa ---- */
+.page--capa {
+  background: var(--p-midnight);
+  color: var(--p-bone);
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+.page--capa::before { display: none; }
+.capa__topo {
+  padding: 22mm 20mm 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.capa__topo .brand {
+  font-family: "Playfair Display", serif;
+  font-size: 14pt;
+  color: var(--p-gold);
+  letter-spacing: 0.04em;
+}
+.capa__topo .brand__tagline {
+  font: 500 8pt/1 "Inter";
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  color: var(--p-mist);
+  opacity: 0.7;
+}
+.capa__meio {
+  position: relative;
+  margin: 0 20mm;
+  background:
+    linear-gradient(135deg, rgba(14,26,43,0.3), rgba(14,26,43,0.75)),
+    radial-gradient(ellipse at 30% 40%, #3a4a62 0%, #0E1A2B 70%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20mm;
+}
+.capa__meio::after {
+  content: attr(data-photo);
+  position: absolute;
+  top: 8mm;
+  left: 8mm;
+  font: 500 7pt/1 "Inter";
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--p-mist);
+  opacity: 0.35;
+}
+.capa__cliente {
+  font: 500 8pt/1 "Inter";
+  letter-spacing: 0.3em;
+  color: var(--p-gold);
+  margin: 0 0 4mm;
+}
+.capa__cliente-nome {
+  font-family: "Playfair Display", serif;
+  font-size: 20pt;
+  margin: 0;
+  color: var(--p-bone);
+}
+.capa__base {
+  padding: 0 20mm 25mm;
+}
+.capa__titulo {
+  font-family: "Playfair Display", serif;
+  font-weight: 500;
+  font-size: 48pt;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  margin: 10mm 0 4mm;
+  color: var(--p-bone);
+}
+.capa__sub {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 14pt;
+  color: var(--p-mist);
+  margin: 0 0 10mm;
+}
+.capa__meta {
+  display: flex;
+  justify-content: space-between;
+  font: 500 9pt/1 "Inter";
+  letter-spacing: 0.25em;
+  color: var(--p-gold);
+  text-transform: uppercase;
+  border-top: 1px solid rgba(181, 145, 98, 0.4);
+  padding-top: 4mm;
+}
+
+/* ---- Carta ---- */
+.page--carta {
+  padding: 40mm 35mm 35mm;
+}
+.carta {
+  max-width: 115mm;
+  margin: 0 auto;
+}
+.capitular {
+  float: left;
+  font-family: "Playfair Display", serif;
+  font-weight: 400;
+  color: var(--p-gold);
+  font-size: 56pt;
+  line-height: 0.85;
+  margin: 6pt 8pt 0 0;
+}
+.carta .saudacao {
+  font-family: "Playfair Display", serif;
+  font-size: 18pt;
+  color: var(--p-midnight);
+  margin: 0 0 10mm;
+}
+.carta p {
+  font-size: 12pt;
+  line-height: 1.7;
+  margin: 0 0 6mm;
+  color: var(--p-charcoal);
+}
+.carta .despedida {
+  margin-top: 10mm;
+  font-style: italic;
+  color: var(--p-charcoal);
+}
+.carta .assinante {
+  margin-top: 6mm;
+  font-family: "Playfair Display", serif;
+  color: var(--p-midnight);
+}
+.carta .assinante span {
+  font-family: "Inter", sans-serif;
+  font-size: 8pt;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--p-charcoal);
+  opacity: 0.65;
+}
+
+/* ---- Visão / A Experiência ---- */
+.page--visao {
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.visao__foto {
+  position: relative;
+  background:
+    linear-gradient(160deg, rgba(14,26,43,0.1), rgba(14,26,43,0.35)),
+    radial-gradient(circle at 40% 60%, #a69b85 0%, #5a5245 65%, #2a2a2a 100%);
+}
+.visao__foto .photo-note {
+  position: absolute;
+  bottom: 6mm;
+  left: 6mm;
+  font: 500 7pt/1 "Inter";
+  letter-spacing: 0.3em;
+  color: var(--p-bone);
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.visao__texto {
+  padding: 25mm 20mm;
+  background: var(--p-paper);
+  color: var(--p-charcoal);
+}
+.eyebrow {
+  font: 500 8pt/1 "Inter";
+  letter-spacing: 0.3em;
+  color: var(--p-gold);
+  text-transform: uppercase;
+  margin: 0 0 6mm;
+}
+.eyebrow--light { color: var(--p-gold); }
+.visao__texto h2 {
+  font-family: "Playfair Display", serif;
+  font-weight: 500;
+  font-size: 32pt;
+  color: var(--p-midnight);
+  margin: 0 0 2mm;
+  line-height: 1.08;
+}
+.visao__texto .sub {
+  font-style: italic;
+  font-size: 13pt;
+  color: var(--p-charcoal);
+  opacity: 0.75;
+  margin: 0 0 6mm;
+}
+.visao__texto p {
+  font-size: 11pt;
+  line-height: 1.65;
+  margin: 0 0 4mm;
+}
+.visao__texto blockquote {
+  margin: 8mm 0;
+  padding: 4mm 0;
+  border-top: 0.5pt solid var(--p-gold);
+  border-bottom: 0.5pt solid var(--p-gold);
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  font-size: 16pt;
+  line-height: 1.3;
+  color: var(--p-midnight);
+  text-align: center;
+}
+.visao__texto .meta {
+  margin: 10mm 0 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  row-gap: 2mm;
+  column-gap: 10mm;
+  font: 500 9pt/1.4 "Inter";
+}
+.visao__texto .meta dt {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--p-gold);
+  font-size: 8pt;
+}
+.visao__texto .meta dd {
+  margin: 0;
+  color: var(--p-charcoal);
+  font-family: "Cormorant Garamond", serif;
+  font-size: 12pt;
+}
+
+/* ---- Programa ---- */
+.page--programa { padding-top: 30mm; }
+.programa__hd {
+  display: flex;
+  align-items: center;
+  gap: 8mm;
+  font: 500 10pt/1 "Inter";
+  color: var(--p-gold);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 10mm;
+}
+.programa__hd .rule {
+  flex: 1;
+  height: 0.5pt;
+  background: var(--p-gold);
+}
+.programa__titulo {
+  font-family: "Playfair Display", serif;
+  font-weight: 500;
+  font-size: 28pt;
+  color: var(--p-midnight);
+  margin: 0 0 10mm;
+  line-height: 1.1;
+}
+.programa__itens {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-left: 0.5pt solid var(--p-mist);
+}
+.programa__itens li {
+  position: relative;
+  padding: 4mm 0 4mm 10mm;
+  font-size: 12pt;
+  line-height: 1.5;
+}
+.programa__itens li::before {
+  content: "";
+  position: absolute;
+  left: -1.5mm;
+  top: 7mm;
+  width: 2.5mm;
+  height: 2.5mm;
+  background: var(--p-gold);
+  border-radius: 50%;
+}
+
+/* ---- Inclusões ---- */
+.page--inclusoes { padding-top: 30mm; }
+.page--inclusoes h2 {
+  font-family: "Playfair Display", serif;
+  font-weight: 500;
+  font-size: 32pt;
+  color: var(--p-midnight);
+  margin: 0 0 12mm;
+}
+.inclusoes {
+  list-style: none;
+  counter-reset: inc;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8mm 10mm;
+}
+.inclusoes li {
+  counter-increment: inc;
+  padding-top: 5mm;
+  border-top: 0.5pt solid var(--p-mist);
+  position: relative;
+}
+.inclusoes li::before {
+  content: counter(inc, decimal-leading-zero);
+  position: absolute;
+  top: -3mm;
+  left: 0;
+  background: var(--p-paper);
+  padding-right: 3mm;
+  font: 500 8pt/1 "Inter";
+  letter-spacing: 0.2em;
+  color: var(--p-gold);
+}
+.inc__nome {
+  display: block;
+  font: 500 9pt/1 "Inter";
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--p-midnight);
+  margin-bottom: 2mm;
+}
+.inc__desc {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 11pt;
+  color: var(--p-charcoal);
+  line-height: 1.45;
+}
+
+/* ---- Investimento ---- */
+.page--investimento {
+  background: var(--p-paper);
+  display: flex;
+  flex-direction: column;
+}
+.page--investimento .eyebrow {
+  margin-top: 8mm;
+}
+.valor {
+  margin: 10mm 0 2mm;
+  text-align: right;
+  font-family: "Playfair Display", serif;
+}
+.valor__moeda {
+  font: 500 11pt/1 "Inter";
+  letter-spacing: 0.25em;
+  color: var(--p-gold);
+  vertical-align: top;
+  margin-right: 4mm;
+}
+.valor__num {
+  font-size: 68pt;
+  color: var(--p-midnight);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.valor__sub {
+  text-align: right;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 13pt;
+  color: var(--p-charcoal);
+  margin: 0 0 15mm;
+}
+.parcelas {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 14mm;
+}
+.parcelas td {
+  padding: 4mm 0;
+  border-bottom: 0.5pt solid var(--p-gold);
+  font: 400 11pt/1 "Inter";
+  color: var(--p-charcoal);
+  font-variant-numeric: tabular-nums;
+}
+.parcelas td.num {
+  text-align: right;
+  font-weight: 500;
+  color: var(--p-midnight);
+}
+.inc-dois {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14mm;
+}
+.inc-dois h4 {
+  font: 500 9pt/1 "Inter";
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--p-gold);
+  margin: 0 0 4mm;
+}
+.inc-dois ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 11pt;
+  color: var(--p-charcoal);
+}
+.inc-dois li {
+  padding: 2mm 0;
+  border-bottom: 0.5pt solid var(--p-mist);
+}
+
+/* ---- Condições ---- */
+.page--condicoes { padding-top: 30mm; }
+.condicoes {
+  column-count: 2;
+  column-gap: 12mm;
+  color: var(--p-charcoal);
+}
+.condicoes h4 {
+  font: 500 8pt/1 "Inter";
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--p-gold);
+  margin: 0 0 2mm;
+  break-after: avoid;
+}
+.condicoes p {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 10.5pt;
+  line-height: 1.55;
+  margin: 0 0 6mm;
+  break-inside: avoid;
+}
+
+/* ---- Próximos passos ---- */
+.page--proximos {
+  background: var(--p-midnight);
+  color: var(--p-bone);
+  padding-top: 40mm;
+}
+.page--proximos .eyebrow--light { color: var(--p-gold); }
+.passos {
+  list-style: none;
+  padding: 0;
+  margin: 15mm 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14mm;
+}
+.passos li {
+  display: grid;
+  grid-template-columns: 24mm 1fr;
+  align-items: baseline;
+  gap: 8mm;
+}
+.passo__num {
+  font-family: "Playfair Display", serif;
+  font-size: 42pt;
+  color: var(--p-gold);
+  line-height: 0.8;
+}
+.passos h3 {
+  font-family: "Playfair Display", serif;
+  font-weight: 500;
+  font-size: 20pt;
+  color: var(--p-bone);
+  margin: 0 0 3mm;
+}
+.passos p {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 12pt;
+  color: var(--p-mist);
+  line-height: 1.55;
+  margin: 0;
+}
+.contato {
+  margin-top: 20mm;
+  padding-top: 6mm;
+  border-top: 0.5pt solid rgba(181, 145, 98, 0.5);
+  font: 500 9pt/1.5 "Inter";
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--p-gold);
+  text-align: center;
+}
+
+/* ---- Colofão ---- */
+.page--colofao {
+  display: grid;
+  place-items: center;
+}
+.page--colofao::before { display: none; }
+.colofao {
+  text-align: center;
+  color: var(--p-charcoal);
+}
+.colofao .marca {
+  font-family: "Playfair Display", serif;
+  font-size: 14pt;
+  color: var(--p-gold);
+  letter-spacing: 0.3em;
+  margin: 0 0 10mm;
+}
+.colofao .codigo {
+  font: 500 10pt/1 "Inter";
+  letter-spacing: 0.3em;
+  margin: 0 0 3mm;
+  color: var(--p-midnight);
+}
+.colofao .info {
+  font: 500 8pt/1.6 "Inter";
+  letter-spacing: 0.3em;
+  color: var(--p-charcoal);
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* ---- Impressão ---- */
+@page { size: A4; margin: 0; }
+@media print {
+  .page {
+    margin: 0;
+    box-shadow: none;
+    page-break-after: always;
+  }
+  .page:last-child { page-break-after: auto; }
+  html, body { background: var(--p-paper); }
+}
+
+/* ---- Modo compacto no preview ---- */
+@media (max-width: 1200px) {
+  .page { transform: scale(0.75); transform-origin: top center; margin-bottom: -70mm; }
+}
