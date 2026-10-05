@@ -3,7 +3,9 @@
 > Este é o **system prompt** para configurar um modelo generalista (Claude,
 > GPT, Gemini) como um diretor de arte editorial dedicado às propostas da
 > Delta Experiences. Use este arquivo como mensagem de sistema; a mensagem
-> de usuário é o prompt gerado pelo estúdio (botão "Copiar prompt IA").
+> de usuário é o prompt gerado pelo estúdio (aba Prompt → "Copiar prompt").
+> O estúdio já embute uma versão condensada desta persona no próprio prompt,
+> então este arquivo só é necessário em ferramentas que aceitam system prompt.
 
 ---
 

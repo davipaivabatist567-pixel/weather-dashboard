@@ -6,10 +6,15 @@ Três cenários prontos para colar no chat da sua IA favorita.
 
 ## 1. Conversa básica (Claude / GPT / Gemini)
 
-**System:** cole o conteúdo de `prompts/editorial-system-prompt.md`.
+**Mensagem única:** no estúdio (`index.html`), aba **Prompt** → **Copiar
+prompt**. O texto já inclui a persona do diretor de arte, a identidade, o
+conteúdo e o formato de entrega. Cole numa conversa nova.
 
-**User:** cole o conteúdo do botão "Copiar prompt IA" do estúdio
-(gerado por `assets/js/prompt.js → gerarPrompt`).
+**Alternativa com system prompt:** se a ferramenta permitir, use
+`prompts/editorial-system-prompt.md` como mensagem de sistema.
+
+**Atalho no Claude:** aberto no Claude, o estúdio diagrama sozinho pela aba
+**Diagramação IA**, sem copiar nada.
 
 **Resultado esperado:** HTML autocontido A4 + relatório em markdown.
 
@@ -55,7 +60,7 @@ A IA deve devolver o HTML **completo** novamente, não apenas o trecho.
 
 ## 4. Prompt curto (para modelos com janela pequena)
 
-Use o botão "Prompt curto". Ele produz uma versão enxuta (≈ 1.5k tokens)
+Na aba **Prompt**, escolha **Curto**. É uma versão enxuta (≈ 1.5k tokens)
 com paleta, tipografia e dados em JSON. Perde-se a direção por seção —
 funciona para rascunhos e refinamentos.
 
@@ -64,12 +69,13 @@ funciona para rascunhos e refinamentos.
 ## 5. Dica de fluxo de trabalho
 
 1. Preencha os dados no estúdio (`index.html`).
-2. Valide a estrutura no preview.
-3. Clique em "Copiar prompt IA".
-4. Cole em uma conversa configurada com o system prompt editorial.
-5. Salve o HTML devolvido em `saidas/<codigo>.html`.
-6. Abra no Chrome/Safari → `Imprimir` → `Salvar como PDF`.
-7. Envie o PDF por link privado ao cliente (nunca por anexo).
+2. Confira a aba **Prévia**: ela avisa se alguma folha passou do tamanho da página.
+3. No Claude: aba **Diagramação IA** → **Diagramar com IA**.
+   Em outra IA: aba **Prompt** → **Copiar prompt**, cole, e traga a resposta
+   de volta em **Trazer HTML gerado em outra IA**.
+4. Peça correções em **Ajustes na diagramação** até a peça ficar pronta.
+5. **Baixar .html**, abra no Chrome/Safari → `Imprimir` → `Salvar como PDF`.
+6. Envie o PDF por link privado ao cliente (nunca por anexo).
 
 Guarde o `.json` original junto — ele é a fonte da verdade para
 auditoria e para repetir a diagramação em uma nova versão da identidade.

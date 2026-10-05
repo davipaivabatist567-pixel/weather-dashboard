@@ -1,6 +1,6 @@
 # Delta Experiences — Guia de Marca para Propostas Editoriais
 
-**Versão 1.0** · documento vivo, atualizado em `assets/js/brand.js`.
+**Versão 1.0** · documento vivo, espelhado no objeto `BRAND` de `index.html`.
 
 Este guia governa qualquer peça assinada pela Delta Experiences, com
 atenção especial às propostas comerciais — a entrega mais sensível da
@@ -142,7 +142,7 @@ portfolio, nem em redes sociais — sem autorização escrita do cliente.
 
 ## 10. Governança
 
-- A fonte de verdade da identidade é `assets/js/brand.js`.
+- A fonte de verdade da identidade é o objeto `BRAND` no `<script>` de `index.html`.
 - Qualquer mudança gera um novo `BRAND_HASH` — anote em cada proposta.
 - Mudanças de identidade são decididas por **direção criativa + direção
   de curadoria**, nunca unilateralmente.

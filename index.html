@@ -1,253 +1,1719 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Delta Experiences — Estúdio de Propostas</title>
-  <meta name="description" content="Sistema editorial de geração de propostas comerciais premium da Delta Experiences.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estúdio Delta Experiences</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap">
+<style id="css-estudio">
+/* Layout: mesa de diagramação. Dados à esquerda, folhas A4 sobre a mesa à direita. */
+:root {
+  --bg: #ECE6DA;
+  --surface: #FBF8F2;
+  --surface-2: #F4EFE6;
+  --desk: #E2DACB;
+  --ink: #1C2026;
+  --muted: #5E594F;
+  --line: rgba(14, 26, 43, 0.13);
+  --accent: #8A6A3F;
+  --accent-ink: #FBF8F2;
+  --danger: #6B2A3A;
+  --focus: #B59162;
+  --chrome: #0E1A2B;
+  --chrome-ink: #F4EFE6;
+  --chrome-muted: #A9A398;
+  --gold: #B59162;
+  --f-display: "Playfair Display", "Times New Roman", serif;
+  --f-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --f-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B1420; --surface: #101C2B; --surface-2: #132134; --desk: #070E17;
+    --ink: #ECE5D8; --muted: #A39C8F; --line: rgba(236, 229, 216, 0.13);
+    --accent: #C9A574; --accent-ink: #0E1A2B; --danger: #D896A3; --focus: #C9A574;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B1420; --surface: #101C2B; --surface-2: #132134; --desk: #070E17;
+  --ink: #ECE5D8; --muted: #A39C8F; --line: rgba(236, 229, 216, 0.13);
+  --accent: #C9A574; --accent-ink: #0E1A2B; --danger: #D896A3; --focus: #C9A574;
+  color-scheme: dark;
+}
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+*, *::before, *::after { box-sizing: border-box; }
+html { height: 100%; box-sizing: border-box; }
+body { height: 100%; margin: 0; background: var(--bg); color: var(--ink); font: 400 14px/1.5 var(--f-sans); -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+[hidden] { display: none !important; }
 
-  <link rel="stylesheet" href="assets/css/app.css">
-  <link rel="stylesheet" href="assets/css/proposal.css">
+.app { height: 100%; display: grid; grid-template-columns: minmax(320px, 420px) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+
+/* Barra superior */
+.topbar { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; padding: 14px 24px; background: var(--chrome); color: var(--chrome-ink); border-bottom: 1px solid var(--line); }
+.mark { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; min-width: 0; }
+.mark__delta { font: 400 24px/1 var(--f-display); color: var(--gold); }
+.mark__name { font: 500 19px/1.1 var(--f-display); letter-spacing: 0.01em; }
+.mark__desc { font: 500 10px/1 var(--f-sans); letter-spacing: 0.28em; text-transform: uppercase; color: var(--chrome-muted); }
+.topbar__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; font: 500 10px/1 var(--f-sans); letter-spacing: 0.22em; text-transform: uppercase; color: var(--chrome-muted); }
+.topbar__meta code { font-family: var(--f-sans); color: var(--gold); letter-spacing: 0.12em; }
+
+/* Botões */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px; padding: 8px 14px; border: 1px solid var(--ink); border-radius: 0; background: transparent; color: var(--ink); font: 500 10px/1.2 var(--f-sans); letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; transition: background-color .14s, color .14s, border-color .14s; }
+.btn:hover { background: var(--ink); color: var(--surface); }
+.btn--primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn--primary:hover { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.btn--quiet { border-color: var(--line); color: var(--muted); }
+.btn--quiet:hover { background: transparent; border-color: var(--ink); color: var(--ink); }
+.btn--gold { background: var(--gold); border-color: var(--gold); color: var(--chrome); }
+.btn--gold:hover { background: var(--chrome-ink); border-color: var(--chrome-ink); color: var(--chrome); }
+.btn--confirm, .btn--confirm:hover { background: transparent; border-color: var(--danger); color: var(--danger); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn:disabled:hover { background: transparent; color: var(--ink); }
+.btn--primary:disabled:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+/* Painel de dados */
+.pane-form { background: var(--surface); border-right: 1px solid var(--line); overflow: auto; padding: 22px 24px 48px; }
+.pane-form__title { font: 500 23px/1.2 var(--f-display); margin: 0 0 4px; text-wrap: balance; }
+.lead { margin: 0 0 16px; color: var(--muted); font-size: 13px; max-width: 60ch; }
+.form-tools { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.sec { border-top: 1px solid var(--line); }
+.sec > summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 15px 0; font: 500 10px/1.2 var(--f-sans); letter-spacing: 0.24em; text-transform: uppercase; }
+.sec > summary::-webkit-details-marker { display: none; }
+.sec > summary::after { content: "+"; font: 300 18px/1 var(--f-sans); color: var(--accent); transition: transform .16s; }
+.sec[open] > summary::after { transform: rotate(45deg); }
+.sec__body { display: grid; gap: 16px; padding-bottom: 22px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field label { font: 500 10px/1.35 var(--f-sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.field label span { text-transform: none; letter-spacing: 0; }
+.field input, .field textarea, .field select { width: 100%; background: transparent; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 4px 0 8px; font: 400 17px/1.4 var(--f-serif); color: var(--ink); resize: vertical; }
+.field--data input, .field--data textarea, .field--data select { font: 400 14px/1.5 var(--f-sans); }
+.field textarea { min-height: 70px; }
+.field select { padding-right: 18px; }
+.field select option { background: var(--surface); color: var(--ink); }
+.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-bottom-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
+.hint { margin: 0; font-size: 12px; line-height: 1.45; color: var(--muted); }
+.hint--warn { color: var(--danger); }
+.hint code { font-family: var(--f-mono); font-size: 11.5px; }
+
+/* Área de trabalho */
+.pane-work { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--desk); }
+.tabs { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0 22px; padding: 0 24px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+.tab { appearance: none; border: 0; border-bottom: 2px solid transparent; background: none; padding: 16px 0 12px; font: 500 10px/1 var(--f-sans); letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tab__count { color: var(--accent); letter-spacing: 0.08em; margin-left: 4px; }
+.panel { flex: 1; min-height: 0; overflow: auto; padding: 20px 24px 64px; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 18px; }
+.toolbar__info { margin-right: auto; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.toolbar__info strong { color: var(--danger); font-weight: 500; }
+
+/* Prompt */
+.prompt-wrap { max-width: 900px; margin: 0 auto; display: grid; gap: 14px; }
+.seg { display: inline-flex; border: 1px solid var(--line); }
+.seg__btn { appearance: none; border: 0; background: none; padding: 9px 12px; font: 500 10px/1 var(--f-sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+.seg__btn[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.prompt-box { margin: 0; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); white-space: pre-wrap; overflow-wrap: anywhere; font: 12.5px/1.6 var(--f-mono); color: var(--ink); }
+
+/* IA */
+.ia { max-width: 900px; margin: 0 auto; display: grid; gap: 18px; }
+.ia-card { background: var(--surface); border: 1px solid var(--line); padding: 20px 22px; display: grid; gap: 14px; }
+.ia-card__title { font: 500 21px/1.2 var(--f-display); margin: 0; }
+.ia-card .lead { margin: 0; }
+.ia-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+.ia-tier { flex: 1 1 220px; }
+.ia-status { margin: 0; min-height: 1.5em; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ia-status--erro { color: var(--danger); }
+.ia-off { margin: 0; padding: 12px 14px; border-left: 2px solid var(--accent); background: var(--surface-2); font-size: 13px; color: var(--ink); }
+.ia-result { display: grid; gap: 14px; }
+.ia-result .toolbar { margin: 0; }
+.frame-wrap { position: relative; width: 100%; max-width: 794px; margin: 0 auto; overflow: hidden; }
+#ai-frame { display: block; width: 794px; height: 1123px; border: 0; transform-origin: 0 0; background: #FBF8F2; }
+details.ia-card { display: block; }
+details.ia-card > * + * { margin-top: 14px; }
+.ia-card > summary { cursor: pointer; font: 500 10px/1.2 var(--f-sans); letter-spacing: 0.22em; text-transform: uppercase; }
+.ia-report__txt { white-space: pre-wrap; font-size: 13px; line-height: 1.6; max-width: 70ch; }
+
+/* Avisos */
+#flash { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 16px); max-width: calc(100% - 32px); padding: 11px 18px; background: var(--chrome); color: var(--chrome-ink); font: 500 11px/1.4 var(--f-sans); letter-spacing: 0.08em; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 50; }
+#flash.on { opacity: 1; transform: translate(-50%, 0); }
+.overlay { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px; background: rgba(7, 14, 23, 0.6); }
+.overlay__box { width: min(560px, 100%); background: var(--surface); color: var(--ink); padding: 22px; display: grid; gap: 12px; border: 1px solid var(--line); }
+.overlay__box h2 { font: 500 19px/1.2 var(--f-display); margin: 0; }
+.overlay__box p { margin: 0; font-size: 13px; color: var(--muted); }
+.overlay__box textarea { width: 100%; min-height: 180px; padding: 10px; background: var(--surface-2); border: 1px solid var(--line); font: 12px/1.5 var(--f-mono); color: var(--ink); }
+
+@media (max-width: 900px) {
+  html, body { height: auto; }
+  .app { height: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
+  .pane-form { border-right: 0; border-bottom: 1px solid var(--line); overflow: visible; }
+  .pane-work { min-height: 70vh; }
+  .tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; }
+  .panel { overflow: visible; }
+}
+@media (max-width: 560px) {
+  .topbar, .pane-form, .tabs, .panel { padding-left: 16px; padding-right: 16px; }
+  .grid-2, .grid-3 { grid-template-columns: minmax(0, 1fr); }
+  .ia-card { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+
+@media print {
+  html, body { height: auto; background: #FFFFFF; }
+  .topbar, .pane-form, .tabs, .toolbar, #flash, .overlay, #panel-prompt, #panel-ia { display: none !important; }
+  #panel-previa { display: block !important; padding: 0; overflow: visible; }
+  .app { display: block; height: auto; }
+  .pane-work { display: block; background: none; }
+}
+</style>
+
+<style id="css-folhas">
+/* Folhas A4 da proposta. Cores fixas: representam papel impresso nos dois temas. */
+:root {
+  --p-midnight: #0E1A2B; --p-bone: #F4EFE6; --p-paper: #FBF8F2; --p-gold: #B59162;
+  --p-charcoal: #2B2E33; --p-mist: #D8D2C7; --p-wine: #6B2A3A;
+  --pf-display: "Playfair Display", "Times New Roman", serif;
+  --pf-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --pf-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+#preview { --s: 1; counter-reset: pg; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.sheet { position: relative; flex: none; width: calc(793.7px * var(--s)); height: calc(1122.5px * var(--s)); counter-increment: pg; box-shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 18px 40px -18px rgba(0, 0, 0, .35); }
+.sheet__flag { display: none; position: absolute; top: 8px; left: 8px; z-index: 3; padding: 5px 8px; background: var(--p-wine); color: var(--p-bone); font: 500 10px/1 var(--pf-sans); letter-spacing: .12em; text-transform: uppercase; }
+.sheet--over .sheet__flag { display: block; }
+.sheet--over { outline: 2px solid var(--p-wine); outline-offset: 2px; }
+
+.page { position: absolute; top: 0; left: 0; width: 210mm; height: 297mm; overflow: hidden; transform: scale(var(--s)); transform-origin: 0 0; padding: 22mm 20mm 25mm; background: var(--p-paper); color: var(--p-charcoal); font: 400 11pt/1.55 var(--pf-serif); }
+.page::before { content: counter(pg, upper-roman); position: absolute; z-index: 2; top: 11mm; right: 20mm; font: 500 8pt/1 var(--pf-sans); letter-spacing: .25em; color: var(--p-gold); }
+.page--capa::before, .page--colofao::before { content: none; }
+:where(.page) p, :where(.page) h1, :where(.page) h2, :where(.page) h3, :where(.page) h4, :where(.page) dl, :where(.page) dd, :where(.page) figure, :where(.page) blockquote { margin: 0; font-weight: inherit; }
+:where(.page) ul, :where(.page) ol { margin: 0; padding: 0; list-style: none; }
+.vazio { opacity: .38; font-style: italic; }
+.eyebrow { font: 500 8pt/1.2 var(--pf-sans); letter-spacing: .3em; text-transform: uppercase; color: var(--p-gold); margin-bottom: 6mm; }
+.titulo { font: 500 30pt/1.1 var(--pf-display); color: var(--p-midnight); letter-spacing: -.005em; text-wrap: balance; }
+
+.ph { position: relative; overflow: hidden; background: radial-gradient(120% 90% at 30% 30%, #3A4658 0%, #1B2739 55%, #0E1A2B 100%); }
+.ph__note { position: absolute; left: 6mm; right: 6mm; bottom: 6mm; font: 500 6.5pt/1.6 var(--pf-sans); letter-spacing: .28em; text-transform: uppercase; color: var(--p-mist); opacity: .72; }
+
+/* Capa */
+.page--capa { padding: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; background: var(--p-midnight); color: var(--p-bone); }
+.capa__top { display: flex; justify-content: space-between; align-items: baseline; gap: 8mm; padding: 20mm 20mm 10mm; }
+.capa__brand { font: 400 13pt/1 var(--pf-display); color: var(--p-gold); letter-spacing: .04em; }
+.capa__tag { font: 500 6.5pt/1 var(--pf-sans); letter-spacing: .32em; text-transform: uppercase; color: var(--p-mist); opacity: .7; }
+.capa__ph { margin: 0 20mm; }
+.capa__base { padding: 12mm 20mm 22mm; }
+.capa__para { font: 500 7.5pt/1 var(--pf-sans); letter-spacing: .32em; text-transform: uppercase; color: var(--p-gold); margin-bottom: 3mm; }
+.capa__cliente { font: 400 14pt/1.25 var(--pf-display); color: var(--p-mist); margin-bottom: 8mm; }
+.capa__titulo { font: 500 46pt/1.02 var(--pf-display); letter-spacing: -.01em; color: var(--p-bone); margin-bottom: 4mm; text-wrap: balance; }
+.capa__sub { font: italic 400 14pt/1.35 var(--pf-serif); color: var(--p-mist); max-width: 135mm; margin-bottom: 10mm; text-wrap: pretty; }
+.capa__meta { display: flex; justify-content: space-between; gap: 6mm; padding-top: 4mm; border-top: .5pt solid rgba(181, 145, 98, .45); font: 500 7.5pt/1 var(--pf-sans); letter-spacing: .26em; text-transform: uppercase; color: var(--p-gold); }
+
+/* Carta */
+.page--carta { padding: 44mm 0 30mm; }
+.carta { width: 118mm; margin: 0 auto; }
+.carta__saud { font: 400 18pt/1.2 var(--pf-display); color: var(--p-midnight); margin-bottom: 9mm; }
+.carta__corpo p { font-size: 12.5pt; line-height: 1.65; margin-bottom: 5mm; text-wrap: pretty; }
+.capitular { float: left; font: 400 52pt/.82 var(--pf-display); color: var(--p-gold); margin: 4pt 7pt 0 0; }
+.carta__desp { margin-top: 10mm; font-size: 12.5pt; font-style: italic; }
+.carta__assin { margin-top: 5mm; font: 400 14pt/1.3 var(--pf-display); color: var(--p-midnight); }
+.carta__cargo { display: block; margin-top: 2mm; font: 500 6.5pt/1.5 var(--pf-sans); letter-spacing: .24em; text-transform: uppercase; color: var(--p-charcoal); opacity: .65; }
+
+/* Abertura da experiência */
+.page--abertura { padding: 0; background: var(--p-midnight); color: var(--p-bone); }
+.abertura__ph { position: absolute; inset: 0; }
+.abertura__ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(14, 26, 43, .9) 0%, rgba(14, 26, 43, 0) 58%); }
+.abertura__ph .ph__note { top: 22mm; bottom: auto; right: 40mm; }
+.abertura__txt { position: absolute; z-index: 1; left: 20mm; right: 20mm; bottom: 28mm; }
+.abertura__cap { font: 500 8pt/1 var(--pf-sans); letter-spacing: .3em; text-transform: uppercase; color: var(--p-gold); margin-bottom: 7mm; }
+.abertura__titulo { font: 500 54pt/1.02 var(--pf-display); letter-spacing: -.01em; color: var(--p-bone); margin-bottom: 5mm; text-wrap: balance; }
+.abertura__sub { font: italic 400 15pt/1.35 var(--pf-serif); color: var(--p-mist); }
+
+/* Narrativa */
+.page--visao { padding: 30mm 20mm 25mm; }
+.visao__col { width: 128mm; }
+.visao__titulo { margin-bottom: 3mm; }
+.visao__sub { font: italic 400 13pt/1.4 var(--pf-serif); opacity: .78; margin-bottom: 10mm; }
+.visao__corpo p { font-size: 11.5pt; line-height: 1.65; margin-bottom: 4.5mm; text-wrap: pretty; }
+.visao__quote { margin: 8mm 0 9mm; padding: 5mm 0; border-top: .5pt solid var(--p-gold); border-bottom: .5pt solid var(--p-gold); font: italic 400 18pt/1.3 var(--pf-display); color: var(--p-midnight); text-wrap: balance; }
+.visao__meta { position: absolute; top: 30mm; right: 20mm; width: 34mm; display: grid; gap: 7mm; }
+.visao__meta dt { font: 500 6.5pt/1.3 var(--pf-sans); letter-spacing: .24em; text-transform: uppercase; color: var(--p-gold); }
+.visao__meta dd { margin-top: 1.5mm; font: 400 11.5pt/1.35 var(--pf-serif); color: var(--p-charcoal); }
+
+/* Programa */
+.page--programa { padding: 30mm 20mm 25mm; }
+.prog__hd { display: flex; align-items: center; gap: 5mm; margin-bottom: 12mm; font: 500 8.5pt/1 var(--pf-sans); letter-spacing: .3em; text-transform: uppercase; color: var(--p-gold); }
+.prog__rule { flex: 1; height: .5pt; background: var(--p-gold); }
+.prog__titulo { font-size: 34pt; max-width: 140mm; margin-bottom: 12mm; }
+.prog__lista { margin-left: 1.2mm; border-left: .5pt solid var(--p-mist); }
+.prog__lista li { position: relative; padding: 3.5mm 0 3.5mm 9mm; font-size: 13pt; line-height: 1.45; }
+.prog__lista li::before { content: ""; position: absolute; left: -1.45mm; top: 5.7mm; width: 2.4mm; height: 2.4mm; border-radius: 50%; background: var(--p-gold); }
+.prog__ph { position: absolute; left: 20mm; bottom: 25mm; width: 82mm; height: 62mm; }
+.prog__num { position: absolute; right: 16mm; bottom: 16mm; font: 400 150pt/.8 var(--pf-display); color: var(--p-mist); opacity: .6; font-variant-numeric: lining-nums; }
+
+/* Inclusões */
+.page--inclusoes { padding: 30mm 20mm 25mm; background: var(--p-bone); }
+.inc__titulo { margin-bottom: 14mm; }
+.inc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9mm 12mm; counter-reset: inc; }
+.inc li { position: relative; padding-top: 5mm; border-top: .5pt solid var(--p-mist); counter-increment: inc; }
+.inc li::before { content: counter(inc, decimal-leading-zero); position: absolute; top: -2.2mm; left: 0; padding-right: 3mm; background: var(--p-bone); font: 500 7.5pt/1 var(--pf-sans); letter-spacing: .2em; color: var(--p-gold); }
+.inc__nome { display: block; margin-bottom: 2mm; font: 500 8pt/1.35 var(--pf-sans); letter-spacing: .18em; text-transform: uppercase; color: var(--p-midnight); }
+.inc__desc { font: 400 11.5pt/1.45 var(--pf-serif); }
+
+/* Investimento */
+.page--invest { padding: 30mm 20mm 25mm; }
+.inv__valor { display: flex; justify-content: flex-end; align-items: flex-start; gap: 4mm; margin: 14mm 0 3mm; }
+.inv__moeda { padding-top: 4mm; font: 500 11pt/1 var(--pf-sans); letter-spacing: .14em; color: var(--p-gold); }
+.inv__num { font: 400 64pt/1 var(--pf-display); letter-spacing: -.02em; color: var(--p-midnight); font-variant-numeric: lining-nums tabular-nums; }
+.inv__sub { text-align: right; font: italic 400 13pt/1.4 var(--pf-serif); margin-bottom: 16mm; }
+.inv__tab { width: 100%; border-collapse: collapse; margin-bottom: 14mm; }
+.inv__tab caption { text-align: left; padding-bottom: 3mm; font: 500 7.5pt/1 var(--pf-sans); letter-spacing: .26em; text-transform: uppercase; color: var(--p-gold); }
+.inv__tab td { padding: 3.5mm 0; border-bottom: .5pt solid var(--p-gold); font: 400 10.5pt/1.3 var(--pf-sans); font-variant-numeric: tabular-nums; }
+.inv__tab td.num { text-align: right; padding-left: 6mm; color: var(--p-midnight); font-weight: 500; white-space: nowrap; }
+.inv__dois { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12mm; }
+.inv__dois h4 { margin-bottom: 3mm; font: 500 7.5pt/1 var(--pf-sans); letter-spacing: .26em; text-transform: uppercase; color: var(--p-gold); }
+.inv__dois li { padding: 2mm 0; border-bottom: .5pt solid var(--p-mist); font: 400 11.5pt/1.35 var(--pf-serif); }
+
+/* Condições */
+.page--cond { padding: 30mm 20mm 25mm; background: var(--p-bone); }
+.cond__titulo { margin-bottom: 12mm; }
+.cond { column-count: 2; column-gap: 12mm; }
+.cond h4 { margin-bottom: 2mm; font: 500 7.5pt/1.2 var(--pf-sans); letter-spacing: .26em; text-transform: uppercase; color: var(--p-gold); break-after: avoid; }
+.cond p { margin-bottom: 7mm; font: 400 11pt/1.55 var(--pf-serif); break-inside: avoid; }
+
+/* Próximos passos */
+.page--prox { padding: 36mm 20mm 25mm; background: var(--p-midnight); color: var(--p-bone); }
+.prox__titulo { color: var(--p-bone); margin-bottom: 16mm; }
+.prox { display: grid; gap: 13mm; }
+.prox li { display: grid; grid-template-columns: 22mm minmax(0, 1fr); gap: 6mm; align-items: baseline; }
+.prox__num { font: 400 40pt/.8 var(--pf-display); color: var(--p-gold); }
+.prox h3 { margin-bottom: 2.5mm; font: 500 19pt/1.2 var(--pf-display); color: var(--p-bone); }
+.prox p { font: 400 12pt/1.55 var(--pf-serif); color: var(--p-mist); }
+.prox__contato { position: absolute; left: 20mm; right: 20mm; bottom: 25mm; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 3mm 8mm; padding-top: 6mm; border-top: .5pt solid rgba(181, 145, 98, .5); font: 500 7.5pt/1.5 var(--pf-sans); letter-spacing: .2em; text-transform: uppercase; color: var(--p-gold); }
+.prox__contato .lower { text-transform: none; letter-spacing: .08em; }
+
+/* Colofão */
+.page--colofao { display: grid; place-items: center; text-align: center; }
+.colo { display: grid; justify-items: center; gap: 2.5mm; }
+.colo__delta { font: 400 28pt/1 var(--pf-display); color: var(--p-gold); }
+.colo__marca { margin-bottom: 9mm; font: 400 11pt/1 var(--pf-display); letter-spacing: .3em; text-transform: uppercase; color: var(--p-midnight); }
+.colo__linha { font: 500 7pt/1.6 var(--pf-sans); letter-spacing: .28em; text-transform: uppercase; opacity: .72; }
+.colo__sigilo { margin-top: 9mm; max-width: 92mm; font: italic 400 10.5pt/1.5 var(--pf-serif); opacity: .75; }
+
+@page { size: A4; margin: 0; }
+@media print {
+  #preview { --s: 1 !important; display: block; gap: 0; }
+  .sheet { box-shadow: none; outline: 0; break-after: page; page-break-after: always; }
+  .sheet:last-child { break-after: auto; page-break-after: auto; }
+  .sheet__flag { display: none !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar">
-      <div class="topbar__brand">
-        <span class="mark"><em>Δ</em><span id="brand-name">Delta Experiences</span></span>
-        <span class="tagline" id="brand-tagline">A curadoria do extraordinário</span>
-      </div>
-      <div class="topbar__meta">
-        ESTÚDIO EDITORIAL · BRAND <code id="brand-hash">DX-…</code>
-      </div>
-    </header>
+<div class="app">
+  <header class="topbar">
+    <div class="mark">
+      <span class="mark__delta" aria-hidden="true">Δ</span>
+      <span class="mark__name">Delta Experiences</span>
+      <span class="mark__desc">Estúdio de propostas</span>
+    </div>
+    <div class="topbar__meta">
+      <span>Identidade <code id="brand-hash">DX</code></span>
+      <button class="btn btn--gold" id="go-ia" type="button">Diagramar com IA</button>
+    </div>
+  </header>
 
-    <aside class="panel-form">
-      <h2>Dados da proposta</h2>
-      <p class="lead">O conteúdo aqui é a fonte de verdade — a IA editorial apenas o diagrama.</p>
+  <aside class="pane-form" aria-label="Dados da proposta">
+    <h1 class="pane-form__title">Dados da proposta</h1>
+    <p class="lead">O que você escreve aqui é a versão comercial oficial. A IA editorial cuida só da forma e não altera nenhum valor.</p>
+    <div class="form-tools">
+      <button class="btn btn--quiet" id="btn-nova" type="button">Nova proposta</button>
+      <button class="btn btn--quiet" id="btn-exemplo" type="button">Carregar exemplo</button>
+      <button class="btn btn--quiet" id="btn-abrir" type="button">Abrir .json</button>
+      <button class="btn btn--quiet" id="btn-json" type="button" data-dl>Salvar .json</button>
+      <input type="file" id="f-import" accept="application/json,.json" hidden>
+    </div>
 
-      <!-- Metadados -->
-      <details open>
-        <summary>Metadados</summary>
-        <div class="row-2">
-          <div class="field">
-            <label for="f-codigo">Código</label>
-            <input id="f-codigo" type="text" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="f-data">Data de envio</label>
-            <input id="f-data" type="date">
+    <form id="form" autocomplete="off" novalidate>
+      <details class="sec" open>
+        <summary>Identificação</summary>
+        <div class="sec__body">
+          <div class="grid-2">
+            <div class="field field--data"><label for="f-codigo">Código</label><input id="f-codigo" type="text"></div>
+            <div class="field field--data"><label for="f-data">Data de envio</label><input id="f-data" type="date"></div>
           </div>
         </div>
       </details>
 
-      <!-- Cliente -->
-      <details open>
+      <details class="sec" open>
         <summary>Cliente</summary>
-        <div class="field">
-          <label for="f-cliente-nome">Nome completo / família / empresa</label>
-          <input id="f-cliente-nome" type="text" autocomplete="off">
-        </div>
-        <div class="row-2">
-          <div class="field">
-            <label for="f-cliente-primeiro">Nome na carta</label>
-            <input id="f-cliente-primeiro" type="text" autocomplete="off">
-            <span class="hint">Primeiro nome usado na saudação.</span>
+        <div class="sec__body">
+          <div class="field"><label for="f-cliente-nome">Nome, família ou empresa</label><input id="f-cliente-nome" type="text"></div>
+          <div class="grid-2">
+            <div class="field"><label for="f-cliente-primeiro">Nome na carta</label><input id="f-cliente-primeiro" type="text"><p class="hint">Usado na saudação da carta de abertura.</p></div>
+            <div class="field field--data"><label for="f-cliente-email">E-mail</label><input id="f-cliente-email" type="email"></div>
           </div>
-          <div class="field">
-            <label for="f-cliente-email">E-mail</label>
-            <input id="f-cliente-email" type="email" autocomplete="off">
-          </div>
-        </div>
-        <div class="field">
-          <label for="f-cliente-tel">Telefone</label>
-          <input id="f-cliente-tel" type="tel" autocomplete="off">
+          <div class="field field--data"><label for="f-cliente-tel">Telefone</label><input id="f-cliente-tel" type="tel"></div>
         </div>
       </details>
 
-      <!-- Experiência -->
-      <details open>
+      <details class="sec" open>
         <summary>Experiência</summary>
-        <div class="field">
-          <label for="f-titulo">Título editorial</label>
-          <input id="f-titulo" type="text" autocomplete="off">
-          <span class="hint">Como se fosse uma manchete de revista. Ex.: "O Deserto Branco".</span>
-        </div>
-        <div class="field">
-          <label for="f-subtitulo">Subtítulo</label>
-          <input id="f-subtitulo" type="text" autocomplete="off">
-        </div>
-        <div class="row-2">
-          <div class="field">
-            <label for="f-destino">Destino (uso interno)</label>
-            <input id="f-destino" type="text" autocomplete="off">
+        <div class="sec__body">
+          <div class="field"><label for="f-titulo">Título editorial</label><input id="f-titulo" type="text"><p class="hint">Como uma manchete de revista. Ex.: O Deserto Branco.</p></div>
+          <div class="field"><label for="f-subtitulo">Subtítulo</label><input id="f-subtitulo" type="text"></div>
+          <div class="grid-2">
+            <div class="field"><label for="f-destino">Destino</label><input id="f-destino" type="text"></div>
+            <div class="field"><label for="f-destino-titulo">Chamada do destino</label><input id="f-destino-titulo" type="text"></div>
           </div>
-          <div class="field">
-            <label for="f-destino-titulo">Destino (chamada)</label>
-            <input id="f-destino-titulo" type="text" autocomplete="off">
+          <div class="field"><label for="f-destino-sub">Linha fina do destino</label><input id="f-destino-sub" type="text"></div>
+          <div class="grid-3">
+            <div class="field"><label for="f-duracao">Duração</label><input id="f-duracao" type="text"></div>
+            <div class="field"><label for="f-convidados">Convidados</label><input id="f-convidados" type="text"></div>
+            <div class="field"><label for="f-epoca">Época</label><input id="f-epoca" type="text"></div>
           </div>
-        </div>
-        <div class="field">
-          <label for="f-destino-sub">Destino (linha fina)</label>
-          <input id="f-destino-sub" type="text" autocomplete="off">
-        </div>
-        <div class="row-3">
-          <div class="field">
-            <label for="f-duracao">Duração</label>
-            <input id="f-duracao" type="text" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="f-convidados">Convidados</label>
-            <input id="f-convidados" type="text" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="f-epoca">Época</label>
-            <input id="f-epoca" type="text" autocomplete="off">
-          </div>
-        </div>
-        <div class="field">
-          <label for="f-contexto">Contexto da carta de abertura</label>
-          <textarea id="f-contexto" rows="3"></textarea>
-          <span class="hint">Uma linha ou duas que lembre o cliente da conversa que gerou esta proposta.</span>
-        </div>
-        <div class="field">
-          <label for="f-narrativa">Narrativa (3 parágrafos, separados por linha em branco)</label>
-          <textarea id="f-narrativa" rows="8"></textarea>
-        </div>
-        <div class="field">
-          <label for="f-pullquote">Pull quote</label>
-          <input id="f-pullquote" type="text" autocomplete="off">
-          <span class="hint">Uma frase que capture o espírito da experiência.</span>
+          <div class="field"><label for="f-contexto">Contexto da carta</label><textarea id="f-contexto" rows="3"></textarea><p class="hint">Uma ou duas frases que lembrem a conversa que originou a proposta.</p></div>
+          <div class="field"><label for="f-narrativa">Narrativa <span>(3 parágrafos, separados por linha em branco)</span></label><textarea id="f-narrativa" rows="9"></textarea></div>
+          <div class="field"><label for="f-pullquote">Frase de destaque</label><input id="f-pullquote" type="text"><p class="hint">Uma frase que resuma o espírito da experiência.</p></div>
         </div>
       </details>
 
-      <!-- Programa -->
-      <details>
-        <summary>Programa dia-a-dia</summary>
-        <div class="field">
-          <label for="f-programa">Um dia por linha · formato: Título | destaque | destaque | ...</label>
-          <textarea id="f-programa" rows="10"></textarea>
+      <details class="sec">
+        <summary>Programa dia a dia</summary>
+        <div class="sec__body">
+          <div class="field field--data"><label for="f-programa">Um dia por linha</label><textarea id="f-programa" rows="10"></textarea><p class="hint">Formato: <code>Título do dia | destaque | destaque</code></p></div>
         </div>
       </details>
 
-      <!-- Inclusões -->
-      <details>
+      <details class="sec">
         <summary>Inclusões exclusivas</summary>
-        <div class="field">
-          <label for="f-inclusoes">Uma inclusão por linha · formato: Nome — descrição</label>
-          <textarea id="f-inclusoes" rows="8"></textarea>
+        <div class="sec__body">
+          <div class="field field--data"><label for="f-inclusoes">Uma inclusão por linha</label><textarea id="f-inclusoes" rows="9"></textarea><p class="hint">Formato: <code>Nome — descrição</code>. Até 12 itens cabem numa página.</p></div>
         </div>
       </details>
 
-      <!-- Investimento -->
-      <details>
+      <details class="sec">
         <summary>Investimento</summary>
-        <div class="row-3">
-          <div class="field">
-            <label for="f-valor">Valor total</label>
-            <input id="f-valor" type="number" min="0" step="1000">
+        <div class="sec__body">
+          <div class="grid-3">
+            <div class="field field--data"><label for="f-valor">Valor total</label><input id="f-valor" type="number" min="0" step="1" inputmode="numeric"></div>
+            <div class="field field--data"><label for="f-moeda">Moeda</label><select id="f-moeda"><option value="BRL">BRL</option><option value="USD">USD</option><option value="EUR">EUR</option></select></div>
+            <div class="field field--data"><label for="f-por-conv">Por convidado</label><input id="f-por-conv" type="number" min="0" step="1" inputmode="numeric"></div>
           </div>
-          <div class="field">
-            <label for="f-moeda">Moeda</label>
-            <select id="f-moeda">
-              <option value="BRL">BRL</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="f-por-conv">Por convidado</label>
-            <input id="f-por-conv" type="number" min="0" step="100">
-          </div>
-        </div>
-        <div class="field">
-          <label for="f-parcelas">Parcelas · formato: Descrição | %</label>
-          <textarea id="f-parcelas" rows="4"></textarea>
-        </div>
-        <div class="row-2">
-          <div class="field">
-            <label for="f-inc">Inclui (um por linha)</label>
-            <textarea id="f-inc" rows="5"></textarea>
-          </div>
-          <div class="field">
-            <label for="f-naoinc">Não inclui (um por linha)</label>
-            <textarea id="f-naoinc" rows="5"></textarea>
+          <div class="field field--data"><label for="f-parcelas">Parcelas</label><textarea id="f-parcelas" rows="4"></textarea><p class="hint" id="parcelas-hint">Formato: <code>Descrição | percentual</code></p></div>
+          <div class="grid-2">
+            <div class="field field--data"><label for="f-inc">Inclui <span>(um por linha)</span></label><textarea id="f-inc" rows="5"></textarea></div>
+            <div class="field field--data"><label for="f-naoinc">Não inclui <span>(um por linha)</span></label><textarea id="f-naoinc" rows="5"></textarea></div>
           </div>
         </div>
       </details>
 
-      <!-- Condições -->
-      <details>
+      <details class="sec">
         <summary>Condições</summary>
-        <div class="field">
-          <label for="f-validade">Validade da proposta</label>
-          <input id="f-validade" type="text" autocomplete="off">
-        </div>
-        <div class="field">
-          <label for="f-pagamento">Pagamento</label>
-          <textarea id="f-pagamento" rows="2"></textarea>
-        </div>
-        <div class="field">
-          <label for="f-cancelamento">Cancelamento</label>
-          <textarea id="f-cancelamento" rows="3"></textarea>
-        </div>
-        <div class="field">
-          <label for="f-sigilo">Sigilo</label>
-          <textarea id="f-sigilo" rows="2"></textarea>
+        <div class="sec__body">
+          <div class="field"><label for="f-validade">Validade da proposta</label><input id="f-validade" type="text"></div>
+          <div class="field"><label for="f-pagamento">Pagamento</label><textarea id="f-pagamento" rows="2"></textarea></div>
+          <div class="field"><label for="f-cancelamento">Cancelamento</label><textarea id="f-cancelamento" rows="3"></textarea></div>
+          <div class="field"><label for="f-sigilo">Sigilo</label><textarea id="f-sigilo" rows="2"></textarea></div>
         </div>
       </details>
 
-      <!-- Equipe -->
-      <details>
+      <details class="sec">
         <summary>Equipe Delta</summary>
-        <div class="row-2">
-          <div class="field">
-            <label for="f-assin-nome">Assinante da carta</label>
-            <input id="f-assin-nome" type="text" autocomplete="off">
+        <div class="sec__body">
+          <div class="grid-2">
+            <div class="field"><label for="f-assin-nome">Quem assina a carta</label><input id="f-assin-nome" type="text"></div>
+            <div class="field"><label for="f-assin-cargo">Cargo</label><input id="f-assin-cargo" type="text"></div>
           </div>
-          <div class="field">
-            <label for="f-assin-cargo">Cargo</label>
-            <input id="f-assin-cargo" type="text" autocomplete="off">
-          </div>
-        </div>
-        <div class="row-3">
-          <div class="field">
-            <label for="f-cont-nome">Contato</label>
-            <input id="f-cont-nome" type="text" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="f-cont-email">E-mail</label>
-            <input id="f-cont-email" type="email" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="f-cont-tel">Telefone</label>
-            <input id="f-cont-tel" type="tel" autocomplete="off">
+          <div class="field"><label for="f-cont-nome">Contato dedicado</label><input id="f-cont-nome" type="text"></div>
+          <div class="grid-2">
+            <div class="field field--data"><label for="f-cont-email">E-mail do contato</label><input id="f-cont-email" type="email"></div>
+            <div class="field field--data"><label for="f-cont-tel">Telefone do contato</label><input id="f-cont-tel" type="tel"></div>
           </div>
         </div>
       </details>
-    </aside>
+    </form>
+  </aside>
 
-    <main class="panel-preview">
+  <main class="pane-work">
+    <div class="tabs" role="tablist" aria-label="Área de trabalho">
+      <button class="tab" role="tab" type="button" id="tab-previa" aria-controls="panel-previa" aria-selected="true">Prévia</button>
+      <button class="tab" role="tab" type="button" id="tab-prompt" aria-controls="panel-prompt" aria-selected="false" tabindex="-1">Prompt<span class="tab__count" id="prompt-count"></span></button>
+      <button class="tab" role="tab" type="button" id="tab-ia" aria-controls="panel-ia" aria-selected="false" tabindex="-1">Diagramação IA</button>
+    </div>
+
+    <section class="panel" id="panel-previa" role="tabpanel" aria-labelledby="tab-previa">
       <div class="toolbar">
-        <h3>Pré-visualização editorial</h3>
-        <button class="btn btn--primary" id="btn-copy-prompt" title="Copiar o prompt completo para colar na IA">Copiar prompt IA</button>
-        <button class="btn" id="btn-export-prompt" title="Baixar o prompt completo em markdown">Prompt .md</button>
-        <button class="btn btn--ghost" id="btn-export-prompt-curto" title="Versão enxuta para modelos pequenos">Prompt curto</button>
-        <button class="btn" id="btn-export-html">Preview .html</button>
-        <button class="btn btn--ghost" id="btn-export-json">Dados .json</button>
-        <button class="btn btn--ghost" id="btn-save-local">Salvar rascunho</button>
-        <button class="btn btn--ghost" id="btn-load-local">Abrir rascunho</button>
-        <button class="btn btn--ghost" id="btn-reset">Exemplo</button>
+        <span class="toolbar__info" id="previa-info"></span>
+        <button class="btn" id="btn-previa-html" type="button" data-dl>Baixar prévia .html</button>
+        <button class="btn" id="btn-print" type="button" data-local hidden>Imprimir ou salvar PDF</button>
       </div>
       <div id="preview"></div>
-    </main>
+    </section>
+
+    <section class="panel" id="panel-prompt" role="tabpanel" aria-labelledby="tab-prompt" hidden>
+      <div class="prompt-wrap">
+        <div class="toolbar">
+          <div class="seg" role="group" aria-label="Versão do prompt">
+            <button class="seg__btn" type="button" data-ver="completo" aria-pressed="true">Completo</button>
+            <button class="seg__btn" type="button" data-ver="curto" aria-pressed="false">Curto</button>
+          </div>
+          <span class="toolbar__info" id="prompt-info"></span>
+          <button class="btn btn--primary" id="btn-prompt-copy" type="button">Copiar prompt</button>
+          <button class="btn" id="btn-prompt-dl" type="button" data-dl>Baixar .md</button>
+        </div>
+        <p class="hint">Cole numa conversa com qualquer IA (Claude, ChatGPT, Gemini). O prompt já traz a persona do diretor de arte, a identidade Delta, o conteúdo e o formato de entrega. A versão curta serve para modelos com pouco contexto.</p>
+        <pre class="prompt-box" id="prompt-box"></pre>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-ia" role="tabpanel" aria-labelledby="tab-ia" hidden>
+      <div class="ia">
+        <div class="ia-card">
+          <h2 class="ia-card__title">Diagramação editorial</h2>
+          <p class="lead">A IA recebe a identidade Delta e o conteúdo do formulário e devolve a proposta inteira em folhas A4. Leva de um a três minutos. Nenhum valor comercial é alterado.</p>
+          <div class="field"><label for="ai-extra">Direção de arte adicional <span>(opcional)</span></label><textarea id="ai-extra" rows="2" placeholder="Ex.: capa mais escura; use o Vinho só na página do aniversário."></textarea></div>
+          <div class="ia-controls" id="ai-controls">
+            <div class="field field--data ia-tier"><label for="ai-tier">Modelo</label>
+              <select id="ai-tier"><option value="complex">Máxima qualidade · mais lento</option><option value="default">Equilibrado · mais rápido</option></select>
+            </div>
+            <button class="btn btn--primary" id="ai-go" type="button" disabled>Diagramar com IA</button>
+            <button class="btn btn--quiet" id="ai-stop" type="button" hidden>Parar</button>
+          </div>
+          <p class="ia-status" id="ai-status" role="status" aria-live="polite"></p>
+          <p class="ia-off" id="ai-off" hidden></p>
+        </div>
+
+        <div class="ia-result" id="ai-result" hidden>
+          <div class="toolbar">
+            <span class="toolbar__info" id="ai-info"></span>
+            <button class="btn" id="ai-dl" type="button" data-dl>Baixar .html</button>
+            <button class="btn" id="ai-copy" type="button">Copiar HTML</button>
+            <button class="btn btn--quiet" id="ai-clear" type="button">Descartar</button>
+          </div>
+          <div class="frame-wrap" id="frame-wrap">
+            <iframe id="ai-frame" title="Proposta diagramada pela IA" sandbox="allow-same-origin"></iframe>
+          </div>
+          <div class="ia-card" id="ai-refine-card">
+            <div class="field"><label for="ai-ajustes">Ajustes na diagramação</label><textarea id="ai-ajustes" rows="2" placeholder="Ex.: a página do dia 03 ficou densa, divida em duas; aumente a frase de destaque."></textarea></div>
+            <div><button class="btn" id="ai-refine" type="button">Aplicar ajustes</button></div>
+          </div>
+          <details class="ia-card">
+            <summary>Relatório de diagramação</summary>
+            <div class="ia-report__txt" id="ai-report"></div>
+          </details>
+        </div>
+
+        <details class="ia-card" id="ai-paste">
+          <summary>Trazer HTML gerado em outra IA</summary>
+          <p class="hint">Cole a resposta completa da IA. O estúdio encontra o documento HTML dentro dela e mostra aqui.</p>
+          <div class="field field--data"><label for="paste-html">Resposta da IA</label><textarea id="paste-html" rows="5"></textarea></div>
+          <div><button class="btn" id="paste-go" type="button">Visualizar</button></div>
+        </details>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="flash" role="status" aria-live="polite"></div>
+
+<div class="overlay" id="copy-overlay" hidden>
+  <div class="overlay__box" role="dialog" aria-modal="true" aria-labelledby="copy-title">
+    <h2 id="copy-title">Copie o texto</h2>
+    <p>Este navegador não permitiu copiar automaticamente. O texto já está selecionado: use Ctrl+C ou ⌘C.</p>
+    <label class="hint" for="copy-text">Texto para copiar</label>
+    <textarea id="copy-text" readonly></textarea>
+    <div><button class="btn" id="copy-close" type="button">Fechar</button></div>
   </div>
+</div>
 
-  <div id="flash" role="status" aria-live="polite"></div>
+<script>
+(() => {
+"use strict";
 
-  <script type="module" src="assets/js/app.js"></script>
+/* ===================== Marca (fonte de verdade da identidade) ===================== */
+const BRAND = {
+  nome: "Delta Experiences",
+  tagline: "A curadoria do extraordinário",
+  manifesto:
+    "Delta Experiences desenha experiências raras para quem já teve tudo. " +
+    "Cada proposta é uma peça editorial — não um documento comercial.",
+
+  posicionamento: {
+    categoria: "Experiências premium sob medida",
+    publico:
+      "C-level, famílias patrimoniais, colecionadores de experiências e marcas que " +
+      "convidam seus VIPs para momentos irrepetíveis.",
+    promessa:
+      "Transformar um desejo em memória — com discrição, requinte e domínio absoluto do detalhe.",
+    diferenciais: [
+      "Rede global de parceiros fechados ao público",
+      "Produção white-glove de ponta a ponta",
+      "Confidencialidade contratual",
+      "Direção artística editorial em cada entrega",
+    ],
+  },
+
+  cores: {
+    midnight:   { hex: "#0E1A2B", nome: "Midnight",       uso: "Fundos editoriais, capa, páginas de abertura" },
+    bone:       { hex: "#F4EFE6", nome: "Bone",           uso: "Fundo principal de leitura, respiros" },
+    gold:       { hex: "#B59162", nome: "Ouro Antigo",    uso: "Detalhes, numerais capitulares, filetes" },
+    charcoal:   { hex: "#2B2E33", nome: "Charcoal",       uso: "Texto corrido" },
+    mist:       { hex: "#D8D2C7", nome: "Mist",           uso: "Divisores, legendas, dados tabulares" },
+    wine:       { hex: "#6B2A3A", nome: "Vinho",          uso: "Acento raro, exclusividades" },
+    paper:      { hex: "#FBF8F2", nome: "Paper",          uso: "Páginas de narrativa longa" },
+  },
+
+  tipografia: {
+    display: {
+      familia: "Playfair Display",
+      pesos:   [400, 500, 700],
+      uso:     "Títulos capitulares, aberturas, pull quotes",
+      tracking:"-0.01em em títulos grandes; 0 em subtítulos",
+    },
+    serif: {
+      familia: "Cormorant Garamond",
+      pesos:   [300, 400, 500],
+      uso:     "Narrativa editorial, cartas, citações",
+    },
+    sans: {
+      familia: "Inter",
+      pesos:   [300, 400, 500, 600],
+      uso:     "Dados, tabelas, condições, UI",
+    },
+    micro: {
+      familia: "Inter",
+      pesos:   [500],
+      uso:     "Caps alta, numeração de capítulos, legendas",
+      tracking:"0.18em, uppercase",
+    },
+  },
+
+  grid: {
+    colunas: 12,
+    gutter_mm: 6,
+    margem_mm: { topo: 22, lado: 20, base: 25 },
+    pagina_mm: { largura: 210, altura: 297 },
+    baseline_pt: 12,
+  },
+
+  voz: {
+    tom: "Confiante, íntimo, cinematográfico, sem adjetivos vazios.",
+    pessoa: "Você (formal), narrativa em terceira pessoa quando descreve a experiência.",
+    pilares: [
+      "Mostre, não anuncie. 'Jantar sob as estrelas no deserto' > 'Jantar inesquecível'.",
+      "Sensorial sobre adjetivos. Som, cheiro, textura, luz.",
+      "Precisão numérica. '14 convidados' > 'grupo íntimo'.",
+      "Discrição. Não cite marcas que exigem sigilo; use 'parceiros selecionados'.",
+    ],
+    proibicoes: [
+      "Clichês: 'experiência única', 'sonho realizado', 'momentos mágicos'",
+      "Exclamações, emojis, superlativos vazios",
+      "Jargão corporativo ('sinergia', 'solução')",
+    ],
+  },
+
+  layout_principios: [
+    "Respiro é luxo — nunca encha a página.",
+    "Fotografia full-bleed abre cada capítulo.",
+    "Numeração capitular em algarismos romanos, Ouro Antigo, canto superior.",
+    "Pull quotes em Playfair 32–48pt, Midnight, com filete de 1pt em Ouro.",
+    "Dados sempre em Inter, tabular-nums, sem bordas duras.",
+    "Nenhuma página sem respiro vertical mínimo de 25% da altura.",
+  ],
+
+  entregas: {
+    formato: "PDF A4 retrato, 12–24 páginas, otimizado para impressão fine-art",
+    acabamento_sugerido: "Capa em papel Cordenons Stardream, miolo em Munken Pure 120g, costurado",
+    digital: "Versão interativa HTML espelhando a diagramação, para envio por link privado",
+  },
+};
+
+const BRAND_HASH = (() => {
+  const s = JSON.stringify(BRAND);
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return "DX-" + (h >>> 0).toString(36).toUpperCase();
+})();
+
+/* ===================== Proposta de exemplo ===================== */
+const DADOS_EXEMPLO = {
+  codigo_proposta: "DX-2026-0147",
+  data_envio: "2026-10-05",
+  titulo: "O Deserto Branco",
+  subtitulo: "Nove dias entre as dunas do Lençóis e a costa de Jericoacoara",
+  cliente: { nome: "Família Albuquerque", primeiro_nome: "Helena", email: "helena@albuquerque.co", telefone: "+55 11 9 9999 0000" },
+  assinante: { nome: "Mariana Delfim", cargo: "Direção de Curadoria, Delta Experiences" },
+  contexto_abertura:
+    "Quando conversamos em agosto, você falou de um aniversário que não quer celebrar — mas marcar. " +
+    "Oito pessoas, nenhum palco, muito silêncio. E, por favor, nada de velas em bolo.",
+  destino: "Lençóis Maranhenses e Jericoacoara",
+  destino_titulo: "Entre lagoas e vento",
+  destino_subtitulo: "Nordeste do Brasil · Julho de 2026",
+  narrativa: [
+    "Começa pelo que não se vê: o som dos pés na areia molhada antes do amanhecer, a luz chegando lateral, cortando o deserto em dois tons. Três noites num refúgio de dez quartos, aberto apenas para o grupo, com um chef que cozinha o que o mangue traz naquele dia.",
+    "Na travessia para Jericoacoara, um buggy, uma balsa e trinta minutos de carro — ou um bimotor privado em quarenta e oito minutos, se preferir pular o roteiro de postal. Em Jeri, uma casa de frente para o vento, chef próprio, iate à disposição.",
+    "Nenhuma passagem comercial. Nenhum restaurante aberto ao público. Nenhum guia que você não tenha aprovado antes.",
+  ],
+  pull_quote: "O luxo, aqui, é a hora em que você escolhe acordar.",
+  duracao: "9 dias / 8 noites",
+  convidados: "8 adultos",
+  epoca: "Julho de 2026 — pós-chuvas, lagoas cheias",
+  programa: [
+    { dia: 1, titulo: "Chegada em São Luís",      destaques: ["Transfer executivo", "Jantar no casarão restaurado"] },
+    { dia: 2, titulo: "Travessia aos Lençóis",    destaques: ["Voo privado", "Welcome dinner nas dunas"] },
+    { dia: 3, titulo: "Lagoas Azuis",             destaques: ["Trilha privativa de 6km", "Almoço na Lagoa Bonita"] },
+    { dia: 4, titulo: "Silêncio",                 destaques: ["Dia livre", "Spa itinerante", "Observação de estrelas"] },
+    { dia: 5, titulo: "Travessia a Jericoacoara", destaques: ["Bimotor privado", "Chegada ao casarão de frente para o mar"] },
+    { dia: 6, titulo: "Vento",                    destaques: ["Vela com instrutor particular", "Pôr do sol na Duna"] },
+    { dia: 7, titulo: "Mar",                      destaques: ["Iate dia inteiro", "Almoço em Mangue Seco"] },
+    { dia: 8, titulo: "O aniversário",            destaques: ["Jantar privado na praia", "Projeção de 8mm"] },
+    { dia: 9, titulo: "Retorno",                  destaques: ["Transfer para Fortaleza", "Lounge privativo"] },
+  ],
+  inclusoes: [
+    { nome: "Hospedagem exclusiva",     descricao: "Dois refúgios privados, uso integral do grupo." },
+    { nome: "Transporte aéreo privado", descricao: "Bimotor com piloto dedicado para transferências internas." },
+    { nome: "Chef residente",           descricao: "Dois chefs dedicados, cardápios desenhados com você." },
+    { nome: "Equipe de produção",       descricao: "Gerente de experiência 24/7 no destino." },
+    { nome: "Fotógrafo editorial",      descricao: "Documentação discreta, entregue em caixa de arquivo." },
+    { nome: "Spa itinerante",           descricao: "Terapeuta à disposição em dias selecionados." },
+    { nome: "Transfer executivo",       descricao: "Todos os deslocamentos em frota blindada opcional." },
+    { nome: "Seguro premium",           descricao: "Cobertura internacional, assistência médica a bordo." },
+  ],
+  investimento: {
+    valor: 487000,
+    moeda: "BRL",
+    por_convidado: 60875,
+    parcelas: [
+      { descricao: "Sinal, na assinatura", percentual: 30 },
+      { descricao: "60 dias antes",        percentual: 40 },
+      { descricao: "No início da viagem",  percentual: 30 },
+    ],
+    inclui: ["Hospedagem", "Alimentação", "Transfers internos e aéreos privados", "Equipe de produção", "Seguro premium"],
+    nao_inclui: ["Passagens aéreas internacionais", "Compras pessoais", "Gorjetas"],
+  },
+  condicoes: {
+    validade: "15 dias",
+    pagamento: "Transferência bancária ou cartão. Pagamentos em USD ou EUR sob solicitação.",
+    cancelamento:
+      "Até 90 dias da data de início: 20% de retenção. Entre 90 e 45 dias: 50%. " +
+      "Menos de 45 dias: 100%. Reagendamento sem custo até 60 dias antes, uma vez.",
+    sigilo: "Esta proposta, todos os parceiros envolvidos e os detalhes operacionais são confidenciais.",
+  },
+  contato: { nome: "Mariana Delfim", email: "mariana@delta.exp", telefone: "+55 11 3000 0147" },
+};
+
+/* ===================== Estrutura canônica da proposta ===================== */
+const SECOES = [
+  {
+    id: "capa", titulo: "Capa", pagina: 1,
+    direcao:
+      "Página full-bleed Midnight. Fotografia cinematográfica alinhada ao destino, " +
+      "escurecida 35%. Logotipo Delta Experiences no topo em Ouro Antigo. " +
+      "Título da experiência em Playfair Display 72pt, centralizado no terço inferior. " +
+      "Nome do cliente discreto em Inter caps 10pt, tracking 0.3em.",
+    conteudo(d) {
+      return { titulo: d.titulo, linha_destaque: d.subtitulo || "Uma experiência Delta", cliente_nome: d.cliente?.nome, data: d.data_envio, codigo: d.codigo_proposta };
+    },
+  },
+  {
+    id: "carta", titulo: "Carta de Abertura", pagina: 2,
+    direcao:
+      "Página Paper, texto único em Cormorant Garamond 14pt, interlinha 22pt, coluna de 92mm centralizada. " +
+      "Assinatura manuscrita digitalizada no final em Charcoal 60%. " +
+      "Capitular em Playfair 72pt Ouro Antigo na primeira letra. " +
+      "Sem imagens — a tipografia é o personagem.",
+    conteudo(d) {
+      const nome = d.cliente?.primeiro_nome || d.cliente?.nome?.split(" ")[0] || "";
+      const contexto = d.contexto_abertura || "Esta proposta nasceu de uma conversa — e das camadas que ela deixou entrever.";
+      return {
+        saudacao: nome ? `${nome},` : "",
+        corpo: [
+          contexto,
+          "O que você verá a seguir não é um pacote. É uma curadoria desenhada a quatro mãos — nossa e sua — que respeita o que você já conhece e abre portas para o que ainda não.",
+          "Cada detalhe foi pensado para que o único trabalho seu seja o de estar presente.",
+        ],
+        despedida: "Com atenção,",
+        assinante: { nome: d.assinante?.nome || "Direção de Curadoria", cargo: d.assinante?.cargo || "Delta Experiences" },
+      };
+    },
+  },
+  {
+    id: "visao", titulo: "A Experiência", pagina: 3,
+    direcao:
+      "Spread duplo. Página esquerda: fotografia full-bleed. Página direita: Paper, " +
+      "título em Playfair 48pt Midnight no alto, três parágrafos de narrativa editorial " +
+      "em Cormorant 13pt. Pull quote centralizada entre o segundo e terceiro parágrafo, " +
+      "em Playfair 28pt itálico, Midnight, filetes de 1pt Ouro acima e abaixo.",
+    conteudo(d) {
+      return {
+        titulo: d.destino_titulo || d.destino, subtitulo: d.destino_subtitulo || "",
+        narrativa: d.narrativa || [], pull_quote: d.pull_quote || "",
+        meta: { duracao: d.duracao, convidados: d.convidados, epoca: d.epoca },
+      };
+    },
+  },
+  {
+    id: "programa", titulo: "Programa", pagina: 5,
+    direcao:
+      "Uma página por dia. Cabeçalho: 'DIA 01' em Inter caps 10pt Ouro, com filete à direita. " +
+      "Título do dia em Playfair 36pt Midnight. Linha do tempo vertical sutil em Mist à esquerda, " +
+      "com pequenos marcadores circulares Ouro nos horários-chave. Cada bloco de atividade: " +
+      "horário em Inter 10pt tabular, descrição em Cormorant 12pt. Fotografia pequena opcional " +
+      "em uma única posição, metade da coluna, com legenda em caps 8pt tracking 0.2em.",
+    conteudo(d) { return { dias: d.programa || [] }; },
+  },
+  {
+    id: "inclusoes", titulo: "Inclusões Exclusivas", pagina: 10,
+    direcao:
+      "Página Bone. Título em Playfair 42pt. Grade de 2 colunas, cada item com ícone de linha " +
+      "fina em Ouro (1pt), nome em Inter 11pt caps tracking 0.18em, descrição em Cormorant 12pt. " +
+      "Nunca mais do que 12 itens por página — divida se for maior.",
+    conteudo(d) { return { inclusoes: d.inclusoes || [] }; },
+  },
+  {
+    id: "investimento", titulo: "Investimento", pagina: 12,
+    direcao:
+      "Página Paper. Título 'Investimento' discreto no topo em Inter caps 10pt tracking 0.25em. " +
+      "Valor principal em Playfair 96pt Midnight, alinhado à direita, com moeda em superscript. " +
+      "Linha explicativa abaixo em Cormorant 14pt. Tabela de condições em Inter 10pt tabular-nums, " +
+      "sem bordas, apenas filete Ouro 0.5pt entre linhas. Nenhum 'R$' em caixa alta — formatação " +
+      "deve respirar.",
+    conteudo(d) {
+      return {
+        valor: d.investimento?.valor, moeda: d.investimento?.moeda || "BRL", por_convidado: d.investimento?.por_convidado,
+        parcelas: d.investimento?.parcelas || [], inclui: d.investimento?.inclui || [], nao_inclui: d.investimento?.nao_inclui || [],
+      };
+    },
+  },
+  {
+    id: "condicoes", titulo: "Condições", pagina: 14,
+    direcao:
+      "Página Bone. Texto de condições em duas colunas, Inter 9.5pt, interlinha 15pt, Charcoal 85%. " +
+      "Subtítulos em Inter caps 9pt Ouro, tracking 0.22em. Sem caixas nem fundos cinza — a hierarquia " +
+      "é tipográfica. Reservado, legal, mas respirando como um contrato de alfaiataria.",
+    conteudo(d) {
+      return {
+        validade: d.condicoes?.validade, pagamento: d.condicoes?.pagamento, cancelamento: d.condicoes?.cancelamento,
+        sigilo: d.condicoes?.sigilo || "Esta proposta e seu conteúdo são confidenciais. Compartilhamento restrito ao destinatário.",
+      };
+    },
+  },
+  {
+    id: "proximos", titulo: "Próximos Passos", pagina: 15,
+    direcao:
+      "Página Midnight. Três passos numerados em algarismos romanos Ouro 48pt. Título de cada passo " +
+      "em Playfair 22pt Bone. Descrição em Cormorant 12pt Bone 85%. Call-to-action discreto no rodapé " +
+      "em Inter caps 10pt Ouro, tracking 0.3em, com telefone e email do contato dedicado.",
+    conteudo(d) {
+      const prazo = d.condicoes?.validade || "15 dias";
+      return {
+        passos: [
+          { numero: "I",   titulo: "Confirmação", descricao: `Retorne este documento assinado ou envie um aceite por email em até ${prazo}.` },
+          { numero: "II",  titulo: "Reserva",     descricao: "Após o aceite, iniciamos imediatamente as reservas em sua rede de parceiros fechados." },
+          { numero: "III", titulo: "Produção",    descricao: "Um gerente dedicado acompanha você até o último detalhe, com reuniões quinzenais." },
+        ],
+        contato: d.contato || {},
+      };
+    },
+  },
+  {
+    id: "colofao", titulo: "Colofão", pagina: 16,
+    direcao:
+      "Última página. Paper. Centralizado verticalmente. Logotipo em Ouro, pequeno. " +
+      "Abaixo, em Inter caps 8pt tracking 0.3em Charcoal: código da proposta, data de emissão, " +
+      "versão da identidade visual, nome do curador responsável. Nada mais.",
+    conteudo(d) { return { codigo: d.codigo_proposta, data: d.data_envio, curador: d.assinante?.nome }; },
+  },
+];
+
+function montarDocumento(dados) {
+  return SECOES.map((s) => ({ id: s.id, titulo: s.titulo, pagina_sugerida: s.pagina, direcao: s.direcao, conteudo: s.conteudo(dados) }));
+}
+
+/* ===================== Prompt para a IA editorial ===================== */
+const FENCE = "```";
+const BLOCO = (titulo, corpo) => `## ${titulo}\n\n${corpo.trim()}\n`;
+
+function blocoMarca() {
+  const cores = Object.values(BRAND.cores).map((c) => `- ${c.nome} \`${c.hex}\` — ${c.uso}`).join("\n");
+  const tipos = Object.entries(BRAND.tipografia).map(([k, t]) => `- **${k}** · ${t.familia} (${t.pesos.join("/")}) — ${t.uso}`).join("\n");
+  const principios = BRAND.layout_principios.map((p) => `- ${p}`).join("\n");
+  return BLOCO("1. Sistema de marca",
+    `**${BRAND.nome}** — ${BRAND.tagline}\n\n${BRAND.manifesto}\n\n` +
+    `### Cores\n${cores}\n\n### Tipografia\n${tipos}\n\n### Princípios de layout\n${principios}\n\n` +
+    `### Grid\n` +
+    `- Página: A4 retrato (${BRAND.grid.pagina_mm.largura}×${BRAND.grid.pagina_mm.altura}mm)\n` +
+    `- Colunas: ${BRAND.grid.colunas} · gutter ${BRAND.grid.gutter_mm}mm\n` +
+    `- Margens: topo ${BRAND.grid.margem_mm.topo}mm · lateral ${BRAND.grid.margem_mm.lado}mm · base ${BRAND.grid.margem_mm.base}mm\n` +
+    `- Baseline: ${BRAND.grid.baseline_pt}pt`);
+}
+
+function blocoVoz() {
+  return BLOCO("2. Voz da marca (para qualquer microcopy que você acrescentar)",
+    `**Tom:** ${BRAND.voz.tom}\n**Pessoa:** ${BRAND.voz.pessoa}\n\n` +
+    `**Pilares:**\n${BRAND.voz.pilares.map((p) => `- ${p}`).join("\n")}\n\n` +
+    `**Proibido:**\n${BRAND.voz.proibicoes.map((p) => `- ${p}`).join("\n")}`);
+}
+
+function blocoSecoes(doc) {
+  return BLOCO("3. Documento, seção por seção", doc.map((s, i) =>
+    `### §${i + 1}. ${s.titulo}  _(página sugerida: ${s.pagina_sugerida})_\n\n` +
+    `**Direção editorial:**\n${s.direcao}\n\n` +
+    `**Conteúdo (fonte da verdade — nunca invente campos):**\n${FENCE}json\n${JSON.stringify(s.conteudo, null, 2)}\n${FENCE}`
+  ).join("\n\n"));
+}
+
+function blocoRegras() {
+  return BLOCO("4. Regras não negociáveis", [
+    "- Nunca mude os valores de `conteudo` — eles são a verdade comercial.",
+    "- Nunca introduza cores fora da paleta acima. Nenhum gradiente colorido.",
+    "- Nenhum ícone pictórico. Apenas filetes finos (0.5–1pt), algarismos romanos ou numerais, e marcadores circulares.",
+    "- Nenhuma caixa com fundo cinza ou borda arredondada. A hierarquia é tipográfica.",
+    "- Cada página deve ter respiro vertical ≥ 25%. Se precisar apertar, divida em duas páginas.",
+    "- Fotografias devem ser full-bleed quando usadas; nunca contornadas, nunca sombras.",
+    "- Preserve o número de página em algarismos romanos Ouro Antigo no canto superior externo.",
+    "- O logotipo aparece apenas na capa e no colofão. Não repita em cada página.",
+    "- Monetário sempre em Inter tabular-nums; valor principal da proposta em Playfair.",
+  ].join("\n"));
+}
+
+function blocoEntrega() {
+  return BLOCO("5. Formato de entrega esperado", [
+    "Gere **um arquivo HTML único, autocontido, pronto para impressão A4**, usando apenas CSS inline ou em `<style>`.",
+    "",
+    "Requisitos técnicos:",
+    "- `@page { size: A4; margin: 0 }` e `@media print` com quebras de página explícitas (`page-break-after: always`).",
+    "- Google Fonts carregados via `<link>` para Playfair Display, Cormorant Garamond, Inter.",
+    "- Nenhuma dependência JS. Nenhuma imagem remota não listada. Para fotografias, use placeholders `<div class='photo' data-direction='...'>` com a direção artística em texto, para que o cliente substitua as fotos reais.",
+    "- Metadata no `<head>`: `<meta name='delta-brand-hash' content='" + BRAND_HASH + "'>`, `<meta name='proposal-code' content='{codigo}'>`.",
+    "- Semântica: `<article>` por seção, `<header>`/`<footer>` por página, `<figure>` para pull quotes.",
+    "- CSS acessível: contraste AA mínimo em qualquer texto corrido.",
+    "",
+    "Depois do HTML, acrescente **um pequeno relatório** em markdown com: páginas geradas, decisões de diagramação não óbvias, e sugestões de fotografia por página (3–7 palavras cada).",
+  ].join("\n"));
+}
+
+function blocoAutocritica() {
+  return BLOCO("6. Autocrítica antes de entregar", [
+    "Antes de responder, releia e verifique:",
+    "- A capa tem respiro suficiente? O título sobrepõe a fotografia com clareza?",
+    "- A carta de abertura soa como alguém escrevendo, não como um e-mail de vendas?",
+    "- Alguma página ficou com densidade de texto > 75%? Divida.",
+    "- A paleta foi obedecida pixel a pixel?",
+    "- O investimento é mostrado com dignidade — nem gritando, nem escondido?",
+    "- O colofão fecha o documento como fechamento de livro?",
+    "",
+    "Se qualquer item falhar, corrija e só então responda.",
+  ].join("\n"));
+}
+
+function gerarPrompt(dados) {
+  const cabecalho =
+    `# Direção para IA de Design Editorial — ${BRAND.nome}\n\n` +
+    `_Proposta ${dados.codigo_proposta} · emitida em ${dados.data_envio} · brand ${BRAND_HASH}_\n\n` +
+    "Você é uma IA especializada em design editorial. Sua tarefa é diagramar " +
+    "uma proposta comercial premium como se fosse uma peça de revista de alto padrão — " +
+    "não um documento de vendas. O conteúdo abaixo é imutável; sua liberdade está na forma.\n";
+  return [cabecalho, blocoMarca(), blocoVoz(), blocoSecoes(montarDocumento(dados)), blocoRegras(), blocoEntrega(), blocoAutocritica()].join("\n");
+}
+
+function gerarPromptCurto(dados) {
+  const doc = montarDocumento(dados);
+  const resumoCores = Object.values(BRAND.cores).map((c) => `${c.nome} ${c.hex}`).join(" · ");
+  const resumoTipos = `${BRAND.tipografia.display.familia} (display) · ${BRAND.tipografia.serif.familia} (narrativa) · ${BRAND.tipografia.sans.familia} (dados)`;
+  return [
+    `# ${BRAND.nome} — Proposta ${dados.codigo_proposta}`, "",
+    "Diagrame em HTML único A4 retrato, com fontes Google, estilo revista fine-art.",
+    `Paleta: ${resumoCores}.`, `Tipografia: ${resumoTipos}.`, "",
+    "## Seções", doc.map((s, i) => `${i + 1}. **${s.titulo}** — ${s.direcao.split(".")[0]}.`).join("\n"), "",
+    "## Dados", FENCE + "json", JSON.stringify(dados, null, 2), FENCE, "",
+    "Nunca mude dados. Respire. Não use ícones nem caixas cinza.",
+  ].join("\n");
+}
+
+const PROMPT_PERSONA = [
+  "Você é Hélio, diretor de arte editorial sênior da Delta Experiences. Sua única função é diagramar propostas comerciais premium como peças editoriais de alto padrão, no espírito de Cereal, Kinfolk, Monocle e T Magazine.",
+  "",
+  "Você vem de vinte anos de editorial, não de marketing. Acredita que respiro é luxo e que a tipografia é a estrela. Domina grid de 12 colunas, baseline de 12pt e composição em A4 retrato. Escreve em português brasileiro culto, com economia.",
+  "",
+  "Você nunca:",
+  "- altera qualquer valor de conteúdo recebido;",
+  "- usa cores fora da paleta Delta;",
+  "- usa ícones pictóricos ou emojis (apenas filetes, numerais e marcadores circulares de até 3mm);",
+  "- usa caixas com fundo cinza, bordas arredondadas ou sombras;",
+  "- passa de 75% de densidade numa página (divide em duas);",
+  "- repete o logotipo fora da capa e do colofão;",
+  "- inventa preços, datas ou parceiros (campo ausente = elemento omitido).",
+  "",
+  "Antes de escrever o CSS, em silêncio: leia o briefing inteiro, escolha a página de maior intensidade, alterne páginas densas e abertas, justifique cada cor e rode a autocrítica do item 6.",
+].join("\n");
+
+function montarPromptIA(dados, extra) {
+  const partes = [
+    PROMPT_PERSONA, "", "---", "",
+    gerarPrompt(dados),
+    BLOCO("7. Formato desta resposta", [
+      `- Comece direto pelo bloco ${FENCE}html com o documento completo, de <!doctype html> a </html>. Nenhum texto antes dele.`,
+      "- Cada página é um elemento com class=\"page\", de 210mm × 297mm, com overflow hidden.",
+      "- CSS enxuto: classes reutilizáveis, sem comentários, sem estilos inline repetidos. Sem JavaScript.",
+      "- Depois do bloco, escreva o relatório de diagramação em markdown, com no máximo 12 linhas.",
+    ].join("\n")),
+  ];
+  if (extra && extra.trim()) partes.push(BLOCO("8. Direção adicional do curador", extra.trim()));
+  return partes.join("\n");
+}
+
+function instrucaoRefino(ajustes) {
+  return `Ajustes pedidos pelo curador:\n\n${ajustes}\n\n` +
+    `Aplique somente esses ajustes e mantenha todas as outras decisões. Devolva o documento completo outra vez, no mesmo formato: bloco ${FENCE}html com o documento inteiro e, depois, o relatório curto.`;
+}
+
+/* ===================== Utilitários ===================== */
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => Array.from(document.querySelectorAll(s));
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const SIMBOLO = { BRL: "R$", USD: "US$", EUR: "€" };
+const fmtNum = (n) => new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 }).format(n);
+const fmtMoeda = (n, m = "BRL") => new Intl.NumberFormat("pt-BR", { style: "currency", currency: m, maximumFractionDigits: 0 }).format(n);
+const fmtMil = (n) => n >= 1000 ? `${fmtNum(Math.round(n / 1000))} mil` : fmtNum(n);
+function fmtData(iso) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso || "")) return iso || "";
+  return new Date(iso + "T12:00:00").toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" });
+}
+const ou = (v, ph) => (v ? esc(v) : `<span class="vazio">${esc(ph)}</span>`);
+const guardar = (k, v) => { try { localStorage.setItem(k, v); } catch { /* armazenamento indisponível */ } };
+const lerGuardado = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+const apagarGuardado = (k) => { try { localStorage.removeItem(k); } catch { /* idem */ } };
+const K_DADOS = "delta.estudio.dados", K_ABA = "delta.estudio.aba", K_IA = "delta.estudio.ia";
+const PAGE_W = 210 * 96 / 25.4;
+const FONTES_LINK = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap">';
+
+/* ===================== Prévia em folhas A4 ===================== */
+const folha = (cls, html) => `<div class="sheet"><section class="page ${cls}">${html}</section><span class="sheet__flag">Excede a página</span></div>`;
+const foto = (nota, cls) => `<div class="ph ${cls}" role="img" aria-label="Espaço para fotografia: ${esc(nota)}"><span class="ph__note">Fotografia · ${esc(nota)}</span></div>`;
+
+function fCapa(c, d) {
+  return folha("page--capa", `
+    <div class="capa__top"><span class="capa__brand">${esc(BRAND.nome)}</span><span class="capa__tag">${esc(BRAND.tagline)}</span></div>
+    ${foto(d.destino || "destino da experiência", "capa__ph")}
+    <div class="capa__base">
+      <p class="capa__para">Proposta para</p>
+      <p class="capa__cliente">${ou(c.cliente_nome, "Nome do cliente")}</p>
+      <h1 class="capa__titulo">${ou(c.titulo, "Título da experiência")}</h1>
+      <p class="capa__sub">${esc(c.linha_destaque)}</p>
+      <div class="capa__meta"><span>${esc(c.codigo)}</span><span>${esc(fmtData(c.data))}</span><span>Confidencial</span></div>
+    </div>`);
+}
+
+function fCarta(c) {
+  const [primeiro = "", ...resto] = c.corpo;
+  const letras = Array.from(primeiro);
+  const corpo = `<p><span class="capitular">${esc(letras[0] || "")}</span>${esc(letras.slice(1).join(""))}</p>` + resto.map((p) => `<p>${esc(p)}</p>`).join("");
+  return folha("page--carta", `
+    <div class="carta">
+      <p class="carta__saud">${ou(c.saudacao, "Nome,")}</p>
+      <div class="carta__corpo">${corpo}</div>
+      <p class="carta__desp">${esc(c.despedida)}</p>
+      <p class="carta__assin">${esc(c.assinante.nome)}<span class="carta__cargo">${esc(c.assinante.cargo)}</span></p>
+    </div>`);
+}
+
+function fAbertura(c) {
+  return folha("page--abertura", `
+    ${foto(c.titulo || "paisagem do destino", "abertura__ph")}
+    <div class="abertura__txt">
+      <p class="abertura__cap">A experiência</p>
+      <h2 class="abertura__titulo">${ou(c.titulo, "Chamada do destino")}</h2>
+      ${c.subtitulo ? `<p class="abertura__sub">${esc(c.subtitulo)}</p>` : ""}
+    </div>`);
+}
+
+function fVisao(c) {
+  const quote = c.pull_quote ? `<blockquote class="visao__quote">${esc(c.pull_quote)}</blockquote>` : "";
+  const narr = c.narrativa || [];
+  let corpo = narr.map((p, i) => `<p>${esc(p)}</p>${i === 1 ? quote : ""}`).join("");
+  if (narr.length < 2) corpo += quote;
+  if (!narr.length) corpo = `<p class="vazio">Narrativa em três parágrafos.</p>` + corpo;
+  const meta = [["Duração", c.meta.duracao], ["Convidados", c.meta.convidados], ["Época", c.meta.epoca]].filter((m) => m[1]);
+  return folha("page--visao", `
+    <div class="visao__col">
+      <p class="eyebrow">A experiência</p>
+      <h2 class="titulo visao__titulo">${ou(c.titulo, "Chamada do destino")}</h2>
+      ${c.subtitulo ? `<p class="visao__sub">${esc(c.subtitulo)}</p>` : ""}
+      <div class="visao__corpo">${corpo}</div>
+    </div>
+    ${meta.length ? `<dl class="visao__meta">${meta.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>` : ""}`);
+}
+
+function fDia(d, i, total) {
+  const n = String(i + 1).padStart(2, "0");
+  return folha("page--programa", `
+    <p class="prog__hd"><span>Dia ${n}</span><span class="prog__rule"></span><span>Programa · ${total} ${total === 1 ? "dia" : "dias"}</span></p>
+    <h2 class="titulo prog__titulo">${ou(d.titulo, "Título do dia")}</h2>
+    <ul class="prog__lista">${(d.destaques || []).map((h) => `<li>${esc(h)}</li>`).join("")}</ul>
+    ${foto(d.titulo || `dia ${n}`, "prog__ph")}
+    <span class="prog__num" aria-hidden="true">${n}</span>`);
+}
+
+function fInclusoes(c) {
+  const itens = c.inclusoes.length
+    ? c.inclusoes.map((x) => `<li><span class="inc__nome">${esc(x.nome)}</span><span class="inc__desc">${esc(x.descricao)}</span></li>`).join("")
+    : `<li><span class="inc__nome vazio">Nome da inclusão</span><span class="inc__desc vazio">Descrição curta.</span></li>`;
+  const qtd = c.inclusoes.length;
+  return folha("page--inclusoes", `
+    <p class="eyebrow">${qtd ? `${String(qtd).padStart(2, "0")} ${qtd === 1 ? "item" : "itens"}` : "Inclusões"}</p>
+    <h2 class="titulo inc__titulo">Inclusões exclusivas</h2>
+    <ol class="inc">${itens}</ol>`);
+}
+
+function fInvest(c) {
+  const total = Number(c.valor) || 0;
+  const m = c.moeda || "BRL";
+  const parcelas = c.parcelas.map((p) =>
+    `<tr><td>${esc(p.descricao)}</td><td class="num">${esc(p.percentual)}%</td><td class="num">${total ? fmtMoeda(total * (Number(p.percentual) || 0) / 100, m) : ""}</td></tr>`).join("");
+  const lista = (xs) => xs.map((x) => `<li>${esc(x)}</li>`).join("");
+  return folha("page--invest", `
+    <p class="eyebrow">Investimento</p>
+    <p class="inv__valor"><span class="inv__moeda">${esc(SIMBOLO[m] || m)}</span><span class="inv__num">${total ? fmtNum(total) : '<span class="vazio">0</span>'}</span></p>
+    <p class="inv__sub">${c.por_convidado ? `${fmtMoeda(Number(c.por_convidado), m)} por convidado` : "Valor total da experiência"}</p>
+    ${parcelas ? `<table class="inv__tab"><caption>Cronograma de pagamento</caption><tbody>${parcelas}</tbody></table>` : ""}
+    <div class="inv__dois">
+      <div><h4>Inclui</h4><ul>${lista(c.inclui)}</ul></div>
+      <div><h4>Não inclui</h4><ul>${lista(c.nao_inclui)}</ul></div>
+    </div>`);
+}
+
+function fCondicoes(c) {
+  const blocos = [["Validade", c.validade], ["Pagamento", c.pagamento], ["Cancelamento", c.cancelamento], ["Sigilo", c.sigilo]]
+    .filter((b) => b[1]).map(([k, v]) => `<h4>${k}</h4><p>${esc(v)}</p>`).join("");
+  return folha("page--cond", `
+    <p class="eyebrow">${c.validade ? `Proposta válida por ${esc(c.validade)}` : "Condições"}</p>
+    <h2 class="titulo cond__titulo">Condições</h2>
+    <div class="cond">${blocos}</div>`);
+}
+
+function fProximos(c) {
+  const k = c.contato || {};
+  return folha("page--prox", `
+    <h2 class="titulo prox__titulo">Próximos passos</h2>
+    <ol class="prox">${c.passos.map((p) => `<li><span class="prox__num">${p.numero}</span><div><h3>${esc(p.titulo)}</h3><p>${esc(p.descricao)}</p></div></li>`).join("")}</ol>
+    <div class="prox__contato"><span>${esc(k.nome)}</span><span class="lower">${esc(k.email)}</span><span>${esc(k.telefone)}</span></div>`);
+}
+
+function fColofao(c, d) {
+  return folha("page--colofao", `
+    <div class="colo">
+      <span class="colo__delta" aria-hidden="true">Δ</span>
+      <p class="colo__marca">${esc(BRAND.nome)}</p>
+      <p class="colo__linha">${esc(c.codigo)}</p>
+      <p class="colo__linha">Emitida em ${esc(fmtData(c.data))}</p>
+      ${c.curador ? `<p class="colo__linha">Curadoria · ${esc(c.curador)}</p>` : ""}
+      <p class="colo__linha">Identidade ${BRAND_HASH}</p>
+      ${d.condicoes?.sigilo ? `<p class="colo__sigilo">${esc(d.condicoes.sigilo)}</p>` : ""}
+    </div>`);
+}
+
+function renderizarPreview(dados) {
+  const s = Object.fromEntries(montarDocumento(dados).map((x) => [x.id, x.conteudo]));
+  const out = [fCapa(s.capa, dados), fCarta(s.carta), fAbertura(s.visao), fVisao(s.visao)];
+  s.programa.dias.forEach((d, i, a) => out.push(fDia(d, i, a.length)));
+  out.push(fInclusoes(s.inclusoes), fInvest(s.investimento), fCondicoes(s.condicoes), fProximos(s.proximos), fColofao(s.colofao, dados));
+  return out.join("");
+}
+
+/* ===================== Estado e formulário ===================== */
+const hojeISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+
+function dadosEmBranco() {
+  return {
+    codigo_proposta: `DX-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9000) + 1000)}`,
+    data_envio: hojeISO(), titulo: "", subtitulo: "",
+    cliente: { nome: "", primeiro_nome: "", email: "", telefone: "" },
+    assinante: { ...DADOS_EXEMPLO.assinante },
+    contexto_abertura: "", destino: "", destino_titulo: "", destino_subtitulo: "",
+    narrativa: [], pull_quote: "", duracao: "", convidados: "", epoca: "",
+    programa: [], inclusoes: [],
+    investimento: {
+      valor: 0, moeda: "BRL", por_convidado: null,
+      parcelas: [
+        { descricao: "Sinal, na assinatura", percentual: 30 },
+        { descricao: "60 dias antes", percentual: 40 },
+        { descricao: "No início da experiência", percentual: 30 },
+      ],
+      inclui: [], nao_inclui: [],
+    },
+    condicoes: { ...DADOS_EXEMPLO.condicoes },
+    contato: { ...DADOS_EXEMPLO.contato },
+  };
+}
+
+function normalizar(o) {
+  const b = dadosEmBranco();
+  const arr = (v) => (Array.isArray(v) ? v : []);
+  return {
+    ...b, ...o,
+    cliente: { ...b.cliente, ...(o.cliente || {}) },
+    assinante: { ...b.assinante, ...(o.assinante || {}) },
+    investimento: { ...b.investimento, ...(o.investimento || {}),
+      parcelas: arr(o.investimento?.parcelas ?? b.investimento.parcelas),
+      inclui: arr(o.investimento?.inclui), nao_inclui: arr(o.investimento?.nao_inclui) },
+    condicoes: { ...b.condicoes, ...(o.condicoes || {}) },
+    contato: { ...b.contato, ...(o.contato || {}) },
+    narrativa: arr(o.narrativa).map(String),
+    programa: arr(o.programa).map((p, i) => ({ dia: i + 1, titulo: String(p?.titulo ?? ""), destaques: arr(p?.destaques).map(String) })),
+    inclusoes: arr(o.inclusoes).map((x) => ({ nome: String(x?.nome ?? ""), descricao: String(x?.descricao ?? "") })),
+  };
+}
+
+const STATE = { dados: structuredClone(DADOS_EXEMPLO), aba: "previa", versaoPrompt: "completo" };
+const val = (id) => $(id).value.trim();
+const linhas = (id) => $(id).value.split("\n").map((s) => s.trim()).filter(Boolean);
+
+function lerForm() {
+  const d = STATE.dados;
+  d.codigo_proposta = val("#f-codigo");
+  d.data_envio = val("#f-data");
+  d.titulo = val("#f-titulo");
+  d.subtitulo = val("#f-subtitulo");
+  d.destino = val("#f-destino");
+  d.destino_titulo = val("#f-destino-titulo");
+  d.destino_subtitulo = val("#f-destino-sub");
+  d.duracao = val("#f-duracao");
+  d.convidados = val("#f-convidados");
+  d.epoca = val("#f-epoca");
+  d.pull_quote = val("#f-pullquote");
+  d.contexto_abertura = val("#f-contexto");
+  d.cliente = { nome: val("#f-cliente-nome"), primeiro_nome: val("#f-cliente-primeiro"), email: val("#f-cliente-email"), telefone: val("#f-cliente-tel") };
+  d.assinante = { nome: val("#f-assin-nome"), cargo: val("#f-assin-cargo") };
+  d.contato = { nome: val("#f-cont-nome"), email: val("#f-cont-email"), telefone: val("#f-cont-tel") };
+  d.narrativa = $("#f-narrativa").value.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
+  d.programa = linhas("#f-programa").map((l, i) => {
+    const [titulo, ...dest] = l.split("|").map((x) => x.trim());
+    return { dia: i + 1, titulo, destaques: dest.filter(Boolean) };
+  });
+  d.inclusoes = linhas("#f-inclusoes").map((l) => {
+    const [nome, ...rest] = l.split("—").map((x) => x.trim());
+    return { nome, descricao: rest.join(" — ") };
+  });
+  d.investimento = {
+    valor: parseInt($("#f-valor").value, 10) || 0,
+    moeda: $("#f-moeda").value || "BRL",
+    por_convidado: parseInt($("#f-por-conv").value, 10) || null,
+    parcelas: linhas("#f-parcelas").map((l) => {
+      const [descricao, perc] = l.split("|").map((x) => x.trim());
+      return { descricao, percentual: parseFloat(String(perc ?? "").replace(",", ".")) || 0 };
+    }),
+    inclui: linhas("#f-inc"),
+    nao_inclui: linhas("#f-naoinc"),
+  };
+  d.condicoes = { validade: val("#f-validade"), pagamento: val("#f-pagamento"), cancelamento: val("#f-cancelamento"), sigilo: val("#f-sigilo") };
+}
+
+function escreverForm() {
+  const d = STATE.dados;
+  const set = (id, v) => { $(id).value = v ?? ""; };
+  set("#f-codigo", d.codigo_proposta); set("#f-data", d.data_envio);
+  set("#f-titulo", d.titulo); set("#f-subtitulo", d.subtitulo);
+  set("#f-destino", d.destino); set("#f-destino-titulo", d.destino_titulo); set("#f-destino-sub", d.destino_subtitulo);
+  set("#f-duracao", d.duracao); set("#f-convidados", d.convidados); set("#f-epoca", d.epoca);
+  set("#f-pullquote", d.pull_quote); set("#f-contexto", d.contexto_abertura);
+  set("#f-cliente-nome", d.cliente?.nome); set("#f-cliente-primeiro", d.cliente?.primeiro_nome);
+  set("#f-cliente-email", d.cliente?.email); set("#f-cliente-tel", d.cliente?.telefone);
+  set("#f-assin-nome", d.assinante?.nome); set("#f-assin-cargo", d.assinante?.cargo);
+  set("#f-cont-nome", d.contato?.nome); set("#f-cont-email", d.contato?.email); set("#f-cont-tel", d.contato?.telefone);
+  set("#f-narrativa", (d.narrativa || []).join("\n\n"));
+  set("#f-programa", (d.programa || []).map((p) => [p.titulo, ...(p.destaques || [])].join(" | ")).join("\n"));
+  set("#f-inclusoes", (d.inclusoes || []).map((i) => (i.descricao ? `${i.nome} — ${i.descricao}` : i.nome)).join("\n"));
+  set("#f-valor", d.investimento?.valor || ""); set("#f-moeda", d.investimento?.moeda || "BRL");
+  set("#f-por-conv", d.investimento?.por_convidado || "");
+  set("#f-parcelas", (d.investimento?.parcelas || []).map((p) => `${p.descricao} | ${p.percentual}`).join("\n"));
+  set("#f-inc", (d.investimento?.inclui || []).join("\n")); set("#f-naoinc", (d.investimento?.nao_inclui || []).join("\n"));
+  set("#f-validade", d.condicoes?.validade); set("#f-pagamento", d.condicoes?.pagamento);
+  set("#f-cancelamento", d.condicoes?.cancelamento); set("#f-sigilo", d.condicoes?.sigilo);
+}
+
+function carregarDados(obj) {
+  STATE.dados = normalizar(obj);
+  escreverForm();
+  atualizarTudo();
+  guardar(K_DADOS, JSON.stringify(STATE.dados));
+}
+
+/* ===================== Prévia: escala, densidade ===================== */
+function ajustarEscala() {
+  const el = $("#preview");
+  const w = el.clientWidth;
+  if (w) el.style.setProperty("--s", Math.min(1, w / PAGE_W).toFixed(4));
+}
+
+function verificarDensidade() {
+  const folhas = $$("#preview .sheet");
+  let excedem = 0;
+  for (const sh of folhas) {
+    const p = sh.firstElementChild;
+    const over = p.scrollHeight > p.clientHeight + 2;
+    sh.classList.toggle("sheet--over", over);
+    if (over) excedem++;
+  }
+  $("#previa-info").innerHTML = `${folhas.length} folhas A4` +
+    (excedem ? ` · <strong>${excedem} ${excedem === 1 ? "folha excede" : "folhas excedem"} a página</strong>` : " · todas dentro da página");
+}
+
+function atualizarPreview() {
+  $("#preview").innerHTML = renderizarPreview(STATE.dados);
+  if (!$("#panel-previa").hidden) verificarDensidade();
+}
+
+function atualizarParcelasHint() {
+  const ps = STATE.dados.investimento.parcelas;
+  const soma = ps.reduce((a, p) => a + (Number(p.percentual) || 0), 0);
+  const h = $("#parcelas-hint");
+  const errado = ps.length > 0 && Math.abs(soma - 100) > 0.01;
+  h.classList.toggle("hint--warn", errado);
+  h.innerHTML = errado ? `As parcelas somam ${fmtNum(soma)}%. O total precisa ser 100%.` : "Formato: <code>Descrição | percentual</code>";
+}
+
+/* ===================== Prompt ===================== */
+function textoPrompt() {
+  return STATE.versaoPrompt === "curto" ? gerarPromptCurto(STATE.dados) : montarPromptIA(STATE.dados, $("#ai-extra").value);
+}
+function atualizarPrompt() {
+  const t = textoPrompt();
+  $("#prompt-count").textContent = `· ${fmtMil(t.length)}`;
+  $("#prompt-info").textContent = `${fmtNum(t.length)} caracteres`;
+  if (!$("#panel-prompt").hidden) $("#prompt-box").textContent = t;
+}
+
+function atualizarTudo() {
+  atualizarPreview();
+  atualizarParcelasHint();
+  atualizarPrompt();
+}
+
+/* ===================== Abas ===================== */
+const ABAS = ["previa", "prompt", "ia"];
+function ativarAba(id) {
+  if (!ABAS.includes(id)) id = "previa";
+  for (const a of ABAS) {
+    const on = a === id;
+    const t = $("#tab-" + a);
+    t.setAttribute("aria-selected", String(on));
+    t.tabIndex = on ? 0 : -1;
+    $("#panel-" + a).hidden = !on;
+  }
+  STATE.aba = id;
+  guardar(K_ABA, id);
+  if (id === "previa") { ajustarEscala(); verificarDensidade(); }
+  if (id === "prompt") atualizarPrompt();
+  if (id === "ia") ajustarFrame(true);
+}
+
+/* ===================== Capacidades do Claude (quando aberto no Claude) ===================== */
+const temClaude = typeof window.claude?.use === "function";
+let sample = temClaude ? undefined : null;
+let downloads = null;
+
+function atualizarDisponibilidade() {
+  const podeBaixar = !!downloads || !temClaude;
+  $$("[data-dl]").forEach((b) => { b.hidden = !podeBaixar; });
+  $$("[data-local]").forEach((b) => { b.hidden = temClaude; });
+}
+
+async function salvarArquivo(nome, conteudo, mime) {
+  if (downloads) {
+    try {
+      await downloads.save({ filename: nome, data: conteudo });
+      flash("Arquivo salvo");
+    } catch (e) {
+      const c = e?.code;
+      if (c === "declined") return;
+      if (c === "rate_limited") flash("Já existe um download aguardando sua confirmação.");
+      else if (c === "rejected_extension" || c === "extension_not_enabled") flash("Este formato não pode ser salvo aqui. Use o botão Copiar.");
+      else { flash("Não foi possível salvar o arquivo aqui. Use o botão Copiar."); if (c === "unavailable" || c === "not_granted") { downloads = null; atualizarDisponibilidade(); } }
+    }
+    return;
+  }
+  const url = URL.createObjectURL(new Blob([conteudo], { type: mime }));
+  const a = document.createElement("a");
+  a.href = url; a.download = nome;
+  document.body.append(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
+}
+
+function copiar(texto, rotulo) {
+  let p;
+  try { p = navigator.clipboard.writeText(texto); } catch { p = Promise.reject(); }
+  p.then(() => flash(`${rotulo} copiado`)).catch(() => {
+    $("#copy-text").value = texto;
+    $("#copy-overlay").hidden = false;
+    $("#copy-text").focus();
+    $("#copy-text").select();
+  });
+}
+
+let flashT = 0;
+function flash(msg) {
+  const el = $("#flash");
+  el.textContent = msg;
+  el.classList.add("on");
+  clearTimeout(flashT);
+  flashT = setTimeout(() => el.classList.remove("on"), 2400);
+}
+
+function confirmarDuplo(btn, texto, acao) {
+  if (btn.dataset.armado === "1") {
+    clearTimeout(btn._t);
+    btn.dataset.armado = "";
+    btn.textContent = btn.dataset.rotulo;
+    btn.classList.remove("btn--confirm");
+    acao();
+    return;
+  }
+  btn.dataset.rotulo = btn.textContent;
+  btn.dataset.armado = "1";
+  btn.textContent = texto;
+  btn.classList.add("btn--confirm");
+  btn._t = setTimeout(() => { btn.dataset.armado = ""; btn.textContent = btn.dataset.rotulo; btn.classList.remove("btn--confirm"); }, 3500);
+}
+
+/* ===================== Diagramação pela IA ===================== */
+const IA = { ctl: null, timer: 0, inicio: 0, base: "", texto: "", parcial: "", html: "", progresso: "", ultimoRender: 0, rodando: false, larguraFrame: 0 };
+const OCULTAR = new Set(["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"]);
+const MSG_ERRO = {
+  rate_limited: "Muitas solicitações seguidas. Aguarde alguns minutos e tente de novo.",
+  session_expired: "Sua sessão no Claude expirou. Entre novamente e tente de novo.",
+  refused: "A IA recusou este pedido. Revise a direção adicional e tente de novo.",
+  empty_completion: "A IA não devolveu conteúdo. Tente de novo com menos direção adicional.",
+  prompt_too_large: "O pedido ficou grande demais. Encurte a narrativa ou o programa e tente de novo.",
+  upstream_error: "A conexão com a IA caiu. O que já tinha chegado foi mantido. Tente de novo.",
+};
+
+function extrairHTML(texto) {
+  let t = texto;
+  const bloco = t.match(/```html\s*([\s\S]*?)(?:```|$)/i);
+  if (bloco) t = bloco[1];
+  const i = t.search(/<!doctype html|<html[\s>]/i);
+  if (i === -1) return null;
+  t = t.slice(i);
+  const j = t.search(/<\/html>/i);
+  return j === -1 ? t : t.slice(0, j + 7);
+}
+
+function extrairRelatorio(texto) {
+  const j = texto.search(/<\/html>/i);
+  if (j === -1) return "";
+  return texto.slice(j + 7).replace(/^\s*```\s*/, "").replace(/```(?:markdown|md)?/g, "").trim();
+}
+
+const contarPaginas = (html) => (html.match(/class\s*=\s*["'][^"']*\bpage\b/gi) || []).length;
+const relogio = (ms) => { const s = Math.floor(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; };
+
+function status(msg, erro = false) {
+  const el = $("#ai-status");
+  el.textContent = msg;
+  el.classList.toggle("ia-status--erro", erro);
+}
+
+function pintarProgresso() {
+  const t = relogio(Date.now() - IA.inicio);
+  if (!IA.parcial) { status(`Pensando… ${t}`); return; }
+  const html = extrairHTML(IA.parcial) || "";
+  const pags = contarPaginas(html);
+  status(`Diagramando… ${t} · ${fmtMil(IA.parcial.length)} caracteres${pags ? ` · ${pags} ${pags === 1 ? "página" : "páginas"}` : ""}`);
+}
+
+function atualizarIAUI() {
+  const ctrls = $("#ai-controls");
+  const off = $("#ai-off");
+  if (sample === undefined) {
+    $("#ai-go").disabled = true;
+    status("Conectando ao Claude…");
+    return;
+  }
+  if (sample === null) {
+    ctrls.hidden = true;
+    $("#ai-refine-card").hidden = true;
+    off.hidden = false;
+    off.textContent = temClaude
+      ? "A diagramação automática não está disponível nesta visualização. Copie o prompt na aba Prompt, cole numa conversa com a IA e traga o HTML de volta no campo abaixo."
+      : "A diagramação automática funciona quando este estúdio é aberto no Claude. Aqui, copie o prompt na aba Prompt, cole numa conversa com a IA e traga o HTML de volta no campo abaixo.";
+    $("#ai-paste").open = true;
+    if (!IA.rodando) status("");
+    return;
+  }
+  ctrls.hidden = false;
+  off.hidden = true;
+  $("#ai-refine-card").hidden = false;
+  $("#ai-go").disabled = IA.rodando;
+  $("#ai-go").textContent = IA.html ? "Diagramar de novo" : "Diagramar com IA";
+  $("#ai-refine").disabled = IA.rodando || !IA.texto;
+  if (!IA.rodando && $("#ai-status").textContent === "Conectando ao Claude…") status("");
+}
+
+function setRodando(on) {
+  IA.rodando = on;
+  $("#ai-stop").hidden = !on;
+  $("#ai-tier").disabled = on;
+  atualizarIAUI();
+}
+
+function mostrarResultado(html) {
+  IA.html = html;
+  $("#ai-result").hidden = false;
+  const pags = contarPaginas(html);
+  $("#ai-info").textContent = `${pags || "?"} ${pags === 1 ? "página" : "páginas"} · ${fmtMil(html.length)} caracteres`;
+  const f = $("#ai-frame");
+  f.onload = () => {
+    ajustarFrame(true);
+    const fontes = f.contentDocument?.fonts;
+    if (fontes?.ready) fontes.ready.then(() => ajustarFrame(true));
+  };
+  f.srcdoc = html;
+}
+
+function ajustarFrame(forcar) {
+  const wrap = $("#frame-wrap");
+  const f = $("#ai-frame");
+  const w = wrap.clientWidth;
+  if (!w || $("#ai-result").hidden) return;
+  if (!forcar && w === IA.larguraFrame) return;
+  IA.larguraFrame = w;
+  const s = Math.min(1, w / PAGE_W);
+  let h = 1123;
+  const doc = f.contentDocument;
+  if (doc?.documentElement) {
+    f.style.height = "10px";
+    h = Math.max(doc.documentElement.scrollHeight, doc.body ? doc.body.scrollHeight : 0, 200);
+  }
+  f.style.height = `${h}px`;
+  f.style.transform = `scale(${s})`;
+  wrap.style.height = `${Math.ceil(h * s)}px`;
+}
+
+async function diagramar(refinar) {
+  if (!sample || IA.rodando) return;
+  let entrada;
+  if (refinar) {
+    const aj = $("#ai-ajustes").value.trim();
+    if (!aj) { flash("Descreva os ajustes antes de aplicar."); $("#ai-ajustes").focus(); return; }
+    if (!IA.base) IA.base = montarPromptIA(STATE.dados, $("#ai-extra").value);
+    entrada = [{ role: "user", content: IA.base }, { role: "assistant", content: IA.texto }, { role: "user", content: instrucaoRefino(aj) }];
+  } else {
+    IA.base = montarPromptIA(STATE.dados, $("#ai-extra").value);
+    entrada = IA.base;
+  }
+  const tier = $("#ai-tier").value;
+  IA.ctl = new AbortController();
+  IA.inicio = Date.now();
+  IA.parcial = "";
+  IA.ultimoRender = 0;
+  setRodando(true);
+  pintarProgresso();
+  IA.timer = setInterval(pintarProgresso, 1000);
+  try {
+    const r = await sample(entrada, {
+      modelTier: tier,
+      signal: IA.ctl.signal,
+      cache: false,
+      onText: ({ text }) => {
+        IA.parcial = text;
+        pintarProgresso();
+        const html = extrairHTML(text);
+        if (html && /<body[\s>]/i.test(html) && Date.now() - IA.ultimoRender > 4000) {
+          IA.ultimoRender = Date.now();
+          mostrarResultado(html);
+        }
+      },
+    });
+    const html = extrairHTML(r.text);
+    if (!html) {
+      status("A IA respondeu, mas sem um documento HTML. Tente de novo.", true);
+      return;
+    }
+    IA.texto = r.text;
+    mostrarResultado(html);
+    $("#ai-report").textContent = extrairRelatorio(r.text) || "A IA não escreveu relatório desta vez.";
+    if (refinar) $("#ai-ajustes").value = "";
+    guardar(K_IA, JSON.stringify({ texto: IA.texto, base: IA.base }));
+    const pags = contarPaginas(html);
+    const outroModelo = r.modelTierApplied && r.modelTierApplied !== tier ? " · respondido pelo modelo equilibrado" : "";
+    if (r.truncated) status(`A resposta foi cortada no limite de tamanho (${pags} páginas). Peça um ajuste para completar ou reduza o programa.`, true);
+    else status(`Pronto em ${relogio(Date.now() - IA.inicio)} · ${pags} páginas${outroModelo}`);
+  } catch (e) {
+    const code = e?.code || "upstream_error";
+    if (code === "cancelled") {
+      status(e.text ? "Interrompido. A prévia mostra o que já tinha chegado." : "Interrompido.");
+    } else if (OCULTAR.has(code)) {
+      sample = null;
+    } else {
+      status(MSG_ERRO[code] || MSG_ERRO.upstream_error, true);
+    }
+    if (code === "refused") {
+      if (IA.texto) mostrarResultado(extrairHTML(IA.texto)); else { $("#ai-result").hidden = true; IA.html = ""; }
+    } else if (e?.text) {
+      const parcial = extrairHTML(e.text);
+      if (parcial) mostrarResultado(parcial);
+    }
+  } finally {
+    clearInterval(IA.timer);
+    IA.ctl = null;
+    setRodando(false);
+  }
+}
+
+function descartarResultado() {
+  IA.texto = ""; IA.html = ""; IA.base = "";
+  $("#ai-frame").removeAttribute("srcdoc");
+  $("#ai-result").hidden = true;
+  $("#ai-report").textContent = "";
+  apagarGuardado(K_IA);
+  status("");
+  atualizarIAUI();
+}
+
+/* ===================== Exportações ===================== */
+const nomeBase = () => (STATE.dados.codigo_proposta || "proposta").replace(/[^\w.-]+/g, "-");
+
+function htmlPrevia() {
+  const d = STATE.dados;
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">` +
+    `<title>${esc(d.codigo_proposta)} · ${esc(d.titulo)}</title><meta name="delta-brand-hash" content="${BRAND_HASH}"><meta name="proposal-code" content="${esc(d.codigo_proposta)}">` +
+    `${FONTES_LINK}<style>${$("#css-folhas").textContent}\nbody{margin:0;padding:24px 0;background:#E2DACB}</style></head>` +
+    `<body><div id="preview">${renderizarPreview(d)}</div></body></html>`;
+}
+
+/* ===================== Inicialização ===================== */
+function init() {
+  $("#brand-hash").textContent = BRAND_HASH;
+
+  const salvo = lerGuardado(K_DADOS);
+  if (salvo) { try { STATE.dados = normalizar(JSON.parse(salvo)); } catch { /* rascunho ilegível: segue com o exemplo */ } }
+  escreverForm();
+  atualizarTudo();
+
+  let raf = 0, saveT = 0;
+  $("#form").addEventListener("submit", (e) => e.preventDefault());
+  $("#form").addEventListener("input", () => {
+    lerForm();
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(atualizarTudo);
+    clearTimeout(saveT);
+    saveT = setTimeout(() => guardar(K_DADOS, JSON.stringify(STATE.dados)), 400);
+  });
+  $("#ai-extra").addEventListener("input", atualizarPrompt);
+
+  new ResizeObserver(() => { ajustarEscala(); }).observe($("#preview"));
+  new ResizeObserver(() => ajustarFrame(false)).observe($("#frame-wrap"));
+  document.fonts?.ready?.then(() => { if (!$("#panel-previa").hidden) verificarDensidade(); });
+
+  // Abas
+  for (const a of ABAS) $("#tab-" + a).addEventListener("click", () => ativarAba(a));
+  $(".tabs").addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const i = ABAS.indexOf(STATE.aba);
+    const prox = ABAS[(i + (e.key === "ArrowRight" ? 1 : ABAS.length - 1)) % ABAS.length];
+    ativarAba(prox);
+    $("#tab-" + prox).focus();
+  });
+  $("#go-ia").addEventListener("click", () => {
+    ativarAba("ia");
+    $("#panel-ia").scrollIntoView({ block: "start" });
+    if (sample && !$("#ai-go").disabled) $("#ai-go").focus();
+  });
+
+  // Ferramentas do formulário
+  $("#btn-nova").addEventListener("click", (e) => confirmarDuplo(e.currentTarget, "Confirmar: apagar rascunho", () => { carregarDados(dadosEmBranco()); flash("Nova proposta em branco"); }));
+  $("#btn-exemplo").addEventListener("click", (e) => confirmarDuplo(e.currentTarget, "Confirmar: trocar pelo exemplo", () => { carregarDados(structuredClone(DADOS_EXEMPLO)); flash("Exemplo carregado"); }));
+  $("#btn-abrir").addEventListener("click", () => $("#f-import").click());
+  $("#f-import").addEventListener("change", (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const o = JSON.parse(String(r.result));
+        if (!o || typeof o !== "object" || Array.isArray(o)) throw new Error("formato");
+        carregarDados(o);
+        flash("Proposta aberta");
+      } catch { flash("Este arquivo não é um .json de proposta válido."); }
+      e.target.value = "";
+    };
+    r.readAsText(file);
+  });
+  $("#btn-json").addEventListener("click", () => salvarArquivo(`${nomeBase()}.json`, JSON.stringify(STATE.dados, null, 2), "application/json"));
+
+  // Prévia
+  $("#btn-previa-html").addEventListener("click", () => salvarArquivo(`${nomeBase()}-previa.html`, htmlPrevia(), "text/html"));
+  $("#btn-print").addEventListener("click", () => { ativarAba("previa"); window.print(); });
+
+  // Prompt
+  $$(".seg__btn").forEach((b) => b.addEventListener("click", () => {
+    STATE.versaoPrompt = b.dataset.ver;
+    $$(".seg__btn").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    atualizarPrompt();
+  }));
+  $("#btn-prompt-copy").addEventListener("click", () => copiar(textoPrompt(), "Prompt"));
+  $("#btn-prompt-dl").addEventListener("click", () => salvarArquivo(`${nomeBase()}-prompt${STATE.versaoPrompt === "curto" ? "-curto" : ""}.md`, textoPrompt(), "text/markdown"));
+
+  // IA
+  $("#ai-go").addEventListener("click", () => diagramar(false));
+  $("#ai-refine").addEventListener("click", () => diagramar(true));
+  $("#ai-stop").addEventListener("click", () => IA.ctl?.abort());
+  $("#ai-copy").addEventListener("click", () => copiar(IA.html, "HTML"));
+  $("#ai-dl").addEventListener("click", () => salvarArquivo(`${nomeBase()}-diagramada.html`, IA.html, "text/html"));
+  $("#ai-clear").addEventListener("click", (e) => confirmarDuplo(e.currentTarget, "Confirmar: descartar", descartarResultado));
+  $("#paste-go").addEventListener("click", () => {
+    const bruto = $("#paste-html").value;
+    const html = extrairHTML(bruto) || (/<\w+[\s>]/.test(bruto) ? bruto.trim() : null);
+    if (!html) { flash("Não encontrei HTML nesse texto. Cole a resposta completa da IA."); return; }
+    IA.texto = bruto;
+    IA.base = montarPromptIA(STATE.dados, $("#ai-extra").value);
+    mostrarResultado(html);
+    $("#ai-report").textContent = extrairRelatorio(bruto) || "Sem relatório.";
+    guardar(K_IA, JSON.stringify({ texto: IA.texto, base: IA.base }));
+    $("#paste-html").value = "";
+    $("#ai-paste").open = false;
+    status("HTML importado.");
+    atualizarIAUI();
+  });
+
+  // Cópia manual
+  $("#copy-close").addEventListener("click", () => { $("#copy-overlay").hidden = true; });
+  $("#copy-overlay").addEventListener("keydown", (e) => { if (e.key === "Escape") $("#copy-overlay").hidden = true; });
+
+  // Resultado anterior da IA
+  const iaSalva = lerGuardado(K_IA);
+  if (iaSalva) {
+    try {
+      const o = JSON.parse(iaSalva);
+      const html = extrairHTML(o.texto || "");
+      if (html) {
+        IA.texto = o.texto; IA.base = o.base || "";
+        mostrarResultado(html);
+        $("#ai-report").textContent = extrairRelatorio(o.texto) || "Sem relatório.";
+      }
+    } catch { apagarGuardado(K_IA); }
+  }
+
+  atualizarDisponibilidade();
+  atualizarIAUI();
+  ativarAba(lerGuardado(K_ABA) || "previa");
+
+  if (temClaude) {
+    window.claude.use("sample").then((s) => { sample = s || null; atualizarIAUI(); }, () => { sample = null; atualizarIAUI(); });
+    window.claude.use("downloads").then((d) => { downloads = d || null; atualizarDisponibilidade(); }, () => {});
+  }
+}
+
+init();
+})();
+</script>
 </body>
 </html>

@@ -2,11 +2,10 @@
 
 Sistema completo para gerar propostas comerciais premium da **Delta
 Experiences**, pensadas como peças editoriais de alto padrão e
-produzidas em parceria com uma **IA especializada em design editorial**
-(Claude, GPT, Gemini).
+diagramadas por uma **IA especializada em design editorial**.
 
-Não é um gerador de PDF genérico. É um estúdio que respeita uma
-identidade visual específica, uma voz, e um ritual de produção.
+Tudo está em **um único arquivo: `index.html`**. Não há servidor, build
+nem dependências. Dê dois cliques e ele abre no navegador.
 
 ---
 
@@ -14,22 +13,43 @@ identidade visual específica, uma voz, e um ritual de produção.
 
 ```
 ┌───────────────────────┐    ┌─────────────────────┐    ┌──────────────────────┐
-│ 1. Curador preenche   │ →  │ 2. Estúdio gera     │ →  │ 3. IA editorial      │
-│    os dados no        │    │    o prompt e o     │    │    diagrama em HTML  │
-│    formulário         │    │    preview          │    │    A4 fine-art       │
+│ 1. Curador preenche   │ →  │ 2. Estúdio monta a  │ →  │ 3. IA editorial      │
+│    os dados no        │    │    prévia A4 e o    │    │    diagrama a peça   │
+│    formulário         │    │    prompt editorial │    │    inteira em HTML   │
 └───────────────────────┘    └─────────────────────┘    └──────────────────────┘
 ```
 
-1. O curador abre `index.html` em qualquer navegador moderno.
-2. Preenche os dados da proposta no formulário à esquerda — cliente,
-   experiência, programa, inclusões, investimento, condições.
-3. O preview à direita renderiza, em tempo real, uma versão enxuta
-   da proposta usando a identidade Delta — para validação de conteúdo.
-4. Com o conteúdo aprovado, o curador clica em **Copiar prompt IA**.
-5. Cola o prompt em uma IA generalista configurada com
-   `prompts/editorial-system-prompt.md`.
-6. A IA devolve um **HTML autocontido A4 editorial** + relatório.
-7. O curador exporta como PDF e envia por link privado.
+O estúdio tem três abas:
+
+| Aba | O que faz |
+|---|---|
+| **Prévia** | Mostra a proposta em 18 folhas A4 na identidade Delta, em tempo real. Avisa quando alguma folha passa do tamanho da página. |
+| **Prompt** | O prompt completo para a IA: persona do diretor de arte, sistema de marca, conteúdo seção por seção, regras e formato de entrega. Versão curta para modelos menores. |
+| **Diagramação IA** | Aberto no Claude, a IA diagrama a proposta inteira direto na página, com acompanhamento ao vivo e pedidos de ajuste. Fora do Claude, cole aqui o HTML devolvido por qualquer IA para visualizar. |
+
+---
+
+## Dois jeitos de usar
+
+### Aberto no Claude (diagramação automática)
+
+1. Preencha os dados.
+2. Aba **Diagramação IA** → **Diagramar com IA**. Leva de um a três minutos.
+3. Peça correções em **Ajustes na diagramação**.
+4. **Baixar .html**, abra no navegador e use `Imprimir → Salvar como PDF`.
+
+A chamada usa a conta Claude de quem está usando a página e pede
+autorização na primeira vez.
+
+### Arquivo local ou outra IA
+
+1. Abra `index.html` no navegador.
+2. Aba **Prompt** → **Copiar prompt** e cole no Claude, ChatGPT ou Gemini.
+3. Cole a resposta em **Diagramação IA → Trazer HTML gerado em outra IA**.
+4. Imprima ou salve em PDF.
+
+O rascunho fica salvo automaticamente no navegador. Para guardar ou
+trocar de computador, use **Salvar .json** e **Abrir .json**.
 
 ---
 
@@ -37,128 +57,53 @@ identidade visual específica, uma voz, e um ritual de produção.
 
 ```
 /
-├── index.html                              # app
-├── assets/
-│   ├── css/
-│   │   ├── app.css                         # UI do estúdio
-│   │   └── proposal.css                    # diagramação editorial do preview
-│   └── js/
-│       ├── app.js                          # orquestração do estúdio
-│       ├── brand.js                        # ★ fonte de verdade da identidade
-│       ├── sections.js                     # estrutura canônica da proposta
-│       ├── data.js                         # dados-exemplo
-│       ├── preview.js                      # renderizador do preview
-│       └── prompt.js                       # gerador do prompt editorial
+├── index.html                          # ★ o estúdio inteiro (marca, dados, prévia, prompt, IA)
 ├── prompts/
-│   ├── editorial-system-prompt.md          # ★ system prompt para a IA
-│   └── exemplos-conversa.md                # fluxos de uso recomendados
+│   ├── editorial-system-prompt.md      # persona completa, para ferramentas com system prompt
+│   └── exemplos-conversa.md            # fluxos de uso recomendados
 ├── docs/
-│   └── brand-guidelines.md                 # guia de marca para humanos
+│   └── brand-guidelines.md             # guia de marca para humanos
 ├── samples/
-│   ├── DX-2026-0147.json                   # proposta-exemplo (dados)
-│   └── DX-2026-0147-prompt.md              # prompt-exemplo gerado
+│   ├── DX-2026-0147.json               # proposta-exemplo (abra pelo botão Abrir .json)
+│   └── DX-2026-0147-prompt.md          # prompt-exemplo gerado
 └── README.md
 ```
 
-Arquivos com ★ são os únicos que a maior parte das equipes precisa
-abrir regularmente. Toda a identidade vive em `brand.js`; toda a
-pedagogia da IA vive em `editorial-system-prompt.md`.
-
----
-
-## Como executar
-
-Como é um app HTML + ES modules estáticos, basta servir o diretório
-localmente:
-
-```bash
-# qualquer servidor estático. ex.:
-python3 -m http.server 8080
-# ou
-npx serve .
-```
-
-Abra `http://localhost:8080`. Não há build nem dependências npm.
-
-Também funciona abrindo `index.html` direto no Chrome/Edge/Safari
-desde que o navegador permita ES modules via `file://` — se não permitir,
-use um dos comandos acima.
-
----
-
-## Fluxo editorial com a IA
-
-### Caminho A — tudo de uma vez
-
-1. Preencha os dados no estúdio.
-2. **Copiar prompt IA** → cole em Claude/GPT/Gemini configurado com o
-   `editorial-system-prompt.md` como mensagem de sistema.
-3. Receba o HTML + relatório.
-
-### Caminho B — iterativo (recomendado para primeiras propostas)
-
-Siga `prompts/exemplos-conversa.md`: peça o **mapa editorial** antes,
-depois a **capa + abertura**, por fim o **documento completo**.
-Mais tokens, menos surpresas.
-
-### Caminho C — modelos pequenos
-
-Use **Prompt curto**. Perde-se direção por seção; mantém-se paleta,
-tipografia e dados. Bom para rascunhos.
+Dentro de `index.html`, o `<script>` está dividido em blocos nomeados:
+`BRAND` (identidade), `DADOS_EXEMPLO`, `SECOES` (estrutura e direção
+editorial por seção), gerador de prompt, prévia A4 e diagramação pela IA.
 
 ---
 
 ## O que torna o sistema específico à Delta
 
-- **`brand.js` é a lei.** Qualquer mudança gera um novo `BRAND_HASH`,
-  carimbado em cada proposta — rastreabilidade total.
-- **Voz codificada.** Clichês proibidos e pilares de redação ficam
-  no mesmo arquivo — a IA os recebe toda vez.
+- **`BRAND` é a lei.** Paleta, tipografia, grid, voz e proibições vivem
+  num só objeto. Qualquer mudança gera um novo hash de identidade
+  (hoje `DX-DQE5ZF`), carimbado em cada proposta.
+- **Voz codificada.** Clichês proibidos e pilares de redação vão para a
+  IA em toda diagramação.
 - **Grid editorial de verdade.** A4 retrato, margens assimétricas,
-  baseline, 12 colunas — não um template genérico de slide.
-- **Nenhum ícone pictórico.** Hierarquia 100% tipográfica, como
-  numa revista fine-art.
-- **Fotografia é placeholder.** O diretor de arte insere a foto final;
-  a IA nunca gera.
+  baseline, 12 colunas.
+- **Nenhum ícone pictórico.** Hierarquia 100% tipográfica.
+- **Fotografia é placeholder.** A foto final é inserida pela direção de
+  arte; a IA nunca gera imagens.
 
 ---
 
-## Exportações disponíveis
-
-| Botão | O que entrega |
-|---|---|
-| **Copiar prompt IA** | O prompt completo (markdown), já no clipboard. |
-| **Prompt .md** | Mesmo prompt, salvo em arquivo. |
-| **Prompt curto** | Variante enxuta para modelos com janela pequena. |
-| **Preview .html** | O preview atual como HTML autocontido. |
-| **Dados .json** | Fonte da verdade da proposta, para auditoria. |
-| **Salvar rascunho** | Salva no `localStorage` do navegador. |
-| **Abrir rascunho** | Recarrega o último rascunho. |
-| **Exemplo** | Restaura os dados-exemplo. |
-
----
-
-## Convenções
+## Convenções do formulário
 
 - Códigos de proposta no formato `DX-AAAA-NNNN`.
-- Datas em ISO (`AAAA-MM-DD`).
-- Valores sempre em inteiros (sem decimais); formatação é feita no render.
-- Programa: uma linha por dia, campos separados por `|`.
-- Inclusões: uma por linha, nome e descrição separados por `—`.
-- Parcelas: `descrição | %`.
+- Narrativa: parágrafos separados por uma linha em branco.
+- Programa: uma linha por dia, `Título | destaque | destaque`.
+- Inclusões: uma por linha, `Nome — descrição`.
+- Parcelas: `Descrição | percentual`. O estúdio avisa se não somarem 100%.
 
 ---
 
 ## Governança
 
-- `brand.js` só muda por decisão conjunta de direção criativa e
-  direção de curadoria.
-- Toda proposta é confidencial. Nunca anexo — sempre link privado.
-- A pasta `samples/` é instrucional; propostas reais ficam fora
-  deste repositório, em cofre.
-
----
-
-## Licença
+- `BRAND` só muda por decisão conjunta de direção criativa e direção de curadoria.
+- Toda proposta é confidencial. Nunca anexo, sempre link privado.
+- A pasta `samples/` é instrucional; propostas reais ficam fora deste repositório.
 
 Uso interno Delta Experiences. Não distribuir.
