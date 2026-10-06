@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Academia</title>
+  <meta name="description" content="Academia de musculação e treino funcional. Venha treinar com a gente!">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏋️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    /* =====================================================================
+       EDITE AQUI: todas as informações da academia ficam neste bloco.
+       ===================================================================== */
+    const ACADEMIA = {
+      nome: "Nome da Academia",
+      slogan: "Seu melhor treino começa aqui.",
+      descricao: "Estrutura completa, equipamentos modernos e professores qualificados para te ajudar a alcançar seus objetivos — seja hipertrofia, emagrecimento, condicionamento ou saúde.",
+      endereco: "Rua Exemplo, 123 - Bairro, Cidade - UF",
+      linkMaps: "https://maps.app.goo.gl/Ja4ZrsY785aSdR9Y7",
+      telefone: "(00) 00000-0000",
+      whatsapp: "5500000000000",           // só números, com 55 + DDD
+      instagram: "suaacademia",            // sem o @
+      mensagemWhatsapp: "Olá! Vim pelo site e gostaria de saber mais sobre os planos.",
+
+      horarios: [
+        ["Segunda a sexta", "05:30 – 23:00"],
+        ["Sábado", "08:00 – 14:00"],
+        ["Domingo e feriados", "08:00 – 12:00"],
+      ],
+
+      modalidades: [
+        ["🏋️", "Musculação", "Área completa de pesos livres e máquinas para todos os grupos musculares."],
+        ["🔥", "Funcional", "Treinos dinâmicos em grupo para força, resistência e agilidade."],
+        ["🚴", "Cardio", "Esteiras, bikes, elípticos e escadas para o seu condicionamento."],
+        ["🥊", "Lutas", "Aulas de boxe, muay thai e outras artes marciais."],
+        ["🧘", "Alongamento", "Mobilidade e flexibilidade para treinar melhor e prevenir lesões."],
+        ["👟", "Acompanhamento", "Avaliação física e treino montado por profissionais."],
+      ],
+
+      planos: [
+        { nome: "Mensal", preco: "99,90", periodo: "/mês", itens: ["Musculação e cardio", "Avaliação física", "Sem fidelidade"] },
+        { nome: "Trimestral", preco: "89,90", periodo: "/mês", itens: ["Musculação e cardio", "Aulas coletivas", "Avaliação física"], destaque: true },
+        { nome: "Anual", preco: "79,90", periodo: "/mês", itens: ["Acesso a todas as modalidades", "Aulas coletivas", "Avaliação a cada 3 meses"] },
+      ],
+
+      numeros: [
+        ["+500", "alunos"],
+        ["+10", "professores"],
+        ["7", "dias por semana"],
+      ],
+    };
+  </script>
+
+  <style>
+    :root {
+      --bg: #0b0b0d;
+      --bg-2: #141418;
+      --card: #1a1a20;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f4f4f6;
+      --muted: #a3a3ad;
+      --accent: #c6ff3d;
+      --accent-ink: #0b0b0d;
+      --whats: #25d366;
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; }
+
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+    h1, h2, h3 {
+      font-family: "Bebas Neue", Impact, sans-serif;
+      font-weight: 400;
+      letter-spacing: 1px;
+      line-height: 1;
+      margin: 0;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+
+    .section { padding: 96px 0; }
+    .section-title { font-size: clamp(2.4rem, 5vw, 3.6rem); margin-bottom: 16px; }
+    .section-sub { color: var(--muted); max-width: 620px; margin: 0 0 48px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 28px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.15s, border-color 0.15s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--accent); color: var(--accent-ink); }
+    .btn-outline { border-color: var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--accent); }
+    .btn svg { width: 20px; height: 20px; flex: none; }
+
+    /* ---------- Cabeçalho ---------- */
+    .header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 50;
+      transition: background 0.2s, border-color 0.2s;
+      border-bottom: 1px solid transparent;
+    }
+    .header.scrolled {
+      background: rgba(11, 11, 13, 0.9);
+      backdrop-filter: blur(12px);
+      border-color: var(--border);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { font-family: "Bebas Neue", Impact, sans-serif; font-size: 1.8rem; letter-spacing: 1px; }
+    .logo span { color: var(--accent); }
+    .menu { display: flex; gap: 28px; align-items: center; font-weight: 500; font-size: 0.95rem; }
+    .menu a:not(.btn) { color: var(--muted); }
+    .menu a:not(.btn):hover { color: var(--text); }
+    .menu .btn { padding: 10px 20px; }
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 0;
+      color: var(--text);
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 80% 30%, rgba(198, 255, 61, 0.18), transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(198, 255, 61, 0.08), transparent 40%),
+        var(--bg);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, black 40%, transparent);
+    }
+    .hero-bg-word {
+      position: absolute;
+      right: -2vw;
+      bottom: -4vw;
+      font-family: "Bebas Neue", Impact, sans-serif;
+      font-size: 28vw;
+      line-height: 0.8;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+      user-select: none;
+    }
+    .hero-content { position: relative; padding-top: 72px; }
+    .hero h1 { font-size: clamp(3.6rem, 10vw, 7.5rem); max-width: 900px; }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero p.lead { font-size: 1.15rem; color: var(--muted); max-width: 560px; margin: 24px 0 36px; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .stats {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      max-width: 640px;
+    }
+    .stats strong { display: block; font-family: "Bebas Neue", Impact, sans-serif; font-size: 2.8rem; line-height: 1; color: var(--accent); font-weight: 400; }
+    .stats span { color: var(--muted); font-size: 0.9rem; }
+
+    /* ---------- Sobre ---------- */
+    .about { background: var(--bg-2); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .about-visual {
+      aspect-ratio: 4 / 5;
+      border-radius: 24px;
+      background:
+        linear-gradient(160deg, rgba(198,255,61,0.25), transparent 60%),
+        repeating-linear-gradient(135deg, #1d1d23 0 14px, #18181d 14px 28px);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-size: 8rem;
+      position: relative;
+    }
+    .about-badge {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-radius: 18px;
+      padding: 18px 22px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      line-height: 1.3;
+      max-width: 200px;
+    }
+    .checks { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 14px; }
+    .checks li { display: flex; gap: 12px; align-items: flex-start; }
+    .checks li::before {
+      content: "✓";
+      flex: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(198,255,61,0.15);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      margin-top: 2px;
+    }
+
+    /* ---------- Modalidades ---------- */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover { border-color: rgba(198,255,61,0.4); transform: translateY(-4px); }
+    .card .icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: rgba(198,255,61,0.1);
+      display: grid;
+      place-items: center;
+      font-size: 1.7rem;
+      margin-bottom: 20px;
+    }
+    .card h3 { font-size: 1.8rem; margin-bottom: 8px; }
+    .card p { color: var(--muted); margin: 0; font-size: 0.95rem; }
+
+    /* ---------- Planos ---------- */
+    .plans { background: var(--bg-2); }
+    .plan { display: flex; flex-direction: column; position: relative; }
+    .plan.featured { border-color: var(--accent); background: linear-gradient(180deg, rgba(198,255,61,0.08), var(--card) 50%); }
+    .plan .tag {
+      position: absolute;
+      top: -13px;
+      left: 28px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+    .price { margin: 12px 0 20px; display: flex; align-items: baseline; gap: 4px; }
+    .price small { color: var(--muted); font-weight: 600; }
+    .price strong { font-family: "Bebas Neue", Impact, sans-serif; font-size: 3.6rem; line-height: 1; font-weight: 400; }
+    .plan .checks { margin: 0 0 28px; flex: 1; font-size: 0.95rem; }
+    .plan .btn { justify-content: center; }
+    .note { color: var(--muted); font-size: 0.85rem; margin-top: 24px; text-align: center; }
+
+    /* ---------- Horários e local ---------- */
+    .visit-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 24px; }
+    .hours { list-style: none; padding: 0; margin: 0; }
+    .hours li {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .hours li:last-child { border-bottom: none; }
+    .hours li span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .hours li.today { color: var(--accent); }
+    .open-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      margin-bottom: 12px;
+    }
+    .open-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+    .open-status.open::before { background: var(--whats); box-shadow: 0 0 0 4px rgba(37,211,102,0.2); }
+    .open-status.closed::before { background: #ff5c5c; }
+
+    .map-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+    .map-card iframe { width: 100%; flex: 1; min-height: 280px; border: 0; filter: grayscale(0.4) invert(0.9) hue-rotate(180deg); }
+    .map-info { padding: 24px 28px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .map-info p { margin: 0; color: var(--muted); }
+    .map-info strong { color: var(--text); display: block; }
+
+    /* ---------- CTA ---------- */
+    .cta {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-radius: 28px;
+      padding: 64px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .cta h2 { font-size: clamp(2.4rem, 5vw, 3.8rem); max-width: 560px; }
+    .cta p { margin: 12px 0 0; font-weight: 500; }
+    .cta .btn { background: var(--accent-ink); color: var(--text); }
+
+    /* ---------- Rodapé ---------- */
+    .footer { border-top: 1px solid var(--border); padding: 48px 0 32px; margin-top: 96px; color: var(--muted); font-size: 0.92rem; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 32px; }
+    .footer h4 { color: var(--text); margin: 0 0 12px; font-size: 0.95rem; }
+    .footer p { margin: 4px 0; }
+    .footer a:hover { color: var(--accent); }
+    .copy { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.82rem; }
+
+    /* ---------- WhatsApp flutuante ---------- */
+    .whats-float {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--whats);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 10px 30px rgba(37, 211, 102, 0.35);
+      z-index: 60;
+      transition: transform 0.15s;
+    }
+    .whats-float:hover { transform: scale(1.08); }
+    .whats-float svg { width: 32px; height: 32px; fill: #fff; }
+
+    /* ---------- Animação de entrada ---------- */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s, transform 0.6s; }
+    .reveal.visible { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ---------- Responsivo ---------- */
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .about-grid, .visit-grid { grid-template-columns: 1fr; }
+      .about-visual { aspect-ratio: 16 / 10; font-size: 6rem; }
+      .about-badge { right: 16px; bottom: -16px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .menu-toggle { display: block; }
+      .menu {
+        position: fixed;
+        top: 72px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background: rgba(11, 11, 13, 0.98);
+        border-bottom: 1px solid var(--border);
+        padding: 8px 16px 20px;
+        display: none;
+      }
+      .menu.open { display: flex; }
+      .menu a:not(.btn) { padding: 14px 0; border-bottom: 1px solid var(--border); }
+      .menu .btn { margin-top: 16px; justify-content: center; padding: 14px; }
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 0 16px; }
+      .section { padding: 72px 0; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .stats { gap: 28px; }
+      .cta { padding: 44px 24px; border-radius: 22px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .hero-actions .btn { flex: 1; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header" id="header">
+    <div class="container nav">
+      <a href="#inicio" class="logo" data-logo></a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
+      <nav class="menu" id="menu">
+        <a href="#sobre">Sobre</a>
+        <a href="#modalidades">Modalidades</a>
+        <a href="#planos">Planos</a>
+        <a href="#visite">Horários</a>
+        <a href="#" class="btn btn-primary" data-whats>Aula experimental</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Início -->
+    <section class="hero" id="inicio">
+      <div class="hero-bg-word" aria-hidden="true">TREINO</div>
+      <div class="container hero-content">
+        <p class="eyebrow" data-field="nome"></p>
+        <h1>Supere seus <em>limites</em> todos os dias</h1>
+        <p class="lead" data-field="slogan"></p>
+        <div class="hero-actions">
+          <a href="#" class="btn btn-primary" data-whats>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.3-.5 0-1 .2-3.3-.7a11.5 11.5 0 0 1-4.6-4.1c-.4-.5-1-1.6-1-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c0 .2.1.4 0 .6l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.7-.1l1-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3.1.2.1.7-.1 1.3Z"/></svg>
+            Agende sua aula grátis
+          </a>
+          <a href="#planos" class="btn btn-outline">Ver planos</a>
+        </div>
+        <div class="stats" id="stats"></div>
+      </div>
+    </section>
+
+    <!-- Sobre -->
+    <section class="section about" id="sobre">
+      <div class="container about-grid">
+        <div class="about-visual reveal" aria-hidden="true">
+          🏋️
+          <div class="about-badge">Aula experimental gratuita para novos alunos</div>
+        </div>
+        <div class="reveal">
+          <p class="eyebrow">Sobre nós</p>
+          <h2 class="section-title">Muito mais que uma academia</h2>
+          <p style="color: var(--muted)" data-field="descricao"></p>
+          <ul class="checks">
+            <li>Equipamentos modernos e manutenção em dia</li>
+            <li>Professores formados acompanhando seu treino</li>
+            <li>Ambiente climatizado, limpo e seguro</li>
+            <li>Vestiários completos e estacionamento</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modalidades -->
+    <section class="section" id="modalidades">
+      <div class="container">
+        <p class="eyebrow">Modalidades</p>
+        <h2 class="section-title">Escolha seu treino</h2>
+        <p class="section-sub">Opções para todos os níveis e objetivos, do iniciante ao avançado.</p>
+        <div class="grid-3" id="modalidades-list"></div>
+      </div>
+    </section>
+
+    <!-- Planos -->
+    <section class="section plans" id="planos">
+      <div class="container">
+        <p class="eyebrow">Planos</p>
+        <h2 class="section-title">Invista em você</h2>
+        <p class="section-sub">Planos flexíveis que cabem na sua rotina e no seu bolso.</p>
+        <div class="grid-3" id="planos-list"></div>
+        <p class="note">Valores sujeitos a alteração. Consulte condições na recepção ou pelo WhatsApp.</p>
+      </div>
+    </section>
+
+    <!-- Horários e localização -->
+    <section class="section" id="visite">
+      <div class="container">
+        <p class="eyebrow">Venha nos visitar</p>
+        <h2 class="section-title">Horários e localização</h2>
+        <p class="section-sub">Estamos esperando por você. Passe aqui para conhecer a estrutura.</p>
+        <div class="visit-grid">
+          <div class="card reveal">
+            <span class="open-status" id="open-status">Horário de funcionamento</span>
+            <h3>Funcionamento</h3>
+            <ul class="hours" id="horarios-list"></ul>
+          </div>
+          <div class="card map-card reveal">
+            <iframe id="map" title="Mapa da academia" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="map-info">
+              <p><strong>Endereço</strong><span data-field="endereco"></span></p>
+              <a class="btn btn-primary" data-maps target="_blank" rel="noopener">📍 Como chegar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chamada final -->
+    <section class="container">
+      <div class="cta reveal">
+        <div>
+          <h2>Comece hoje. Seu eu do futuro agradece.</h2>
+          <p>Fale com a gente e agende sua aula experimental gratuita.</p>
+        </div>
+        <a href="#" class="btn" data-whats>Chamar no WhatsApp</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#inicio" class="logo" data-logo></a>
+          <p data-field="slogan"></p>
+        </div>
+        <div>
+          <h4>Contato</h4>
+          <p><a href="#" data-tel></a></p>
+          <p><a href="#" data-whats>WhatsApp</a></p>
+          <p><a href="#" data-insta target="_blank" rel="noopener"></a></p>
+        </div>
+        <div>
+          <h4>Endereço</h4>
+          <p data-field="endereco"></p>
+          <p><a data-maps target="_blank" rel="noopener">Abrir no Google Maps →</a></p>
+        </div>
+      </div>
+      <p class="copy">© <span id="year"></span> <span data-field="nome"></span>. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <a href="#" class="whats-float" data-whats aria-label="Falar no WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.3-.5 0-1 .2-3.3-.7a11.5 11.5 0 0 1-4.6-4.1c-.4-.5-1-1.6-1-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c0 .2.1.4 0 .6l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.7-.1l1-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3.1.2.1.7-.1 1.3Z"/></svg>
+  </a>
+
+  <script>
+    (() => {
+      const A = ACADEMIA;
+      const $ = (s) => document.querySelector(s);
+      const $$ = (s) => document.querySelectorAll(s);
+      const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+      // Textos simples
+      document.title = `${A.nome} | Academia`;
+      $$("[data-field]").forEach((el) => { el.textContent = A[el.dataset.field]; });
+
+      // Logo: última palavra destacada
+      const words = A.nome.split(" ");
+      const last = words.pop();
+      $$("[data-logo]").forEach((el) => { el.innerHTML = `${esc(words.join(" "))} <span>${esc(last)}</span>`; });
+
+      // Links de contato
+      const whatsUrl = `https://wa.me/${A.whatsapp}?text=${encodeURIComponent(A.mensagemWhatsapp)}`;
+      $$("[data-whats]").forEach((el) => { el.href = whatsUrl; el.target = "_blank"; el.rel = "noopener"; });
+      $$("[data-maps]").forEach((el) => { el.href = A.linkMaps; });
+      $$("[data-tel]").forEach((el) => { el.href = `tel:+${A.telefone.replace(/\D/g, "").replace(/^(?!55)/, "55")}`; el.textContent = A.telefone; });
+      $$("[data-insta]").forEach((el) => { el.href = `https://instagram.com/${A.instagram}`; el.textContent = `@${A.instagram}`; });
+      $("#map").src = `https://www.google.com/maps?q=${encodeURIComponent(A.endereco)}&output=embed`;
+      $("#year").textContent = new Date().getFullYear();
+
+      // Números
+      $("#stats").innerHTML = A.numeros.map(([n, l]) => `<div><strong>${esc(n)}</strong><span>${esc(l)}</span></div>`).join("");
+
+      // Modalidades
+      $("#modalidades-list").innerHTML = A.modalidades.map(([icon, title, text]) => `
+        <article class="card reveal">
+          <div class="icon" aria-hidden="true">${icon}</div>
+          <h3>${esc(title)}</h3>
+          <p>${esc(text)}</p>
+        </article>`).join("");
+
+      // Planos
+      $("#planos-list").innerHTML = A.planos.map((p) => `
+        <article class="card plan reveal${p.destaque ? " featured" : ""}">
+          ${p.destaque ? `<span class="tag">Mais escolhido</span>` : ""}
+          <h3>${esc(p.nome)}</h3>
+          <div class="price"><small>R$</small><strong>${esc(p.preco)}</strong><small>${esc(p.periodo)}</small></div>
+          <ul class="checks">${p.itens.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>
+          <a class="btn ${p.destaque ? "btn-primary" : "btn-outline"}" target="_blank" rel="noopener"
+             href="https://wa.me/${A.whatsapp}?text=${encodeURIComponent(`Olá! Tenho interesse no plano ${p.nome}.`)}">Quero este plano</a>
+        </article>`).join("");
+
+      // Horários, destacando o dia de hoje
+      const dia = new Date().getDay(); // 0 = domingo
+      const linhaHoje = dia === 0 ? 2 : dia === 6 ? 1 : 0;
+      $("#horarios-list").innerHTML = A.horarios.map(([d, h], i) =>
+        `<li class="${i === linhaHoje ? "today" : ""}"><span>${esc(d)}</span><span>${esc(h)}</span></li>`).join("");
+
+      // Aberto agora? (usa a linha de hoje, no formato "HH:MM – HH:MM")
+      const m = (A.horarios[linhaHoje] || [])[1]?.match(/(\d{1,2}):(\d{2})\D+(\d{1,2}):(\d{2})/);
+      if (m) {
+        const agora = new Date().getHours() * 60 + new Date().getMinutes();
+        const aberto = agora >= +m[1] * 60 + +m[2] && agora < +m[3] * 60 + +m[4];
+        const st = $("#open-status");
+        st.textContent = aberto ? "Aberto agora" : "Fechado agora";
+        st.classList.add(aberto ? "open" : "closed");
+      }
+
+      // Cabeçalho ao rolar
+      const header = $("#header");
+      const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 20);
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      // Menu mobile
+      const menu = $("#menu");
+      const toggle = $("#menu-toggle");
+      toggle.addEventListener("click", () => {
+        const open = menu.classList.toggle("open");
+        toggle.setAttribute("aria-expanded", open);
+        toggle.textContent = open ? "✕" : "☰";
+      });
+      menu.addEventListener("click", (e) => {
+        if (e.target.closest("a")) { menu.classList.remove("open"); toggle.textContent = "☰"; toggle.setAttribute("aria-expanded", false); }
+      });
+
+      // Animação ao aparecer na tela
+      const io = "IntersectionObserver" in window && new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("visible"); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      $$(".reveal").forEach((el) => (io ? io.observe(el) : el.classList.add("visible")));
+    })();
+  </script>
+</body>
+</html>

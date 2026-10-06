@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel do Clima</title>
+  <meta name="description" content="Dashboard de clima em tempo real usando a API pública Open-Meteo.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛅</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="brand">⛅ Painel do Clima</h1>
+    <form id="search-form" class="search" role="search" autocomplete="off">
+      <input id="search-input" type="search" placeholder="Buscar cidade…" aria-label="Buscar cidade">
+      <ul id="suggestions" class="suggestions" role="listbox" hidden></ul>
+    </form>
+    <div class="actions">
+      <button id="locate-btn" class="icon-btn" type="button" title="Usar minha localização" aria-label="Usar minha localização">📍</button>
+      <button id="unit-btn" class="icon-btn" type="button" title="Alternar unidade" aria-label="Alternar unidade">°C</button>
+      <button id="theme-btn" class="icon-btn" type="button" title="Alternar tema" aria-label="Alternar tema">🌓</button>
+    </div>
+  </header>
+
+  <main id="app">
+    <p id="status" class="status">Carregando…</p>
+
+    <section id="current" class="card current" hidden>
+      <div class="current-main">
+        <div>
+          <h2 id="place" class="place"></h2>
+          <p id="updated" class="muted"></p>
+          <div class="temp-row">
+            <span id="current-icon" class="big-icon"></span>
+            <span id="current-temp" class="big-temp"></span>
+          </div>
+          <p id="current-desc" class="desc"></p>
+          <p id="current-range" class="muted"></p>
+        </div>
+      </div>
+      <dl class="stats">
+        <div><dt>Sensação</dt><dd id="feels"></dd></div>
+        <div><dt>Umidade</dt><dd id="humidity"></dd></div>
+        <div><dt>Vento</dt><dd id="wind"></dd></div>
+        <div><dt>Precipitação</dt><dd id="precip"></dd></div>
+        <div><dt>Pressão</dt><dd id="pressure"></dd></div>
+        <div><dt>Índice UV</dt><dd id="uv"></dd></div>
+        <div><dt>Nascer do sol</dt><dd id="sunrise"></dd></div>
+        <div><dt>Pôr do sol</dt><dd id="sunset"></dd></div>
+      </dl>
+    </section>
+
+    <section id="hourly-section" class="card" hidden>
+      <h3>Próximas 24 horas</h3>
+      <svg id="hourly-chart" class="chart" role="img" aria-label="Gráfico de temperatura por hora"></svg>
+      <div id="hourly" class="hourly"></div>
+    </section>
+
+    <section id="daily-section" class="card" hidden>
+      <h3>Próximos 7 dias</h3>
+      <ul id="daily" class="daily"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Dados: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
