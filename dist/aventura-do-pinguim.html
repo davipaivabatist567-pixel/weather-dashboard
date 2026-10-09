@@ -28,7 +28,9 @@ html, body {
   overscroll-behavior: none; touch-action: none;
   user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
 }
-#app { position: fixed; inset: 0; }
+#app { position: fixed; top: 0; left: 0; width: var(--app-w, 100vw); height: var(--app-h, 100vh); }
+/* celular em pé: o jogo inteiro é girado para ficar na horizontal */
+body.rotated #app { left: var(--screen-w, 100vw); transform-origin: top left; transform: rotate(90deg); }
 #stage-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: #000; }
 #game { display: block; image-rendering: pixelated; image-rendering: crisp-edges; background: #000; }
 .hidden { display: none !important; }
@@ -169,13 +171,7 @@ input[type=range] { width: 180px; }
   position: absolute; bottom: max(6px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
   z-index: 6; min-height: 34px; padding: 4px 14px; font-size: 10px; opacity: 0.85;
 }
-#rotate-hint {
-  display: none; position: absolute; top: 4px; left: 0; right: 0; text-align: center; font-size: 9px;
-  color: var(--accent); z-index: 6; pointer-events: none;
-}
-@media (orientation: portrait) and (pointer: coarse) {
-  body.fighting #rotate-hint { display: block; }
-}
+
 
 @media (max-width: 760px), (max-height: 520px) {
   .select-layout { flex-direction: column; align-items: center; }
@@ -184,9 +180,22 @@ input[type=range] { width: 180px; }
   .char-grid { grid-template-columns: repeat(5, minmax(48px, 72px)); }
   .screen { justify-content: flex-start; }
 }
-@media (orientation: portrait) and (pointer: coarse) {
-  #stage-wrap { align-items: flex-start; padding-top: 8vh; }
-}
+/* celular girado por CSS: as media queries enxergam a tela "em pé", então
+   aplicamos aqui o layout compacto da tela deitada */
+body.rotated .select-layout { flex-direction: row; align-items: stretch; gap: 6px; }
+body.rotated .select-card { width: 150px; padding: 6px; gap: 3px; }
+body.rotated .select-card img { height: 54px; }
+body.rotated .select-card .desc { display: none; }
+body.rotated .char-grid { grid-template-columns: repeat(5, 54px); gap: 5px; }
+body.rotated .screen { justify-content: flex-start; gap: 8px; padding: 8px; }
+body.rotated .logo { font-size: 20px; }
+body.rotated .menu { width: min(420px, 90%); gap: 5px; }
+body.rotated .menu button { padding: 8px 12px; min-height: 36px; }
+body.rotated .title-chars img { height: 90px; }
+body.rotated .form, body.rotated .moves { width: 94%; }
+body.rotated .dpad { width: 150px; }
+body.rotated .buttons { grid-template-columns: repeat(3, 62px); }
+
 
 </style>
 </head>
@@ -215,7 +224,6 @@ input[type=range] { width: 180px; }
       </div>
     </div>
     <button id="pause-btn" class="hidden" aria-label="Pausar">❚❚ PAUSA</button>
-    <div id="rotate-hint">Gire o celular para jogar na horizontal ↻</div>
 
     <!-- Telas -->
     <div id="screens">
@@ -288,6 +296,7 @@ input[type=range] { width: 180px; }
           <label>Controles de toque
             <select id="o-touch"><option value="auto">Automático</option><option value="on">Sempre</option><option value="off">Nunca</option></select>
           </label>
+          <label><input type="checkbox" id="o-landscape"> Celular sempre na horizontal</label>
           <label><input type="checkbox" id="o-debug"> Mostrar caixas de colisão (F1)</label>
         </div>
         <div class="row"><button data-action="back">VOLTAR</button></div>
@@ -663,7 +672,9 @@ input[type=range] { width: 180px; }
       for (const p of this.pointers.values()) {
         if (p.kind === 'dpad' && this.dpad) {
           const r = this.dpad.getBoundingClientRect();
-          const dx = p.x - (r.left + r.width / 2), dy = p.y - (r.top + r.height / 2);
+          let dx = p.x - (r.left + r.width / 2), dy = p.y - (r.top + r.height / 2);
+          // interface girada 90° (celular em pé): converte para o referencial da tela do jogo
+          if (document.body.classList.contains('rotated')) { const t = dx; dx = dy; dy = -t; }
           const dead = r.width * 0.16;
           if (Math.hypot(dx, dy) > dead) {
             const ang = Math.atan2(dy, dx); // 8 direções
@@ -3688,7 +3699,7 @@ input[type=range] { width: 180px; }
       if (!a) return;
       PF.Audio.play('select');
       switch (a) {
-        case 'start': this.backStack = []; this.show('modes'); PF.Audio.play('confirm'); break;
+        case 'start': this.game.lockLandscape(); this.backStack = []; this.show('modes'); PF.Audio.play('confirm'); break;
         case 'back': this.back(); break;
         case 'options': this.show('options'); break;
         case 'controls': this.renderControls(); this.show('controls'); break;
@@ -3884,6 +3895,9 @@ input[type=range] { width: 180px; }
       time.addEventListener('change', () => { S.roundTime = +time.value; S.save(); });
       touch.addEventListener('change', () => { S.touch = touch.value; S.save(); });
       dbg.addEventListener('change', () => { S.debug = dbg.checked; this.game.renderer.debug = dbg.checked; S.save(); });
+      const land = $('#o-landscape');
+      land.checked = S.landscape !== false;
+      land.addEventListener('change', () => { S.landscape = land.checked; S.save(); if (land.checked) this.game.lockLandscape(); this.game.applyOrientation(); });
     },
 
     renderControls() {
@@ -3939,14 +3953,14 @@ input[type=range] { width: 180px; }
   const PF = globalThis.PF;
 
   const Settings = {
-    roundsToWin: 2, roundTime: 99, touch: 'auto', debug: false, difficulty: 'normal',
+    roundsToWin: 2, roundTime: 99, touch: 'auto', debug: false, difficulty: 'normal', landscape: true,
     load() {
       try { Object.assign(this, JSON.parse(localStorage.getItem('pf_settings') || '{}')); } catch (e) { /* padrão */ }
     },
     save() {
       try {
-        const { roundsToWin, roundTime, touch, debug, difficulty } = this;
-        localStorage.setItem('pf_settings', JSON.stringify({ roundsToWin, roundTime, touch, debug, difficulty }));
+        const { roundsToWin, roundTime, touch, debug, difficulty, landscape } = this;
+        localStorage.setItem('pf_settings', JSON.stringify({ roundsToWin, roundTime, touch, debug, difficulty, landscape }));
       } catch (e) { /* ignora */ }
     },
   };
@@ -3967,8 +3981,10 @@ input[type=range] { width: 180px; }
       this.renderer = new PF.Renderer(document.getElementById('game'));
       this.renderer.debug = !!Settings.debug;
       this.effects = new PF.Effects();
-      window.addEventListener('resize', () => this.renderer.resize());
-      window.addEventListener('orientationchange', () => setTimeout(() => this.renderer.resize(), 200));
+      window.addEventListener('resize', () => this.applyOrientation());
+      window.addEventListener('orientationchange', () => setTimeout(() => this.applyOrientation(), 200));
+      if (window.visualViewport) window.visualViewport.addEventListener('resize', () => this.applyOrientation());
+      this.applyOrientation();
       document.addEventListener('visibilitychange', () => { if (document.hidden && this.inFight()) this.pause(true); });
       window.addEventListener('keydown', (e) => this.onKey(e));
       // gestos do navegador que atrapalham a luta
@@ -3983,6 +3999,43 @@ input[type=range] { width: 180px; }
         // cenário de fundo do menu: CPU contra CPU
         this.startDemo();
       });
+    },
+
+    // ------------------------------------------------------------
+    // Celular sempre na horizontal
+    // 1) tenta tela cheia + trava de orientação (Android/Chrome);
+    // 2) se o aparelho continuar em pé, gira a interface 90° por CSS.
+    // ------------------------------------------------------------
+    isMobile() {
+      return (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || 'ontouchstart' in window;
+    },
+    lockLandscape() {
+      if (!Settings.landscape || !this.isMobile()) return;
+      const el = document.documentElement;
+      const lock = () => {
+        try {
+          if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch(() => { /* sem suporte: usa rotação por CSS */ });
+          }
+        } catch (e) { /* ignora */ }
+      };
+      try {
+        if (!document.fullscreenElement && el.requestFullscreen) {
+          el.requestFullscreen({ navigationUI: 'hide' }).then(lock, lock);
+        } else if (!document.fullscreenElement && el.webkitRequestFullscreen) {
+          el.webkitRequestFullscreen(); lock();
+        } else lock();
+      } catch (e) { lock(); }
+    },
+    applyOrientation() {
+      const w = window.innerWidth, h = window.innerHeight;
+      const rotate = !!(Settings.landscape && this.isMobile() && h > w);
+      const body = document.body;
+      body.classList.toggle('rotated', rotate);
+      body.style.setProperty('--app-w', (rotate ? h : w) + 'px');
+      body.style.setProperty('--app-h', (rotate ? w : h) + 'px');
+      body.style.setProperty('--screen-w', w + 'px');
+      if (this.renderer) this.renderer.resize();
     },
 
     inFight() { return !!(this.session && this.match && this.session.mode !== 'demo'); },
@@ -4035,7 +4088,6 @@ input[type=range] { width: 180px; }
       const free = this.inFight() && !this.match.paused && !(PF.UI && PF.UI.current);
       document.getElementById('touch').classList.toggle('hidden', !(free && this.touchEnabled()));
       document.getElementById('pause-btn').classList.toggle('hidden', !free);
-      document.body.classList.toggle('fighting', this.inFight());
     },
     touchEnabled() {
       if (Settings.touch === 'on') return true;
@@ -4118,6 +4170,7 @@ input[type=range] { width: 180px; }
     // ------------------------------------------------------------
     begin(mode, sel) {
       PF.Audio.unlock();
+      this.lockLandscape();
       const humanTouch = { touch: true };
       const c1 = new PF.HumanController(1, humanTouch);
       const diff = sel.difficulty || Settings.difficulty;

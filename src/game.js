@@ -4,14 +4,14 @@
   const PF = globalThis.PF;
 
   const Settings = {
-    roundsToWin: 2, roundTime: 99, touch: 'auto', debug: false, difficulty: 'normal',
+    roundsToWin: 2, roundTime: 99, touch: 'auto', debug: false, difficulty: 'normal', landscape: true,
     load() {
       try { Object.assign(this, JSON.parse(localStorage.getItem('pf_settings') || '{}')); } catch (e) { /* padrão */ }
     },
     save() {
       try {
-        const { roundsToWin, roundTime, touch, debug, difficulty } = this;
-        localStorage.setItem('pf_settings', JSON.stringify({ roundsToWin, roundTime, touch, debug, difficulty }));
+        const { roundsToWin, roundTime, touch, debug, difficulty, landscape } = this;
+        localStorage.setItem('pf_settings', JSON.stringify({ roundsToWin, roundTime, touch, debug, difficulty, landscape }));
       } catch (e) { /* ignora */ }
     },
   };
@@ -32,8 +32,10 @@
       this.renderer = new PF.Renderer(document.getElementById('game'));
       this.renderer.debug = !!Settings.debug;
       this.effects = new PF.Effects();
-      window.addEventListener('resize', () => this.renderer.resize());
-      window.addEventListener('orientationchange', () => setTimeout(() => this.renderer.resize(), 200));
+      window.addEventListener('resize', () => this.applyOrientation());
+      window.addEventListener('orientationchange', () => setTimeout(() => this.applyOrientation(), 200));
+      if (window.visualViewport) window.visualViewport.addEventListener('resize', () => this.applyOrientation());
+      this.applyOrientation();
       document.addEventListener('visibilitychange', () => { if (document.hidden && this.inFight()) this.pause(true); });
       window.addEventListener('keydown', (e) => this.onKey(e));
       // gestos do navegador que atrapalham a luta
@@ -48,6 +50,43 @@
         // cenário de fundo do menu: CPU contra CPU
         this.startDemo();
       });
+    },
+
+    // ------------------------------------------------------------
+    // Celular sempre na horizontal
+    // 1) tenta tela cheia + trava de orientação (Android/Chrome);
+    // 2) se o aparelho continuar em pé, gira a interface 90° por CSS.
+    // ------------------------------------------------------------
+    isMobile() {
+      return (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || 'ontouchstart' in window;
+    },
+    lockLandscape() {
+      if (!Settings.landscape || !this.isMobile()) return;
+      const el = document.documentElement;
+      const lock = () => {
+        try {
+          if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch(() => { /* sem suporte: usa rotação por CSS */ });
+          }
+        } catch (e) { /* ignora */ }
+      };
+      try {
+        if (!document.fullscreenElement && el.requestFullscreen) {
+          el.requestFullscreen({ navigationUI: 'hide' }).then(lock, lock);
+        } else if (!document.fullscreenElement && el.webkitRequestFullscreen) {
+          el.webkitRequestFullscreen(); lock();
+        } else lock();
+      } catch (e) { lock(); }
+    },
+    applyOrientation() {
+      const w = window.innerWidth, h = window.innerHeight;
+      const rotate = !!(Settings.landscape && this.isMobile() && h > w);
+      const body = document.body;
+      body.classList.toggle('rotated', rotate);
+      body.style.setProperty('--app-w', (rotate ? h : w) + 'px');
+      body.style.setProperty('--app-h', (rotate ? w : h) + 'px');
+      body.style.setProperty('--screen-w', w + 'px');
+      if (this.renderer) this.renderer.resize();
     },
 
     inFight() { return !!(this.session && this.match && this.session.mode !== 'demo'); },
@@ -100,7 +139,6 @@
       const free = this.inFight() && !this.match.paused && !(PF.UI && PF.UI.current);
       document.getElementById('touch').classList.toggle('hidden', !(free && this.touchEnabled()));
       document.getElementById('pause-btn').classList.toggle('hidden', !free);
-      document.body.classList.toggle('fighting', this.inFight());
     },
     touchEnabled() {
       if (Settings.touch === 'on') return true;
@@ -183,6 +221,7 @@
     // ------------------------------------------------------------
     begin(mode, sel) {
       PF.Audio.unlock();
+      this.lockLandscape();
       const humanTouch = { touch: true };
       const c1 = new PF.HumanController(1, humanTouch);
       const diff = sel.difficulty || Settings.difficulty;

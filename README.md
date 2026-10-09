@@ -103,6 +103,10 @@ tests/                     testes automáticos (Node) e teste no navegador (Play
   achatado ou esticado. Quadros que a prancha desenhou maiores/menores que o resto da
   mesma animação são reescalados automaticamente na geração dos sprites. O Pingui tem só 1 quadro por ação,
   então suas animações são as mais "duras".
+- No celular o jogo fica sempre na horizontal: ao tocar em *Começar* ele tenta tela cheia e
+  trava a orientação (Android/Chrome). Se o navegador não permitir (ex.: iPhone ou trava de
+  rotação), a interface inteira é girada 90° — é só virar o celular. Dá para desligar em
+  *Opções → Celular sempre na horizontal*.
 - O modo 2 jogadores no mesmo celular não tem dois conjuntos de botões na tela; o 2º jogador
   precisa de teclado ou controle.
 - A fonte "Press Start 2P" vem do Google Fonts; sem internet o jogo usa uma fonte monoespaçada.

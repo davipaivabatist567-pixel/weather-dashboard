@@ -16,7 +16,9 @@ html, body {
   overscroll-behavior: none; touch-action: none;
   user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
 }
-#app { position: fixed; inset: 0; }
+#app { position: fixed; top: 0; left: 0; width: var(--app-w, 100vw); height: var(--app-h, 100vh); }
+/* celular em pé: o jogo inteiro é girado para ficar na horizontal */
+body.rotated #app { left: var(--screen-w, 100vw); transform-origin: top left; transform: rotate(90deg); }
 #stage-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: #000; }
 #game { display: block; image-rendering: pixelated; image-rendering: crisp-edges; background: #000; }
 .hidden { display: none !important; }
@@ -157,13 +159,7 @@ input[type=range] { width: 180px; }
   position: absolute; bottom: max(6px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
   z-index: 6; min-height: 34px; padding: 4px 14px; font-size: 10px; opacity: 0.85;
 }
-#rotate-hint {
-  display: none; position: absolute; top: 4px; left: 0; right: 0; text-align: center; font-size: 9px;
-  color: var(--accent); z-index: 6; pointer-events: none;
-}
-@media (orientation: portrait) and (pointer: coarse) {
-  body.fighting #rotate-hint { display: block; }
-}
+
 
 @media (max-width: 760px), (max-height: 520px) {
   .select-layout { flex-direction: column; align-items: center; }
@@ -172,6 +168,19 @@ input[type=range] { width: 180px; }
   .char-grid { grid-template-columns: repeat(5, minmax(48px, 72px)); }
   .screen { justify-content: flex-start; }
 }
-@media (orientation: portrait) and (pointer: coarse) {
-  #stage-wrap { align-items: flex-start; padding-top: 8vh; }
-}
+/* celular girado por CSS: as media queries enxergam a tela "em pé", então
+   aplicamos aqui o layout compacto da tela deitada */
+body.rotated .select-layout { flex-direction: row; align-items: stretch; gap: 6px; }
+body.rotated .select-card { width: 150px; padding: 6px; gap: 3px; }
+body.rotated .select-card img { height: 54px; }
+body.rotated .select-card .desc { display: none; }
+body.rotated .char-grid { grid-template-columns: repeat(5, 54px); gap: 5px; }
+body.rotated .screen { justify-content: flex-start; gap: 8px; padding: 8px; }
+body.rotated .logo { font-size: 20px; }
+body.rotated .menu { width: min(420px, 90%); gap: 5px; }
+body.rotated .menu button { padding: 8px 12px; min-height: 36px; }
+body.rotated .title-chars img { height: 90px; }
+body.rotated .form, body.rotated .moves { width: 94%; }
+body.rotated .dpad { width: 150px; }
+body.rotated .buttons { grid-template-columns: repeat(3, 62px); }
+

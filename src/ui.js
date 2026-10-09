@@ -66,7 +66,7 @@
       if (!a) return;
       PF.Audio.play('select');
       switch (a) {
-        case 'start': this.backStack = []; this.show('modes'); PF.Audio.play('confirm'); break;
+        case 'start': this.game.lockLandscape(); this.backStack = []; this.show('modes'); PF.Audio.play('confirm'); break;
         case 'back': this.back(); break;
         case 'options': this.show('options'); break;
         case 'controls': this.renderControls(); this.show('controls'); break;
@@ -262,6 +262,9 @@
       time.addEventListener('change', () => { S.roundTime = +time.value; S.save(); });
       touch.addEventListener('change', () => { S.touch = touch.value; S.save(); });
       dbg.addEventListener('change', () => { S.debug = dbg.checked; this.game.renderer.debug = dbg.checked; S.save(); });
+      const land = $('#o-landscape');
+      land.checked = S.landscape !== false;
+      land.addEventListener('change', () => { S.landscape = land.checked; S.save(); if (land.checked) this.game.lockLandscape(); this.game.applyOrientation(); });
     },
 
     renderControls() {

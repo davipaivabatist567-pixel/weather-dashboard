@@ -168,7 +168,9 @@
       for (const p of this.pointers.values()) {
         if (p.kind === 'dpad' && this.dpad) {
           const r = this.dpad.getBoundingClientRect();
-          const dx = p.x - (r.left + r.width / 2), dy = p.y - (r.top + r.height / 2);
+          let dx = p.x - (r.left + r.width / 2), dy = p.y - (r.top + r.height / 2);
+          // interface girada 90° (celular em pé): converte para o referencial da tela do jogo
+          if (document.body.classList.contains('rotated')) { const t = dx; dx = dy; dy = -t; }
           const dead = r.width * 0.16;
           if (Math.hypot(dx, dy) > dead) {
             const ang = Math.atan2(dy, dx); // 8 direções
