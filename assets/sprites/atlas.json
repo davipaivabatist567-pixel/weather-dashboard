@@ -1,0 +1,383 @@
+{
+ "characters": {
+  "pingui": {
+   "image": "assets/sprites/pingui.png",
+   "portrait": "assets/sprites/pingui_retrato.png",
+   "cell": [
+    62,
+    61
+   ],
+   "columns": 8,
+   "frames": 7,
+   "animations": {
+    "idle": [
+     0
+    ],
+    "walk": [
+     1
+    ],
+    "run": [
+     2
+    ],
+    "jump": [
+     3
+    ],
+    "attack": [
+     4
+    ],
+    "hit": [
+     5
+    ],
+    "defeat": [
+     6
+    ]
+   }
+  },
+  "rei": {
+   "image": "assets/sprites/rei.png",
+   "portrait": "assets/sprites/rei_retrato.png",
+   "cell": [
+    126,
+    82
+   ],
+   "columns": 8,
+   "frames": 24,
+   "animations": {
+    "idle": [
+     0,
+     1,
+     2
+    ],
+    "walk": [
+     3,
+     4,
+     5,
+     6
+    ],
+    "run": [
+     7,
+     8,
+     9,
+     10
+    ],
+    "jump": [
+     11,
+     12,
+     13,
+     14
+    ],
+    "fall": [
+     15,
+     16
+    ],
+    "attack": [
+     17,
+     18,
+     19
+    ],
+    "special": [
+     20,
+     21
+    ],
+    "victory": [
+     22
+    ],
+    "defeat": [
+     23
+    ]
+   }
+  },
+  "capitao": {
+   "image": "assets/sprites/capitao.png",
+   "portrait": "assets/sprites/capitao_retrato.png",
+   "cell": [
+    107,
+    82
+   ],
+   "columns": 8,
+   "frames": 21,
+   "animations": {
+    "idle": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "walk": [
+     4,
+     5,
+     6,
+     7
+    ],
+    "run": [
+     8,
+     9,
+     10,
+     11
+    ],
+    "jump": [
+     12,
+     13,
+     14
+    ],
+    "attack": [
+     15,
+     16
+    ],
+    "special": [
+     17,
+     18
+    ],
+    "victory": [
+     19
+    ],
+    "defeat": [
+     20
+    ]
+   }
+  },
+  "golem": {
+   "image": "assets/sprites/golem.png",
+   "portrait": "assets/sprites/golem_retrato.png",
+   "cell": [
+    127,
+    80
+   ],
+   "columns": 8,
+   "frames": 17,
+   "animations": {
+    "idle": [
+     0,
+     1,
+     2
+    ],
+    "walk": [
+     3,
+     4,
+     5
+    ],
+    "jump": [
+     6,
+     7,
+     8
+    ],
+    "fall": [
+     9,
+     10
+    ],
+    "attack": [
+     11,
+     12
+    ],
+    "special": [
+     13,
+     14
+    ],
+    "victory": [
+     15
+    ],
+    "defeat": [
+     16
+    ]
+   }
+  },
+  "bruxa": {
+   "image": "assets/sprites/bruxa.png",
+   "portrait": "assets/sprites/bruxa_retrato.png",
+   "cell": [
+    83,
+    93
+   ],
+   "columns": 8,
+   "frames": 16,
+   "animations": {
+    "idle": [
+     0,
+     1,
+     2
+    ],
+    "walk": [
+     3,
+     4,
+     5
+    ],
+    "run": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "attack": [
+     10,
+     11,
+     12
+    ],
+    "special": [
+     13
+    ],
+    "victory": [
+     14
+    ],
+    "defeat": [
+     15
+    ]
+   }
+  }
+ },
+ "effects": {
+  "iceball": {
+   "image": "assets/sprites/fx_iceball.png",
+   "size": [
+    68,
+    40
+   ]
+  },
+  "rajada": {
+   "image": "assets/sprites/fx_rajada.png",
+   "size": [
+    128,
+    58
+   ]
+  },
+  "flocos": {
+   "image": "assets/sprites/fx_flocos.png",
+   "size": [
+    110,
+    64
+   ]
+  },
+  "tempestade": {
+   "image": "assets/sprites/fx_tempestade.png",
+   "size": [
+    191,
+    70
+   ]
+  },
+  "cannonfire": {
+   "image": "assets/sprites/fx_cannonfire.png",
+   "size": [
+    91,
+    47
+   ]
+  },
+  "anchor": {
+   "image": "assets/sprites/fx_anchor.png",
+   "size": [
+    38,
+    67
+   ]
+  },
+  "cannonrain": {
+   "image": "assets/sprites/fx_cannonrain.png",
+   "size": [
+    171,
+    67
+   ]
+  },
+  "punchfx": {
+   "image": "assets/sprites/fx_punchfx.png",
+   "size": [
+    42,
+    60
+   ]
+  },
+  "quake": {
+   "image": "assets/sprites/fx_quake.png",
+   "size": [
+    108,
+    64
+   ]
+  },
+  "crystals": {
+   "image": "assets/sprites/fx_crystals.png",
+   "size": [
+    116,
+    52
+   ]
+  },
+  "beam": {
+   "image": "assets/sprites/fx_beam.png",
+   "size": [
+    136,
+    60
+   ]
+  },
+  "orb": {
+   "image": "assets/sprites/fx_orb.png",
+   "size": [
+    32,
+    35
+   ]
+  },
+  "magicbeam": {
+   "image": "assets/sprites/fx_magicbeam.png",
+   "size": [
+    109,
+    50
+   ]
+  },
+  "vortex": {
+   "image": "assets/sprites/fx_vortex.png",
+   "size": [
+    137,
+    68
+   ]
+  },
+  "teleport": {
+   "image": "assets/sprites/fx_teleport.png",
+   "size": [
+    143,
+    68
+   ]
+  },
+  "blast": {
+   "image": "assets/sprites/fx_blast.png",
+   "size": [
+    86,
+    57
+   ]
+  },
+  "storm": {
+   "image": "assets/sprites/fx_storm.png",
+   "size": [
+    60,
+    64
+   ]
+  },
+  "explosion": {
+   "image": "assets/sprites/fx_explosion.png",
+   "size": [
+    56,
+    59
+   ]
+  },
+  "smoke": {
+   "image": "assets/sprites/fx_smoke.png",
+   "size": [
+    61,
+    55
+   ]
+  },
+  "dust": {
+   "image": "assets/sprites/fx_dust.png",
+   "size": [
+    26,
+    55
+   ]
+  },
+  "pinguinha": {
+   "image": "assets/sprites/fx_pinguinha.png",
+   "size": [
+    51,
+    74
+   ]
+  },
+  "pinguinha_feliz": {
+   "image": "assets/sprites/fx_pinguinha_feliz.png",
+   "size": [
+    39,
+    53
+   ]
+  }
+ }
+}

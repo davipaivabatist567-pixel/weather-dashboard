@@ -1,0 +1,12 @@
+{
+  "name": "aventura-do-pinguim-fighting-arena",
+  "version": "1.0.0",
+  "description": "Jogo de luta 2D em HTML5 Canvas inspirado em Street Fighter",
+  "private": true,
+  "scripts": {
+    "start": "npx http-server -c-1 -p 8080 .",
+    "test": "node --test tests/*.test.js",
+    "test:browser": "node tests/browser-smoke.js",
+    "sprites": "python3 tools/build_sprites.py"
+  }
+}

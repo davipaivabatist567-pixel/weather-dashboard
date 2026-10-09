@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#050b1f">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Aventura do Pinguim: Fighting Arena</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="stage-wrap">
+      <canvas id="game" aria-label="Arena de luta"></canvas>
+    </div>
+
+    <!-- Controles de toque (multitouch) -->
+    <div id="touch" class="hidden" aria-hidden="true">
+      <div class="dpad" data-dpad>
+        <div class="dpad-arrow up">▲</div>
+        <div class="dpad-arrow down">▼</div>
+        <div class="dpad-arrow left">◀</div>
+        <div class="dpad-arrow right">▶</div>
+        <div class="dpad-knob"></div>
+      </div>
+      <div class="buttons">
+        <div class="tbtn punch" data-btn="punch">SOCO</div>
+        <div class="tbtn kick" data-btn="kick">CHUTE</div>
+        <div class="tbtn special" data-btn="special">ESPECIAL</div>
+        <div class="tbtn block" data-btn="block">DEFESA</div>
+        <div class="tbtn jump" data-btn="up">PULO</div>
+        <div class="tbtn super" data-btn="super">SUPER</div>
+      </div>
+    </div>
+    <button id="pause-btn" class="hidden" aria-label="Pausar">❚❚ PAUSA</button>
+    <div id="rotate-hint">Gire o celular para jogar na horizontal ↻</div>
+
+    <!-- Telas -->
+    <div id="screens">
+      <section id="scr-loading" class="screen active">
+        <h1 class="logo">AVENTURA DO PINGUIM</h1>
+        <p class="subtitle">FIGHTING ARENA</p>
+        <div class="progress"><div id="load-bar"></div></div>
+        <p id="load-text">Carregando sprites…</p>
+      </section>
+
+      <section id="scr-title" class="screen">
+        <h1 class="logo">AVENTURA DO PINGUIM</h1>
+        <p class="subtitle">FIGHTING ARENA</p>
+        <div id="title-chars" class="title-chars"></div>
+        <button class="big pulse" data-action="start">TOQUE OU APERTE ENTER</button>
+        <p class="hint">Teclado: A/D andar · W pular · S agachar · J soco · K chute · L defesa · U especial</p>
+      </section>
+
+      <section id="scr-modes" class="screen">
+        <h2>MODO DE JOGO</h2>
+        <div class="menu">
+          <button data-mode="arcade">ARCADE<small>Enfrente todos até o chefe final</small></button>
+          <button data-mode="cpu">JOGADOR x CPU<small>Luta rápida contra a máquina</small></button>
+          <button data-mode="versus">2 JOGADORES<small>Mesmo teclado ou controles</small></button>
+          <button data-mode="training">TREINAMENTO<small>Boneco, combos e dano</small></button>
+          <button data-mode="survival">SOBREVIVÊNCIA<small>Ondas cada vez mais difíceis</small></button>
+          <button data-action="moves">LISTA DE GOLPES</button>
+          <button data-action="options">OPÇÕES</button>
+          <button data-action="controls">CONTROLES</button>
+        </div>
+      </section>
+
+      <section id="scr-select" class="screen">
+        <h2 id="select-title">ESCOLHA SEU LUTADOR</h2>
+        <div class="select-layout">
+          <div class="select-card" id="card-p1"></div>
+          <div class="char-grid" id="char-grid"></div>
+          <div class="select-card" id="card-p2"></div>
+        </div>
+        <div class="select-opts">
+          <label id="opt-diff-wrap">Dificuldade
+            <select id="opt-diff"><option value="facil">Fácil</option><option value="normal" selected>Normal</option><option value="dificil">Difícil</option></select>
+          </label>
+          <label id="opt-stage-wrap">Arena
+            <select id="opt-stage"></select>
+          </label>
+          <label id="opt-dummy-wrap">Boneco
+            <select id="opt-dummy"></select>
+          </label>
+        </div>
+        <div class="row">
+          <button data-action="back">VOLTAR</button>
+          <button id="btn-random" data-action="random">ALEATÓRIO</button>
+          <button id="btn-fight" class="big" data-action="fight" disabled>LUTAR!</button>
+        </div>
+      </section>
+
+      <section id="scr-options" class="screen">
+        <h2>OPÇÕES</h2>
+        <div class="form">
+          <label>Volume <input type="range" id="o-volume" min="0" max="1" step="0.05"></label>
+          <label><input type="checkbox" id="o-sound"> Efeitos sonoros</label>
+          <label><input type="checkbox" id="o-music"> Música</label>
+          <label>Rounds para vencer
+            <select id="o-rounds"><option value="1">1</option><option value="2">2 (melhor de 3)</option><option value="3">3 (melhor de 5)</option></select>
+          </label>
+          <label>Tempo do round
+            <select id="o-time"><option value="60">60 s</option><option value="99">99 s</option></select>
+          </label>
+          <label>Controles de toque
+            <select id="o-touch"><option value="auto">Automático</option><option value="on">Sempre</option><option value="off">Nunca</option></select>
+          </label>
+          <label><input type="checkbox" id="o-debug"> Mostrar caixas de colisão (F1)</label>
+        </div>
+        <div class="row"><button data-action="back">VOLTAR</button></div>
+      </section>
+
+      <section id="scr-controls" class="screen">
+        <h2>CONTROLES</h2>
+        <p class="hint">Clique numa tecla e depois aperte a nova tecla. Controles USB/Bluetooth também funcionam.</p>
+        <div class="controls-grid" id="controls-grid"></div>
+        <div class="row">
+          <button data-action="back">VOLTAR</button>
+          <button data-action="reset-keys">PADRÃO</button>
+        </div>
+      </section>
+
+      <section id="scr-moves" class="screen">
+        <h2>LISTA DE GOLPES</h2>
+        <div class="tabs" id="moves-tabs"></div>
+        <div class="moves" id="moves-list"></div>
+        <div class="row"><button data-action="back">VOLTAR</button></div>
+      </section>
+
+      <section id="scr-pause" class="screen overlay">
+        <h2>PAUSA</h2>
+        <div class="menu">
+          <button data-action="resume">CONTINUAR</button>
+          <button data-action="restart">REINICIAR LUTA</button>
+          <button data-action="training-reset" class="only-training">REPOSICIONAR (R)</button>
+          <label class="only-training inline">Boneco <select id="pause-dummy"></select></label>
+          <button data-action="moves">LISTA DE GOLPES</button>
+          <button data-action="menu">MENU PRINCIPAL</button>
+        </div>
+      </section>
+
+      <section id="scr-results" class="screen overlay">
+        <h2 id="res-title">VITÓRIA!</h2>
+        <div id="res-art"></div>
+        <p id="res-text"></p>
+        <div class="menu" id="res-buttons"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Ordem de carregamento dos módulos -->
+  <script src="src/core.js"></script>
+  <script src="src/data/atlas.js"></script>
+  <script src="src/assets.js"></script>
+  <script src="src/input.js"></script>
+  <script src="src/data/characters.js"></script>
+  <script src="src/animation.js"></script>
+  <script src="src/fighter.js"></script>
+  <script src="src/combat.js"></script>
+  <script src="src/match.js"></script>
+  <script src="src/ai.js"></script>
+  <script src="src/audio.js"></script>
+  <script src="src/effects.js"></script>
+  <script src="src/stage.js"></script>
+  <script src="src/render.js"></script>
+  <script src="src/ui.js"></script>
+  <script src="src/game.js"></script>
+</body>
+</html>
