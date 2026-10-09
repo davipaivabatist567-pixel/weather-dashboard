@@ -93,35 +93,42 @@
     }
 
     // desenha um quadro do atlas com transformações
-    blitFrame(img, meta, frame, x, y, facing, scale, pose, alpha = 1, tint = null, tintA = 0) {
+    blitFrame(sharp, meta, frame, x, y, facing, scale, pose, alpha = 1, tint = null, tintA = 0) {
       const ctx = this.ctx;
       const [cw, ch] = meta.cell;
-      const sx = (frame % meta.columns) * cw, sy = Math.floor(frame / meta.columns) * ch;
-      let src = img, srcX = sx, srcY = sy;
+      const U = sharp.f;
+      let src = sharp.img;
+      let sx = (frame % meta.columns) * cw * U, sy = Math.floor(frame / meta.columns) * ch * U;
       if (tint && tintA > 0) {
-        if (this.tmp.width < cw || this.tmp.height < ch) { this.tmp.width = Math.max(this.tmp.width, cw); this.tmp.height = Math.max(this.tmp.height, ch); }
+        if (this.tmp.width < cw * U || this.tmp.height < ch * U) {
+          this.tmp.width = Math.max(this.tmp.width, cw * U); this.tmp.height = Math.max(this.tmp.height, ch * U);
+        }
         const t = this.tmpCtx;
         t.globalCompositeOperation = 'source-over';
         t.clearRect(0, 0, this.tmp.width, this.tmp.height);
-        t.drawImage(img, sx, sy, cw, ch, 0, 0, cw, ch);
+        t.drawImage(src, sx, sy, cw * U, ch * U, 0, 0, cw * U, ch * U);
         t.globalCompositeOperation = 'source-atop';
-        t.globalAlpha = tintA; t.fillStyle = tint; t.fillRect(0, 0, cw, ch);
+        t.globalAlpha = tintA; t.fillStyle = tint; t.fillRect(0, 0, cw * U, ch * U);
         t.globalAlpha = 1; t.globalCompositeOperation = 'source-over';
-        src = this.tmp; srcX = 0; srcY = 0;
+        src = this.tmp; sx = 0; sy = 0;
       }
       ctx.save();
       ctx.globalAlpha = alpha;
-      ctx.translate(x + pose.ox * facing, y - pose.oy);
-      ctx.scale(facing * scale * pose.sx, scale * pose.sy);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.translate(Math.round(x + pose.ox * facing), Math.round(y - pose.oy));
+      // escala sempre uniforme (sx == sy): o desenho nunca é achatado
+      const s = scale * pose.sx;
+      ctx.scale(facing * s, s);
       ctx.rotate(pose.rot);
-      ctx.drawImage(src, srcX, srcY, cw, ch, -cw / 2, -ch + 1, cw, ch);
+      ctx.drawImage(src, sx, sy, cw * U, ch * U, -cw / 2, -ch + 1, cw, ch);
       ctx.restore();
     }
 
     drawFighter(f, now, match) {
       const ctx = this.ctx;
       const pose = PF.Anim.pose(f, now);
-      const img = PF.Assets.get('char:' + f.def.id);
+      const img = PF.Assets.sharp('char:' + f.def.id);
       const meta = PF.ATLAS && PF.ATLAS.characters[f.def.id];
       const x = this.sx(f.x), y = this.sy(f.y);
 
@@ -152,7 +159,7 @@
 
       // escudo de defesa
       if (f.guarding && (f.state === 'idle' || f.state === 'crouch') || f.state === 'blockstun') {
-        const h = f.def.bodyH * (f.crouching ? 0.62 : 1);
+        const h = f.def.bodyH * (f.crouching ? 0.7 : 1);
         ctx.save();
         ctx.globalAlpha = f.state === 'blockstun' ? 0.55 : 0.28;
         ctx.strokeStyle = '#9be7ff'; ctx.lineWidth = 3;
@@ -212,6 +219,7 @@
       const x = this.sx(p.x), y = this.sy(p.y);
       const dir = p.kind === 'fall' || p.kind === 'area' ? 1 : (Math.sign(p.vx) || p.facing);
       ctx.save();
+      ctx.imageSmoothingEnabled = true;
       ctx.translate(x, y);
       if (p.kind === 'tornado') ctx.scale(1 + Math.sin(now / 60) * 0.06, 1);
       if (p.kind === 'area') ctx.globalAlpha = Math.min(1, (p.life - p.age) / 250, p.age / 120);
@@ -242,6 +250,7 @@
         const p = s.age / s.life;
         const pop = p < 0.15 ? 0.6 + p / 0.15 * 0.4 : 1;
         ctx.save();
+        ctx.imageSmoothingEnabled = true;
         ctx.globalAlpha = p > 0.6 ? (1 - p) / 0.4 : 1;
         ctx.translate(this.sx(s.x), this.sy(s.y));
         ctx.rotate(s.rot || 0);
@@ -358,6 +367,7 @@
         // recorta a parte de cima (rosto) do retrato
         const sw = por.width, sh = Math.min(por.height, por.width);
         ctx.save();
+        ctx.imageSmoothingEnabled = true;
         ctx.beginPath(); ctx.rect(px + 2, 12, 68, 68); ctx.clip();
         if (!left) { ctx.translate(px + 72, 0); ctx.scale(-1, 1); ctx.drawImage(por, 0, 0, sw, sh, 2, 12, 68, 68); }
         else ctx.drawImage(por, 0, 0, sw, sh, px + 2, 12, 68, 68);

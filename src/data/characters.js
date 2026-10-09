@@ -191,9 +191,10 @@
       bodyW: 66, bodyH: 125, reach: 74, power: 1.02, defense: 0.98, weight: 0.9, stunMax: 80, frameMult: 0.85,
       scale: 2.15,
       sprites: {
-        idle: { from: 'idle', seq: [0, 1, 2, 1] }, walk: { from: 'walk' }, run: { from: 'run' },
+        // quadros 1 e 2 do "parado" e o 2 da corrida têm escala/pose diferentes na prancha
+        idle: { from: 'idle', seq: [0] }, walk: { from: 'walk' }, run: { from: 'run', seq: [0, 1, 3] },
         jumpUp: { from: 'run', seq: [1] }, jumpDown: { from: 'run', seq: [3] },
-        punch: { from: 'attack' }, kick: { from: 'run', seq: [0, 2] }, special: { from: 'special' },
+        punch: { from: 'attack' }, kick: { from: 'run', seq: [0, 1] }, special: { from: 'special' },
         victory: { from: 'victory' }, defeat: { from: 'defeat' },
       },
       specials: {

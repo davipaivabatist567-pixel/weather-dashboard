@@ -82,7 +82,7 @@
     hurtbox() {
       const d = this.def;
       let w = d.bodyW, h = d.bodyH, y = this.y;
-      if (this.crouching || (this.move && this.move.crouch)) h = d.bodyH * 0.62;
+      if (this.crouching || (this.move && this.move.crouch)) h = d.bodyH * 0.7;
       if (this.state === 'knockdown' || this.state === 'ko') { h = d.bodyH * 0.3; w = d.bodyW * 1.5; }
       if (this.state === 'launched' || this.state === 'thrown') { h = d.bodyH * 0.6; w = d.bodyW * 1.2; }
       if (this.state === 'air' || this.state === 'attack' && this.move && this.move.air) { h = d.bodyH * 0.85; y = this.y + d.bodyH * 0.1; }

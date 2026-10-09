@@ -8,6 +8,7 @@ import json, os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from segment import extract
 from PIL import Image
+import numpy as np
 
 ROOT = os.path.join(os.path.dirname(__file__), '..')
 S1 = Image.open(os.path.join(ROOT, 'assets/source/prancha_personagens.png')).convert('RGB')
@@ -97,6 +98,33 @@ EFFECTS = {
   'pinguinha_feliz': ('s1', (240, 765, 292, 818)),
 }
 
+UPRIGHT = {'idle', 'walk', 'run', 'jump', 'fall', 'attack', 'special'}
+
+def core_area(img):
+    a = np.array(img)[:, :, 3] > 0
+    for _ in range(2):  # erosão simples
+        a = a & np.roll(a, 1, 0) & np.roll(a, -1, 0) & np.roll(a, 1, 1) & np.roll(a, -1, 1)
+    return max(1, int(a.sum()))
+
+def normalize_sizes(name, frames):
+    # compara cada quadro com a mediana da PRÓPRIA animação (a escala entre
+    # painéis diferentes da prancha já é parecida; o problema são quadros
+    # isolados desenhados maiores ou menores dentro da mesma sequência)
+    for anim in UPRIGHT:
+        group = [p for a, p in frames if a == anim]
+        if len(group) < 3:
+            continue
+        ref = float(np.median([core_area(p['img']) for p in group]))
+        for p in group:
+            s = (ref / core_area(p['img'])) ** 0.5
+            s = max(0.8, min(1.25, s))
+            if abs(s - 1) > 0.08:
+                im = p['img']
+                p['img'] = im.resize((max(1, round(im.width * s)), max(1, round(im.height * s))), Image.LANCZOS)
+                p['anchor_x'] *= s
+                print(f'  {name}:{anim} quadro reescalado x{s:.2f}')
+    return frames
+
 def build(outdir):
     os.makedirs(outdir, exist_ok=True)
     meta = {'characters': {}, 'effects': {}}
@@ -124,6 +152,10 @@ def build(outdir):
                 else:
                     print('  descartado quadro parcial', name, anim, p['src'])
         frames = filtered
+        # normaliza o tamanho: a prancha desenha alguns quadros maiores/menores
+        # que outros. Mede a "massa" do corpo (máscara erodida, sem cajados e
+        # partículas finas) e reescala quadros fora do padrão da animação.
+        frames = normalize_sizes(name, frames)
         # portrait vai num arquivo proprio
         port = [p for a, p in frames if a == 'portrait']
         frames = [(a, p) for a, p in frames if a != 'portrait']

@@ -25,6 +25,7 @@
   };
 
   const cache = {};
+  const CROUCH = 0.82; // escala uniforme ao agachar (nunca achata o sprite)
 
   // Lista de índices do atlas para uma animação lógica do personagem.
   function resolve(charId, name) {
@@ -97,10 +98,10 @@
       if (mt < m.startup) {
         const p = mt / Math.max(1, m.startup);
         idx = n >= 2 ? Math.min(n - 2, Math.floor(p * (n - 1))) : 0;
-        out.ox = -5 * p; out.sy = 1 - 0.03 * p;
+        out.ox = -5 * p;
       } else if (mt < m.startup + m.active) {
         idx = n - 1;
-        out.ox = 9; out.sx = 1.05;
+        out.ox = 9;
       } else {
         const p = (mt - m.startup - m.active) / Math.max(1, m.recovery);
         idx = n >= 2 ? Math.max(0, Math.round((1 - p) * (n - 2))) : 0;
@@ -109,7 +110,7 @@
       out.frame = frames[idx];
       if (name === 'kick' && r.substitute) { out.rot = -0.1; out.oy = 6; }
       if (name === 'kick' && !r.substitute) { out.rot = -0.05; }
-      if (m.crouch) { out.sy *= 0.74; out.sx *= 1.06; }
+      if (m.crouch) { out.sx = out.sy = CROUCH; out.rot += 0.05; }
       if (m.air) out.rot += -0.08;
       return out;
     }
@@ -123,8 +124,8 @@
     const time = (now || 0) / 1000;
     switch (name) {
       case 'idle': {
-        const b = Math.sin(time * Math.PI * 1.6 + f.side);
-        out.sy = 1 + 0.018 * b; out.sx = 1 - 0.01 * b;
+        // respiração: sobe e desce sem deformar o desenho
+        out.oy = (Math.sin(time * Math.PI * 1.6 + f.side) + 1) * 1.2;
         break;
       }
       case 'walk': case 'walkBack': case 'run':
@@ -132,9 +133,10 @@
         if (name === 'run') out.rot = 0.05;
         break;
       case 'crouch': case 'blockLow': {
-        const p = f.state === 'jumpSquat' || f.state === 'land' ? 0.85 : 0.72;
-        out.sy = p; out.sx = 1.07;
-        if (name === 'blockLow') out.rot = -0.04;
+        // agachar: escala uniforme (mantém proporções) + leve inclinação
+        const p = f.state === 'jumpSquat' || f.state === 'land' ? 0.93 : CROUCH;
+        out.sx = out.sy = p;
+        out.rot = name === 'blockLow' ? -0.04 : 0.06;
         break;
       }
       case 'block': out.rot = -0.06; out.ox = -3; break;
@@ -143,15 +145,15 @@
       case 'down':
         if (r.from !== 'defeat') { out.rot = -1.45; out.oy = -10; }
         break;
-      case 'getup': out.sy = 0.6 + 0.4 * Math.min(1, t / 380); break;
+      case 'getup': out.sx = out.sy = 0.85 + 0.15 * Math.min(1, t / 380); break;
       case 'dizzy': out.rot = Math.sin(time * 5) * 0.08; break;
       case 'jumpUp': case 'jumpDown':
-        if (r.substitute) { out.sy = 0.94; out.rot = f.vy > 0 ? -0.05 : 0.05; }
+        if (r.substitute) out.rot = f.vy > 0 ? -0.05 : 0.05;
         break;
       case 'victory':
         if (r.substitute) out.oy = Math.abs(Math.sin(time * 4)) * 10;
         break;
-      case 'defeatPose': out.rot = -0.05; out.sy = 0.96; break;
+      case 'defeatPose': out.rot = -0.05; break;
     }
     return out;
   }

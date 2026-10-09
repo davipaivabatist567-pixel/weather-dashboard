@@ -16,7 +16,8 @@ try { playwright = require('playwright'); } catch (e) { playwright = require('/o
     page.on('pageerror', (e) => errors.push(name + ': ' + e.message));
     page.on('console', (m) => { if (m.type() === 'error') errors.push(name + ' console: ' + m.text()); });
     await page.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.fulfill({ status: 200, contentType: 'text/css', body: '' }));
-    await page.goto('file://' + path.join(__dirname, '..', 'index.html'));
+    // PF_PAGE permite testar o HTML único (dist/aventura-do-pinguim.html)
+    await page.goto('file://' + (process.env.PF_PAGE || path.join(__dirname, '..', 'index.html')));
     await page.waitForFunction(() => window.PF && PF.UI && PF.UI.current === 'title', null, { timeout: 15000 });
     await page.screenshot({ path: path.join(outDir, name + '-1-titulo.png') });
     return { ctx, page };

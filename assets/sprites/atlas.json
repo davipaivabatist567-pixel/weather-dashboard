@@ -37,8 +37,8 @@
    "image": "assets/sprites/rei.png",
    "portrait": "assets/sprites/rei_retrato.png",
    "cell": [
-    126,
-    82
+    109,
+    73
    ],
    "columns": 8,
    "frames": 24,
@@ -91,7 +91,7 @@
    "image": "assets/sprites/capitao.png",
    "portrait": "assets/sprites/capitao_retrato.png",
    "cell": [
-    107,
+    88,
     82
    ],
    "columns": 8,
@@ -140,7 +140,7 @@
    "image": "assets/sprites/golem.png",
    "portrait": "assets/sprites/golem_retrato.png",
    "cell": [
-    127,
+    86,
     80
    ],
    "columns": 8,
@@ -185,8 +185,8 @@
    "image": "assets/sprites/bruxa.png",
    "portrait": "assets/sprites/bruxa_retrato.png",
    "cell": [
-    83,
-    93
+    84,
+    78
    ],
    "columns": 8,
    "frames": 16,
@@ -229,7 +229,7 @@
    "image": "assets/sprites/fx_iceball.png",
    "size": [
     68,
-    40
+    34
    ]
   },
   "rajada": {
@@ -299,7 +299,7 @@
    "image": "assets/sprites/fx_beam.png",
    "size": [
     136,
-    60
+    57
    ]
   },
   "orb": {
@@ -327,14 +327,14 @@
    "image": "assets/sprites/fx_teleport.png",
    "size": [
     143,
-    68
+    66
    ]
   },
   "blast": {
    "image": "assets/sprites/fx_blast.png",
    "size": [
     86,
-    57
+    51
    ]
   },
   "storm": {
@@ -348,35 +348,35 @@
    "image": "assets/sprites/fx_explosion.png",
    "size": [
     56,
-    59
+    47
    ]
   },
   "smoke": {
    "image": "assets/sprites/fx_smoke.png",
    "size": [
     61,
-    55
+    47
    ]
   },
   "dust": {
    "image": "assets/sprites/fx_dust.png",
    "size": [
     26,
-    55
+    43
    ]
   },
   "pinguinha": {
    "image": "assets/sprites/fx_pinguinha.png",
    "size": [
     51,
-    74
+    68
    ]
   },
   "pinguinha_feliz": {
    "image": "assets/sprites/fx_pinguinha_feliz.png",
    "size": [
     39,
-    53
+    44
    ]
   }
  }

@@ -166,6 +166,16 @@ def main_object(m, ratio=0.12):
             keep[i] = True
     return keep[lab]
 
+def drop_slivers(m):
+    """Remove lascas finas que sobram do quadro vizinho após o corte."""
+    lab, sizes = label(m)
+    keep = np.zeros(len(sizes), bool)
+    for i in range(1, len(sizes)):
+        ys, xs = np.nonzero(lab == i)
+        if np.ptp(xs) + 1 > 3 and np.ptp(ys) + 1 > 3:
+            keep[i] = True
+    return keep[lab]
+
 def extract(img, box, n=1, thr=48, single=True):
     """Extrai n sprites RGBA de uma caixa da prancha."""
     rgb = np.array(img.crop(box).convert('RGB'))
@@ -174,11 +184,18 @@ def extract(img, box, n=1, thr=48, single=True):
     out = []
     for a, b in segs:
         sub = m[:, a:b].copy()
+        sub = drop_slivers(sub)
         if single:
             sub = main_object(sub)
         sub = fill_holes(sub)
         sub = dilate(sub, 1)
         sub &= rgb[:, a:b].max(axis=2) > 2
+        # limpeza final: pontos soltos e traços de 1-2 px
+        lab, sizes = label(sub)
+        for i in range(1, len(sizes)):
+            ys, xs = np.nonzero(lab == i)
+            if sizes[i] < 30 or np.ptp(xs) < 2 or np.ptp(ys) < 2:
+                sub[ys, xs] = False
         ys, xs = np.nonzero(sub)
         if len(ys) == 0:
             continue

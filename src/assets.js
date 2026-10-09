@@ -28,7 +28,7 @@
         img.onerror = () => finish(false);
         // não deixar o carregamento travar o jogo
         setTimeout(() => finish(false), 15000);
-        img.src = src;
+        img.src = PF.assetUrl(src);
       });
     },
 
@@ -52,7 +52,38 @@
     },
 
     get(key) { return this.images[key] || null; },
+
+    // Cópia ampliada (vizinho mais próximo, fator inteiro) para desenhar com
+    // suavização: evita pixels de tamanhos desiguais quando a escala final
+    // não é inteira (o que deixava os sprites com aparência deformada).
+    UPSCALE: 3,
+    sharp(key) {
+      const cached = this.sharpCache[key];
+      if (cached !== undefined) return cached;
+      const img = this.images[key];
+      if (!img) return null; // ainda não carregou (ou falhou): não guarda em cache
+      let out = null;
+      if (typeof document !== 'undefined') {
+        try {
+          const U = this.UPSCALE;
+          const c = document.createElement('canvas');
+          c.width = img.naturalWidth * U; c.height = img.naturalHeight * U;
+          const g = c.getContext('2d');
+          g.imageSmoothingEnabled = false;
+          g.drawImage(img, 0, 0, c.width, c.height);
+          out = { img: c, f: U };
+        } catch (e) {
+          console.warn('[Pinguim] Sem cópia ampliada para ' + key, e);
+        }
+      }
+      if (!out) out = { img, f: 1 };
+      this.sharpCache[key] = out;
+      return out;
+    },
+    sharpCache: {},
   };
 
   PF.Assets = Assets;
+  // caminho do recurso (no HTML único as imagens vêm embutidas)
+  PF.assetUrl = (p) => (p && PF.EMBEDDED && PF.EMBEDDED[p]) || p;
 })();

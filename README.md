@@ -6,7 +6,11 @@ bibliotecas externas.
 
 ## Como jogar
 
-- Abra `index.html` direto no navegador **ou** rode `npm start` e acesse `http://localhost:8080`.
+- **Arquivo único:** `dist/aventura-do-pinguim.html` tem tudo embutido (código, estilos e
+  sprites). Basta abrir no navegador do computador ou do celular, sem precisar de mais nada.
+  Para gerar de novo depois de mudar o código: `npm run build`.
+- Versão em pastas: abra `index.html` direto no navegador **ou** rode `npm start` e acesse
+  `http://localhost:8080`.
 - Para publicar, basta enviar a pasta inteira para qualquer hospedagem estática (GitHub Pages etc.).
 
 ### Controles (teclado, remapeáveis em *Controles*)
@@ -67,6 +71,7 @@ src/audio.js               efeitos e música sintetizados (Web Audio)
 src/render.js              câmera, desenho e HUD
 src/ui.js, src/game.js     telas e laço principal (requestAnimationFrame + passo fixo)
 tools/build_sprites.py     recorta as pranchas originais e gera os atlas
+tools/build_single_html.py gera o HTML único em dist/
 assets/source/             as duas pranchas originais
 assets/sprites/            spritesheets gerados (quadros uniformes, fundo transparente)
 tests/                     testes automáticos (Node) e teste no navegador (Playwright)
@@ -94,7 +99,9 @@ tests/                     testes automáticos (Node) e teste no navegador (Play
   recortados automaticamente: cada personagem tem de 1 a 5 quadros por ação. Ações sem
   desenho próprio (agachar, defesa, soco/chute fraco/médio/forte separados, atordoamento,
   dano para os 4 personagens além do Pingui) usam um quadro existente com transformação
-  simples (achatamento, inclinação, deslocamento, brilho). O Pingui tem só 1 quadro por ação,
+  simples (escala sempre uniforme, inclinação, deslocamento, brilho) — o desenho nunca é
+  achatado ou esticado. Quadros que a prancha desenhou maiores/menores que o resto da
+  mesma animação são reescalados automaticamente na geração dos sprites. O Pingui tem só 1 quadro por ação,
   então suas animações são as mais "duras".
 - O modo 2 jogadores no mesmo celular não tem dois conjuntos de botões na tela; o 2º jogador
   precisa de teclado ou controle.

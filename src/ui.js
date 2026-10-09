@@ -32,7 +32,7 @@
       const tc = $('#title-chars');
       tc.innerHTML = PF.CHARACTER_ORDER.map((id) => {
         const c = PF.ATLAS.characters[id];
-        return c && c.portrait && PF.Assets.get('portrait:' + id) ? `<img src="${c.portrait}" alt="${PF.CHARACTERS[id].name}">` : '';
+        return c && c.portrait && PF.Assets.get('portrait:' + id) ? `<img src="${PF.assetUrl(c.portrait)}" alt="${PF.CHARACTERS[id].name}">` : '';
       }).join('');
       this.show('title');
     },
@@ -121,7 +121,7 @@
       const grid = $('#char-grid');
       grid.innerHTML = PF.CHARACTER_ORDER.map((id, i) => {
         const c = PF.ATLAS.characters[id];
-        const src = c && c.portrait ? c.portrait : '';
+        const src = c && c.portrait ? PF.assetUrl(c.portrait) : '';
         return `<button class="char-cell" data-char="${id}" data-i="${i}" aria-label="${PF.CHARACTERS[id].name}">${src ? `<img src="${src}" alt="">` : ''}</button>`;
       }).join('');
       grid.querySelectorAll('.char-cell').forEach((cell) => {
@@ -200,7 +200,7 @@
       const c = PF.CHARACTERS[id], a = PF.ATLAS.characters[id];
       const stat = (label, v, max) => `<div class="stat"><span>${label}</span><span class="bar"><i style="width:${Math.round(Math.min(1, v / max) * 100)}%"></i></span></div>`;
       return `<div class="who">${who}</div>
-        ${a && a.portrait ? `<img src="${a.portrait}" alt="">` : ''}
+        ${a && a.portrait ? `<img src="${PF.assetUrl(a.portrait)}" alt="">` : ''}
         <div class="name" style="color:${c.color}">${c.name.toUpperCase()}</div>
         <div class="title">${c.title}</div>
         <div class="desc">${c.desc}</div>
