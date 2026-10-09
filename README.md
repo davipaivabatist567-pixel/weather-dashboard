@@ -9,6 +9,12 @@ bibliotecas externas.
 - **Arquivo único:** `dist/aventura-do-pinguim.html` tem tudo embutido (código, estilos e
   sprites). Basta abrir no navegador do computador ou do celular, sem precisar de mais nada.
   Para gerar de novo depois de mudar o código: `npm run build`.
+- **Android (APK):** `dist/aventura-do-pinguim.apk`. Copie para o celular, abra o arquivo e
+  permita "instalar apps de fontes desconhecidas". Requer Android 7.0 ou mais novo. O app abre
+  em tela cheia, sempre na horizontal; o botão *voltar* pausa a luta, volta de tela nos menus
+  e fecha o app na tela inicial. Para gerar de novo: `npm run apk` (precisa de Java e internet
+  para baixar do Maven Central as ferramentas listadas em `android/tools/build_apk.py`;
+  não precisa do Android SDK).
 - Versão em pastas: abra `index.html` direto no navegador **ou** rode `npm start` e acesse
   `http://localhost:8080`.
 - Para publicar, basta enviar a pasta inteira para qualquer hospedagem estática (GitHub Pages etc.).
@@ -72,6 +78,7 @@ src/render.js              câmera, desenho e HUD
 src/ui.js, src/game.js     telas e laço principal (requestAnimationFrame + passo fixo)
 tools/build_sprites.py     recorta as pranchas originais e gera os atlas
 tools/build_single_html.py gera o HTML único em dist/
+android/                   app Android (WebView) e gerador do APK
 assets/source/             as duas pranchas originais
 assets/sprites/            spritesheets gerados (quadros uniformes, fundo transparente)
 tests/                     testes automáticos (Node) e teste no navegador (Playwright)
@@ -94,6 +101,10 @@ tests/                     testes automáticos (Node) e teste no navegador (Play
 - Lista de verificação manual: [TESTES.md](TESTES.md).
 
 ## Limitações conhecidas
+
+- O APK é assinado com uma chave de desenvolvimento (`android/keystore/`, senha no script),
+  guardada no repositório para que as próximas versões instalem por cima da anterior. Para
+  publicar na Play Store é preciso gerar uma chave própria e mantê-la em segredo.
 
 - As pranchas originais são imagens de apresentação, não spritesheets. Os quadros foram
   recortados automaticamente: cada personagem tem de 1 a 5 quadros por ação. Ações sem

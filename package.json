@@ -9,6 +9,7 @@
     "test:browser": "node tests/browser-smoke.js",
     "sprites": "python3 tools/build_sprites.py",
     "build": "python3 tools/build_single_html.py",
+    "apk": "python3 android/tools/build_apk.py",
     "test:dist": "PF_PAGE=$PWD/dist/aventura-do-pinguim.html node tests/browser-smoke.js"
   }
 }
