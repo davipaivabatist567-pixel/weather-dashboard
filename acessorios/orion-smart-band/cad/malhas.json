@@ -1,0 +1,229 @@
+{
+  "ORION_Corpo_Principal": {
+    "nome": "Peça 01 — Corpo principal",
+    "orientacao": "Face da tela na mesa: topo liso, paredes sobem; postes com topo cônico de 45°",
+    "rotacoes": [
+      [
+        "X",
+        180
+      ]
+    ],
+    "fechada_watertight": true,
+    "normais_consistentes": true,
+    "volume_malha_mm3": 4445.13,
+    "volume_cad_mm3": 4445.84,
+    "dif_volume_pct": 0.016,
+    "corpos": 1,
+    "dimensoes_impressao_mm": [
+      49.0,
+      34.0,
+      13.1
+    ],
+    "apoiada_em_z0": true,
+    "espessura_local_mm": {
+      "p1": 1.1982409198604933,
+      "p5": 1.1990000476837106,
+      "mediana": 1.7989992370605457
+    },
+    "triangulos": 12612
+  },
+  "ORION_Tampa_Traseira": {
+    "nome": "Peça 02 — Tampa traseira",
+    "orientacao": "Face do pulso na mesa: logotipo e rebaixos dos parafusos ficam lisos",
+    "rotacoes": [],
+    "fechada_watertight": true,
+    "normais_consistentes": true,
+    "volume_malha_mm3": 3024.46,
+    "volume_cad_mm3": 3024.57,
+    "dif_volume_pct": 0.003,
+    "corpos": 1,
+    "dimensoes_impressao_mm": [
+      49.0,
+      34.0,
+      2.0
+    ],
+    "apoiada_em_z0": true,
+    "espessura_local_mm": {
+      "p1": 0.7089999189376832,
+      "p5": 0.9990000192092884,
+      "mediana": 1.998999899999999
+    },
+    "triangulos": 11662
+  },
+  "ORION_Moldura_Tela": {
+    "nome": "Peça 03 — Moldura da tela",
+    "orientacao": "Face visível na mesa; a aba interna fica para cima",
+    "rotacoes": [
+      [
+        "X",
+        180
+      ]
+    ],
+    "fechada_watertight": true,
+    "normais_consistentes": true,
+    "volume_malha_mm3": 781.05,
+    "volume_cad_mm3": 781.06,
+    "dif_volume_pct": 0.001,
+    "corpos": 1,
+    "dimensoes_impressao_mm": [
+      31.1,
+      23.7,
+      2.0
+    ],
+    "apoiada_em_z0": true,
+    "espessura_local_mm": {
+      "p1": 0.7989999523162843,
+      "p5": 0.7989999523162843,
+      "mediana": 1.9989999999999966
+    },
+    "triangulos": 1392
+  },
+  "ORION_Suporte_ESP32": {
+    "nome": "Peça 04 — Suporte do ESP32",
+    "orientacao": "Paredes para cima; abas de apoio chanfradas a 45°",
+    "rotacoes": [],
+    "fechada_watertight": true,
+    "normais_consistentes": true,
+    "volume_malha_mm3": 264.26,
+    "volume_cad_mm3": 264.26,
+    "dif_volume_pct": 0.0,
+    "corpos": 1,
+    "dimensoes_impressao_mm": [
+      19.8,
+      22.05,
+      5.8
+    ],
+    "apoiada_em_z0": true,
+    "espessura_local_mm": {
+      "p1": 0.4430258325861494,
+      "p5": 0.7989992370605474,
+      "mediana": 0.7989992370605474
+    },
+    "triangulos": 104
+  },
+  "ORION_Bandeja_Interna": {
+    "nome": "Peça 04B — Bandeja interna (chassi)",
+    "orientacao": "Placa na mesa; nervuras, anel do motor e suporte da chave para cima",
+    "rotacoes": [],
+    "fechada_watertight": true,
+    "normais_consistentes": true,
+    "volume_malha_mm3": 1409.76,
+    "volume_cad_mm3": 1409.74,
+    "dif_volume_pct": 0.001,
+    "corpos": 1,
+    "dimensoes_impressao_mm": [
+      44.9,
+      29.9,
+      5.3
+    ],
+    "apoiada_em_z0": true,
+    "espessura_local_mm": {
+      "p1": 0.7975784697992755,
+      "p5": 0.999,
+      "mediana": 0.999
+    },
+    "triangulos": 2056
+  },
+  "ORION_Suporte_Bateria": {
+    "nome": "Peça 05 — Suporte da bateria",
+    "orientacao": "Moldura em pé, sem saliências",
+    "rotacoes": [],
+    "fechada_watertight": true,
+    "normais_consistentes": true,
+    "volume_malha_mm3": 388.65,
+    "volume_cad_mm3": 388.67,
+    "dif_volume_pct": 0.005,
+    "corpos": 1,
+    "dimensoes_impressao_mm": [
+      22.1,
+      24.1,
+      5.8
+    ],
+    "apoiada_em_z0": true,
+    "espessura_local_mm": {
+      "p1": 0.7990001907348638,
+      "p5": 0.7990001907348638,
+      "mediana": 0.7990001907348638
+    },
+    "triangulos": 736
+  },
+  "ORION_Botao_Lateral": {
+    "nome": "Peça 06 — Botão lateral",
+    "orientacao": "Aba interna na mesa, haste para cima",
+    "rotacoes": [
+      [
+        "X",
+        -90
+      ]
+    ],
+    "fechada_watertight": true,
+    "normais_consistentes": true,
+    "volume_malha_mm3": 35.72,
+    "volume_cad_mm3": 35.73,
+    "dif_volume_pct": 0.024,
+    "corpos": 1,
+    "dimensoes_impressao_mm": [
+      7.0,
+      4.0,
+      2.3
+    ],
+    "apoiada_em_z0": true,
+    "espessura_local_mm": {
+      "p1": 0.7989999523162843,
+      "p5": 0.7989999523162843,
+      "mediana": 2.2989999523162843
+    },
+    "triangulos": 700
+  },
+  "ORION_Adaptadores_Pulseira": {
+    "nome": "Peça 07 — Adaptadores da pulseira",
+    "orientacao": "Base plana (língua) na mesa; furos da barra de mola horizontais (passar broca 1,0–1,1 mm)",
+    "rotacoes": [],
+    "fechada_watertight": true,
+    "normais_consistentes": true,
+    "volume_malha_mm3": 1016.05,
+    "volume_cad_mm3": 1016.3,
+    "dif_volume_pct": 0.025,
+    "corpos": 4,
+    "dimensoes_impressao_mm": [
+      62.0,
+      25.4,
+      7.2
+    ],
+    "apoiada_em_z0": true,
+    "espessura_local_mm": {
+      "p1": 0.741384125374437,
+      "p5": 0.9989999999999996,
+      "mediana": 1.5990003814697253
+    },
+    "triangulos": 19248
+  },
+  "ORION_Acesso_USB_C": {
+    "nome": "Peça 08 — Tampa do USB-C",
+    "orientacao": "Aba externa na mesa; imprimir em TPU se possível",
+    "rotacoes": [
+      [
+        "X",
+        90
+      ]
+    ],
+    "fechada_watertight": true,
+    "normais_consistentes": true,
+    "volume_malha_mm3": 240.93,
+    "volume_cad_mm3": 240.94,
+    "dif_volume_pct": 0.005,
+    "corpos": 1,
+    "dimensoes_impressao_mm": [
+      16.6,
+      8.5,
+      2.4
+    ],
+    "apoiada_em_z0": true,
+    "espessura_local_mm": {
+      "p1": 0.5990000238418579,
+      "p5": 0.799000011920929,
+      "mediana": 2.3990000953674318
+    },
+    "triangulos": 884
+  }
+}

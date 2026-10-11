@@ -1,0 +1,290 @@
+{
+  "parametros": {
+    "L": 49.0,
+    "W": 34.0,
+    "R_ext": 3.5,
+    "t_wall": 1.8,
+    "t_top": 1.2,
+    "t_back": 2.0,
+    "chanfro_topo": 0.8,
+    "filete_base": 1.2,
+    "filete_tampa": 1.0,
+    "f_comp": 0.3,
+    "f_peca": 0.25,
+    "f_moldura": 0.15,
+    "f_botao": 0.2,
+    "f_usb_tampa": 0.1,
+    "f_bat": 0.25,
+    "mcu_c": 21.0,
+    "mcu_l": 17.8,
+    "mcu_pcb_t": 1.2,
+    "mcu_comp_h": 3.3,
+    "mcu_folga_baixo": 1.0,
+    "usb_plug_l": 12.6,
+    "usb_plug_h": 7.0,
+    "oled_pcb_x": 27.8,
+    "oled_pcb_y": 27.8,
+    "oled_pcb_t": 1.6,
+    "oled_glass_x": 26.7,
+    "oled_glass_y": 19.3,
+    "oled_glass_t": 1.5,
+    "oled_ativa_x": 21.7,
+    "oled_ativa_y": 10.8,
+    "oled_glass_off_y": -1.5,
+    "oled_comp_baixo": 1.0,
+    "tela_cx": 3.5,
+    "bat_t": 4.0,
+    "bat_x": 20.0,
+    "bat_y": 20.0,
+    "bat_pcm": 2.0,
+    "bat_espuma": 0.5,
+    "sw_x": 6.0,
+    "sw_z": 3.5,
+    "sw_h": 4.3,
+    "sw_curso": 0.25,
+    "motor": true,
+    "motor_d": 10.0,
+    "motor_t": 2.7,
+    "bandeja_t": 1.0,
+    "nervura_oled_h": 1.2,
+    "berco_parede": 0.8,
+    "bat_parede": 0.8,
+    "moldura_borda": 1.0,
+    "moldura_aba": 1.2,
+    "moldura_aba_t": 0.8,
+    "janela_margem": 0.5,
+    "janela_acrilico_t": 0.0,
+    "boss_r": 2.0,
+    "boss_dentro": 0.9,
+    "furo_piloto": 1.6,
+    "furo_passante": 2.3,
+    "cabeca_d": 4.0,
+    "cabeca_prof": 1.3,
+    "btn_haste_x": 4.4,
+    "btn_haste_z": 2.4,
+    "btn_flange_x": 7.0,
+    "btn_flange_z": 4.0,
+    "btn_flange_t": 0.8,
+    "btn_rebaixo_x": 7.6,
+    "btn_rebaixo_z": 5.0,
+    "btn_rebaixo_p": 0.6,
+    "btn_recuo_face": 0.3,
+    "btn_folga_sw": 0.15,
+    "pulseira_w": 20.0,
+    "lug_t": 2.6,
+    "lug_comp": 6.5,
+    "lug_h": 7.2,
+    "barra_d_furo": 1.1,
+    "barra_prof": 1.4,
+    "barra_x": 4.2,
+    "barra_z": 3.6,
+    "lingua_comp": 6.0,
+    "lingua_w": 14.0,
+    "lingua_t": 1.0,
+    "pino_d": 2.0,
+    "pino_folga": 0.3,
+    "logo": "ORION",
+    "logo_tam": 5.0,
+    "logo_prof": 0.4,
+    "linha_luz_comp": 9.0,
+    "linha_luz_larg": 0.6,
+    "linha_luz_prof": 0.4
+  },
+  "derivados": {
+    "H": 15.1,
+    "Li": 45.4,
+    "Wi": 30.4,
+    "z_mcu": 3.0,
+    "z_usb": 5.8,
+    "z_bandeja": 7.8,
+    "z_bandeja_top": 8.8,
+    "z_oled": 10.0,
+    "z_vidro_top": 13.1,
+    "z_cav_top": 13.9,
+    "oled_x0": -10.4,
+    "oled_x1": 17.4,
+    "mcu_x0": 0.85,
+    "mcu_x1": 18.65,
+    "mcu_y0": -14.9,
+    "btn_x": -14.2,
+    "btn_z": 11.15,
+    "motor_cx": -16.45,
+    "zona_x0": -22.45,
+    "zona_x1": -10.7,
+    "bosses": [
+      [
+        -20.2,
+        -14.3
+      ],
+      [
+        -20.2,
+        14.3
+      ],
+      [
+        20.95,
+        -14.3
+      ],
+      [
+        20.95,
+        14.3
+      ]
+    ]
+  },
+  "itens": [
+    {
+      "item": "Dimensões externas da caixa",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "49.00 x 34.00 x 15.10 mm (sem adaptadores)",
+      "valor": [
+        49.0000002,
+        34.0000002,
+        15.1000001
+      ]
+    },
+    {
+      "item": "Comprimento com adaptadores",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "62.00 mm de ponta a ponta",
+      "valor": 62.0
+    },
+    {
+      "item": "Colisões (peças + componentes)",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "16 volumes, nenhuma interseção acima de 0.01 mm³ (componentes com medidas aproximadas)",
+      "valor": null
+    },
+    {
+      "item": "Folga ESP32 × parede/corpo",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "0.30 mm",
+      "valor": 0.3
+    },
+    {
+      "item": "Folga OLED × corpo",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "1.30 mm",
+      "valor": 1.3
+    },
+    {
+      "item": "Folga Bateria × suporte",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "0.15 mm",
+      "valor": 0.146
+    },
+    {
+      "item": "Folga Bateria × bandeja (sem compressão)",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "1.30 mm",
+      "valor": 1.3
+    },
+    {
+      "item": "Folga Bateria × tampa (espuma)",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "0.50 mm",
+      "valor": 0.5
+    },
+    {
+      "item": "Folga Motor × OLED",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "1.05 mm",
+      "valor": 1.05
+    },
+    {
+      "item": "Folga Chave × haste do botão (pré-curso)",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "0.15 mm",
+      "valor": 0.15
+    },
+    {
+      "item": "Folga Plugue USB-C × corpo",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "2.10 mm",
+      "valor": 2.1
+    },
+    {
+      "item": "Folga ESP32 × poste do parafuso mais próximo",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "0.30 mm",
+      "valor": 0.3
+    },
+    {
+      "item": "Caminho do plugue USB-C até o receptáculo",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "interseção do corpo metálico do plugue com o corpo: 0.000 mm³; centro Z = 5.80 mm (depende da altura real do receptáculo)",
+      "valor": null
+    },
+    {
+      "item": "Botão alinhado com a chave",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "pré-curso 0.15 mm + curso da chave 0.25 mm (curso não confirmado no datasheet)",
+      "valor": null
+    },
+    {
+      "item": "Moldura da tela sai por baixo",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "caminho livre até sair do corpo",
+      "valor": null
+    },
+    {
+      "item": "OLED sai por baixo",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "caminho livre até sair do corpo",
+      "valor": null
+    },
+    {
+      "item": "Bandeja + motor + chave saem por baixo",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "caminho livre até sair do corpo",
+      "valor": null
+    },
+    {
+      "item": "Suporte do ESP32 + placa saem por baixo",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "caminho livre até sair do corpo",
+      "valor": null
+    },
+    {
+      "item": "Suporte da bateria + bateria saem por baixo",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "caminho livre até sair do corpo",
+      "valor": null
+    },
+    {
+      "item": "Tampa traseira removível",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "sai em -Z depois de soltar os 4 parafusos",
+      "valor": null
+    },
+    {
+      "item": "Adaptador -X sai com a tampa aberta",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "livre em -Z",
+      "valor": null
+    },
+    {
+      "item": "Adaptador +X sai com a tampa aberta",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "livre em -Z",
+      "valor": null
+    },
+    {
+      "item": "Botão entra por dentro até a posição",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "a aba interna para na parede",
+      "valor": null
+    },
+    {
+      "item": "Espessura mínima da parede (seção logo abaixo do topo)",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "1.80 mm (parede nominal 1.8 mm)",
+      "valor": 1.8
+    },
+    {
+      "item": "Parede no rebaixo do botão",
+      "status": "Aprovado por verificação digital",
+      "detalhe": "1.20 mm (parede 1.8 − rebaixo 0.6)",
+      "valor": null
+    }
+  ],
+  "aprovado_digital": true
+}
