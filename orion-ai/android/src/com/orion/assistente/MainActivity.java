@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.ViewGroup;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
@@ -16,6 +17,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -173,7 +175,25 @@ public class MainActivity extends Activity {
         if (requestCode != REQ_MEDIA) return;
         PermissionRequest request = pendingWebRequest;
         pendingWebRequest = null;
+        boolean blockedForGood = false;
+        boolean denied = false;
+        for (int i = 0; i < permissions.length; i++) {
+            if (grantResults.length > i && grantResults[i] == PackageManager.PERMISSION_GRANTED) continue;
+            denied = true;
+            // Sem "mostrar de novo": o Android não pergunta mais, só as configurações do app resolvem.
+            if (!shouldShowRequestPermissionRationale(permissions[i])) blockedForGood = true;
+        }
         if (request != null) grantAllowed(request);
+        if (denied) {
+            Toast.makeText(this, "Permissão negada. Ative a Câmera em Configurações do Android → Apps → Orion AI → Permissões.", Toast.LENGTH_LONG).show();
+            if (blockedForGood) {
+                try {
+                    startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())));
+                } catch (Exception ignored) {
+                    // aparelho sem a tela de detalhes do app
+                }
+            }
+        }
     }
 
     @Override

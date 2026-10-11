@@ -57,6 +57,8 @@ function describeCameraError(err: unknown): string {
   switch (name) {
     case "NotAllowedError":
     case "SecurityError":
+      if (/OrionApp\//.test(navigator.userAgent))
+        return "Permissão da câmera negada. No Android: Configurações → Apps → Orion AI → Permissões → Câmera → Permitir, e depois toque em Ativar de novo.";
       return "Permissão da câmera negada. Libere o acesso nas configurações do navegador e tente novamente.";
     case "NotFoundError":
     case "OverconstrainedError":
@@ -182,7 +184,8 @@ class VisionEngine {
       let delegate: "GPU" | "CPU" = "GPU";
       let m: Awaited<ReturnType<typeof make>>;
       try {
-        m = await make("GPU");
+        // A GPU de alguns aparelhos/WebViews trava sem dar erro: depois de 25 s usa a CPU.
+        m = await Promise.race([make("GPU"), new Promise<never>((_, reject) => setTimeout(() => reject(new Error("GPU demorou demais")), 25_000))]);
       } catch {
         delegate = "CPU";
         m = await make("CPU");
