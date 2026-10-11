@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt do Orion AI</title>
+<style>
+:root { --bg:#02060d; --panel:#071425; --line:#12324a; --text:#d9f4ff; --muted:#8fb3c4; --cyan:#00e5ff; --soft:#7af3ff; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+header { position:sticky; top:0; z-index:2; display:flex; gap:12px; align-items:center; justify-content:space-between; padding:12px 16px; background:rgba(2,6,13,.92); border-bottom:1px solid var(--line); backdrop-filter:blur(6px); }
+header b { color:var(--cyan); letter-spacing:.08em; }
+button { font:inherit; font-weight:600; color:#001018; background:var(--cyan); border:0; border-radius:10px; padding:10px 16px; cursor:pointer; white-space:nowrap; }
+button:active { transform:scale(.97); }
+main { max-width:820px; margin:0 auto; padding:8px 16px 48px; }
+h1 { color:var(--cyan); font-size:1.5rem; margin:20px 0 8px; }
+h2 { color:var(--soft); font-size:1.15rem; margin:28px 0 8px; padding-top:12px; border-top:1px solid var(--line); }
+p, li { overflow-wrap:anywhere; }
+ul, ol { padding-left:22px; }
+li { margin:4px 0; }
+strong { color:#fff; }
+code { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.9em; background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:1px 5px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px; overflow-x:auto; }
+pre code { border:0; padding:0; background:none; }
+.ok { color:var(--soft); font-size:.9rem; min-height:1.2em; }
+</style>
+</head>
+<body>
+<header><b>ORION AI · PROMPT</b><button id="copy">Copiar prompt</button></header>
+<main>
+<p class="ok" id="status" role="status"></p>
+<h1>PROMPT DE CONTINUAÇÃO — ORION AI</h1>
+<p>Você vai continuar o desenvolvimento do <strong>ORION AI</strong>, um assistente pessoal multimodal em português do Brasil, inspirado no JARVIS, mas construído com tecnologias reais. Leia tudo antes de agir.</p>
+<h2>Regras de trabalho</h2>
+<ul>
+<li>Responda e escreva a interface em português do Brasil. O criador está aprendendo: explique de forma simples, sem esconder detalhes de engenharia importantes.</li>
+<li>Nada simulado: não invente recursos, preços, compatibilidades, medições nem resultados de teste. O diagnóstico mostra só valores medidos; sem dado, mostre &quot;Indisponível&quot;.</li>
+<li>Diferencie sempre: <strong>ideia</strong>, <strong>protótipo</strong>, <strong>funcional e testado</strong>, <strong>versão final</strong>.</li>
+<li>Teste antes de entregar (<code>npm test</code> e <code>npx playwright test</code>) e diga o que não pôde ser testado.</li>
+<li>Privacidade: imagem processada no aparelho, nenhuma gravação silenciosa, sem reconhecimento de identidade. Exclusões pedidas pela IA exigem confirmação na tela.</li>
+<li>Nunca coloque chave de API dentro de arquivos publicados.</li>
+</ul>
+<h2>Onde está o código</h2>
+<p>Repositório <code>davipaivabatist567-pixel/weather-dashboard</code>, branch <code>ccr-9b24e0be-7tarhc</code>.</p>
+<ul>
+<li><code>orion-ai/</code>: o aplicativo (React 19 + TypeScript + Vite, backend Express 5, zustand, zod, vitest, Playwright).</li>
+<li><code>docs/index.html</code>: cópia do Orion em HTML para o GitHub Pages (preparado, <strong>Pages não ativado</strong>).</li>
+<li><code>acessorios/orion-ring/README.md</code>: ficha do primeiro acessório.</li>
+</ul>
+<h2>O que já existe (funcional e testado, salvo indicação)</h2>
+<p><strong>Três formas de usar o mesmo Orion:</strong></p>
+<ol>
+<li><strong>Versão com servidor</strong> (<code>npm run dev</code> ou <code>npm run build &amp;&amp; npm start</code>): a chave da Anthropic fica no <code>.env</code> do servidor (<code>ANTHROPIC_API_KEY</code>; opcionais <code>ORION_MODEL</code>, <code>ORION_EFFORT</code>, <code>ORION_WEB_SEARCH</code>, <code>ORION_PORT</code>, <code>ORION_HOST</code>, <code>ORION_DB_PATH</code>). Dados em <code>data/orion-db.json</code>.</li>
+<li><strong><code>orion.html</code></strong> (arquivo único, <code>npm run build:html</code>): sem servidor; a pessoa cola a própria chave em Configurações → Conexão com a IA; dados no <code>localStorage</code>.</li>
+<li><strong><code>orion.apk</code></strong> v1.2 (<code>npm run build:apk</code>, ~18 MB): WebView (<code>android/src/com/orion/assistente/MainActivity.java</code>) que serve o HTML, o MediaPipe (WASM) e os modelos de visão de dentro do APK por um endereço https interno (<code>https://appassets.orion/</code>), pede câmera/microfone ao Android e abre as configurações do app se a permissão for negada. Gerado sem Gradle, com <code>aapt</code>, <code>dx</code>, <code>zipalign</code> e <code>apksigner</code> do Ubuntu; assinatura em <code>android/orion-debug.keystore</code>. O APK não é versionado no Git.</li>
+</ol>
+<p><strong>Recursos:</strong></p>
+<ul>
+<li>Conversa com IA real (Claude via API da Anthropic) com streaming, Markdown, ferramentas, pesquisa na web (<code>web_search</code>) e análise de imagens, PDFs e textos. Sem chave: &quot;modo local limitado&quot; honesto (cálculo, data/hora, comandos, memória, projetos).</li>
+<li>7 modos com comportamento diferente: assistente, engenheiro, estudos, criativo, produtividade, laboratório, pesquisa.</li>
+<li>Ferramentas com risco e permissão: <code>calcular</code>, <code>data_hora_atual</code>, <code>memoria_*</code>, <code>conhecimento_*</code>, <code>aprender_texto</code>, <code>projeto_*</code>, <code>projetos_listar</code>, <code>tarefa_criar</code>, <code>lembrete_criar</code>. Exclusões viram ação pendente que exige Confirmar.</li>
+<li>Aprendizado (sem retreinar o modelo): base de conhecimento com busca BM25 adaptada ao português, extração automática de fatos após cada resposta (memórias 🧠), &quot;aprenda: …&quot; e &quot;o que você sabe sobre …&quot;.</li>
+<li>Visão computacional real com MediaPipe (corpo + 2 mãos), suavização One Euro, gestos com confiança, confirmação por quadros, intervalo, sensibilidade, calibração e histórico. Gestos: mão aberta, polegar para cima, mão fechada, mão direita levantada, braços levantados, deslizes, pinça. A câmera liga sozinha se a permissão já estiver guardada.</li>
+<li><strong>Diagnosticar câmera</strong> (página Visão): lista cada passo (contexto seguro, permissão, abrir câmera, WebAssembly, WebGL2, arquivos do MediaPipe e modelos) com o erro real.</li>
+<li>Voz pela Web Speech API (ditado pt-BR e fala do Orion), interface holográfica com núcleo por estados, 8 páginas, projetos/tarefas/lembretes, diagnóstico real, privacidade e &quot;Apagar todos os meus dados&quot;.</li>
+<li><strong>Orion Ring, lado do software:</strong> um botão físico (qualquer teclado, tecla padrão <code>F9</code>, reaprendível) vira clique (liga/desliga ditado), duplo clique (lê a última resposta) e pressão longa (interrompe tudo). Código em <code>src/lib/ring.ts</code> e <code>src/lib/ringDecoder.ts</code>; configuração em Configurações → Orion Ring. O anel nunca confirma exclusões.</li>
+</ul>
+<p><strong>Testes atuais:</strong> 94 unitários (Vitest) e 21 ponta a ponta (Playwright/Chromium, com câmera falsa a partir de imagens do MediaPipe e API da Anthropic simulada em <code>tests/e2e/mock-anthropic.mjs</code>). Todos passando.</p>
+<h2>O que NÃO foi testado ou não existe</h2>
+<ul>
+<li>Nenhuma chamada a uma API real da Anthropic (só servidor simulado).</li>
+<li>O APK nunca foi executado em celular ou emulador (o código Java não tem teste automático).</li>
+<li><strong>Problema em aberto:</strong> o criador relatou duas vezes que a câmera não funciona no celular, sem dizer a mensagem. Correções feitas às cegas (aviso de permissão negada, GPU com tempo limite de 25 s e fallback para CPU, MediaPipe dentro do APK). <strong>Próximo passo: pedir o resultado do botão &quot;Diagnosticar câmera&quot;</strong> e se está usando o APK ou o HTML.</li>
+<li>Ditado por voz não existe dentro do APK (WebView não tem Web Speech API). Lembretes só com o app aberto. Sem integrações externas (e-mail, calendário).</li>
+<li>O Ring físico, a ORION CAM e os ORION GLASSES ainda são <strong>ideia</strong>.</li>
+</ul>
+<h2>Decisões pendentes do criador</h2>
+<ol>
+<li>Qual &quot;cérebro&quot; usar: Claude com a própria chave (atual), modelo gratuito no navegador, Ollama ou híbrido.</li>
+<li>Ring: modelo do celular e versão do Android; tem ferro de solda e multímetro; teto de gasto; placa XIAO nRF52840 comum ou Sense.</li>
+<li>Ativar ou não o GitHub Pages (o endereço fica público).</li>
+</ol>
+<h2>Plano dos acessórios (definido pelo criador)</h2>
+<p>Ordem: <strong>ORION RING → ORION CAM → ORION GLASSES</strong>, cada um em etapas (bancada simples → testes → miniaturização), com ficha de documentação, lista de materiais, esquema, firmware, carcaça 3D e testes. Para o Ring foram propostas: (A, recomendada) Seeed XIAO nRF52840, com Bluetooth de baixo consumo e carregador embutido; (B) ESP32-C3 SuperMini + módulo TP4056 (exige reduzir a corrente de carga). Preços em reais <strong>ainda não confirmados</strong>. Bateria LiPo só com proteção e corrente de carga ≤ 1C. Primeiro protótipo: controle de dedo maior, não um anel final. Integração: primeiro como teclado Bluetooth (já suportado no Orion), depois serviço Bluetooth próprio para comunicação nos dois sentidos. <strong>Aguardar aprovação do criador antes da lista de compras.</strong></p>
+<h2>Como gerar e testar</h2>
+<pre><code class="language-bash">cd orion-ai
+npm install &amp;&amp; npm run setup:models
+npm test                         # unitários
+./tests/e2e/prepare-fixtures.sh  # vídeos de câmera falsa
+npx playwright test              # ponta a ponta
+npm run build:html               # orion.html e ../docs/index.html
+npm run build:apk                # orion.apk (precisa de: sudo apt install aapt apksigner zipalign dalvik-exchange android-sdk-platform-23)
+</code></pre>
+
+</main>
+<script>
+const PROMPT = "# PROMPT DE CONTINUAÇÃO — ORION AI\n\nVocê vai continuar o desenvolvimento do **ORION AI**, um assistente pessoal multimodal em português do Brasil, inspirado no JARVIS, mas construído com tecnologias reais. Leia tudo antes de agir.\n\n## Regras de trabalho\n- Responda e escreva a interface em português do Brasil. O criador está aprendendo: explique de forma simples, sem esconder detalhes de engenharia importantes.\n- Nada simulado: não invente recursos, preços, compatibilidades, medições nem resultados de teste. O diagnóstico mostra só valores medidos; sem dado, mostre \"Indisponível\".\n- Diferencie sempre: **ideia**, **protótipo**, **funcional e testado**, **versão final**.\n- Teste antes de entregar (`npm test` e `npx playwright test`) e diga o que não pôde ser testado.\n- Privacidade: imagem processada no aparelho, nenhuma gravação silenciosa, sem reconhecimento de identidade. Exclusões pedidas pela IA exigem confirmação na tela.\n- Nunca coloque chave de API dentro de arquivos publicados.\n\n## Onde está o código\nRepositório `davipaivabatist567-pixel/weather-dashboard`, branch `ccr-9b24e0be-7tarhc`.\n- `orion-ai/`: o aplicativo (React 19 + TypeScript + Vite, backend Express 5, zustand, zod, vitest, Playwright).\n- `docs/index.html`: cópia do Orion em HTML para o GitHub Pages (preparado, **Pages não ativado**).\n- `acessorios/orion-ring/README.md`: ficha do primeiro acessório.\n\n## O que já existe (funcional e testado, salvo indicação)\n**Três formas de usar o mesmo Orion:**\n1. **Versão com servidor** (`npm run dev` ou `npm run build && npm start`): a chave da Anthropic fica no `.env` do servidor (`ANTHROPIC_API_KEY`; opcionais `ORION_MODEL`, `ORION_EFFORT`, `ORION_WEB_SEARCH`, `ORION_PORT`, `ORION_HOST`, `ORION_DB_PATH`). Dados em `data/orion-db.json`.\n2. **`orion.html`** (arquivo único, `npm run build:html`): sem servidor; a pessoa cola a própria chave em Configurações → Conexão com a IA; dados no `localStorage`.\n3. **`orion.apk`** v1.2 (`npm run build:apk`, ~18 MB): WebView (`android/src/com/orion/assistente/MainActivity.java`) que serve o HTML, o MediaPipe (WASM) e os modelos de visão de dentro do APK por um endereço https interno (`https://appassets.orion/`), pede câmera/microfone ao Android e abre as configurações do app se a permissão for negada. Gerado sem Gradle, com `aapt`, `dx`, `zipalign` e `apksigner` do Ubuntu; assinatura em `android/orion-debug.keystore`. O APK não é versionado no Git.\n\n**Recursos:**\n- Conversa com IA real (Claude via API da Anthropic) com streaming, Markdown, ferramentas, pesquisa na web (`web_search`) e análise de imagens, PDFs e textos. Sem chave: \"modo local limitado\" honesto (cálculo, data/hora, comandos, memória, projetos).\n- 7 modos com comportamento diferente: assistente, engenheiro, estudos, criativo, produtividade, laboratório, pesquisa.\n- Ferramentas com risco e permissão: `calcular`, `data_hora_atual`, `memoria_*`, `conhecimento_*`, `aprender_texto`, `projeto_*`, `projetos_listar`, `tarefa_criar`, `lembrete_criar`. Exclusões viram ação pendente que exige Confirmar.\n- Aprendizado (sem retreinar o modelo): base de conhecimento com busca BM25 adaptada ao português, extração automática de fatos após cada resposta (memórias 🧠), \"aprenda: …\" e \"o que você sabe sobre …\".\n- Visão computacional real com MediaPipe (corpo + 2 mãos), suavização One Euro, gestos com confiança, confirmação por quadros, intervalo, sensibilidade, calibração e histórico. Gestos: mão aberta, polegar para cima, mão fechada, mão direita levantada, braços levantados, deslizes, pinça. A câmera liga sozinha se a permissão já estiver guardada.\n- **Diagnosticar câmera** (página Visão): lista cada passo (contexto seguro, permissão, abrir câmera, WebAssembly, WebGL2, arquivos do MediaPipe e modelos) com o erro real.\n- Voz pela Web Speech API (ditado pt-BR e fala do Orion), interface holográfica com núcleo por estados, 8 páginas, projetos/tarefas/lembretes, diagnóstico real, privacidade e \"Apagar todos os meus dados\".\n- **Orion Ring, lado do software:** um botão físico (qualquer teclado, tecla padrão `F9`, reaprendível) vira clique (liga/desliga ditado), duplo clique (lê a última resposta) e pressão longa (interrompe tudo). Código em `src/lib/ring.ts` e `src/lib/ringDecoder.ts`; configuração em Configurações → Orion Ring. O anel nunca confirma exclusões.\n\n**Testes atuais:** 94 unitários (Vitest) e 21 ponta a ponta (Playwright/Chromium, com câmera falsa a partir de imagens do MediaPipe e API da Anthropic simulada em `tests/e2e/mock-anthropic.mjs`). Todos passando.\n\n## O que NÃO foi testado ou não existe\n- Nenhuma chamada a uma API real da Anthropic (só servidor simulado).\n- O APK nunca foi executado em celular ou emulador (o código Java não tem teste automático).\n- **Problema em aberto:** o criador relatou duas vezes que a câmera não funciona no celular, sem dizer a mensagem. Correções feitas às cegas (aviso de permissão negada, GPU com tempo limite de 25 s e fallback para CPU, MediaPipe dentro do APK). **Próximo passo: pedir o resultado do botão \"Diagnosticar câmera\"** e se está usando o APK ou o HTML.\n- Ditado por voz não existe dentro do APK (WebView não tem Web Speech API). Lembretes só com o app aberto. Sem integrações externas (e-mail, calendário).\n- O Ring físico, a ORION CAM e os ORION GLASSES ainda são **ideia**.\n\n## Decisões pendentes do criador\n1. Qual \"cérebro\" usar: Claude com a própria chave (atual), modelo gratuito no navegador, Ollama ou híbrido.\n2. Ring: modelo do celular e versão do Android; tem ferro de solda e multímetro; teto de gasto; placa XIAO nRF52840 comum ou Sense.\n3. Ativar ou não o GitHub Pages (o endereço fica público).\n\n## Plano dos acessórios (definido pelo criador)\nOrdem: **ORION RING → ORION CAM → ORION GLASSES**, cada um em etapas (bancada simples → testes → miniaturização), com ficha de documentação, lista de materiais, esquema, firmware, carcaça 3D e testes. Para o Ring foram propostas: (A, recomendada) Seeed XIAO nRF52840, com Bluetooth de baixo consumo e carregador embutido; (B) ESP32-C3 SuperMini + módulo TP4056 (exige reduzir a corrente de carga). Preços em reais **ainda não confirmados**. Bateria LiPo só com proteção e corrente de carga ≤ 1C. Primeiro protótipo: controle de dedo maior, não um anel final. Integração: primeiro como teclado Bluetooth (já suportado no Orion), depois serviço Bluetooth próprio para comunicação nos dois sentidos. **Aguardar aprovação do criador antes da lista de compras.**\n\n## Como gerar e testar\n```bash\ncd orion-ai\nnpm install && npm run setup:models\nnpm test                         # unitários\n./tests/e2e/prepare-fixtures.sh  # vídeos de câmera falsa\nnpx playwright test              # ponta a ponta\nnpm run build:html               # orion.html e ../docs/index.html\nnpm run build:apk                # orion.apk (precisa de: sudo apt install aapt apksigner zipalign dalvik-exchange android-sdk-platform-23)\n```\n";
+const status = document.getElementById("status");
+document.getElementById("copy").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(PROMPT);
+  } catch {
+    // Arquivo aberto sem permissão de área de transferência: copia por um campo temporário.
+    const t = document.createElement("textarea");
+    t.value = PROMPT;
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand("copy");
+    t.remove();
+  }
+  status.textContent = "✓ Prompt copiado. Cole no começo da outra conversa.";
+});
+</script>
+</body>
+</html>
