@@ -12,7 +12,9 @@ O arquivo **`orion.html`** contém o Orion inteiro. Basta abri-lo no Chrome ou n
 - Para conversar com a IA, abra **Configurações → Conexão com a IA** e cole sua chave da Anthropic (`sk-ant-…`). Sem a chave, o Orion funciona em modo local limitado.
 - Precisa de internet para baixar o MediaPipe (jsDelivr e Google Storage) e para falar com a API.
 - **Segurança:** nessa versão, a chave fica guardada no navegador e as chamadas saem dele direto para a API da Anthropic. Use apenas em um dispositivo pessoal e **nunca publique o arquivo em um site com a sua chave**. Para uso compartilhado ou publicado, use a versão com servidor abaixo, em que a chave fica no backend.
-- Para gerar o arquivo de novo depois de mudar o código: `npm run build:html`.
+- Para gerar o arquivo de novo depois de mudar o código: `npm run build:html` (também atualiza `docs/index.html`).
+
+**Abrir no celular com câmera (endereço https):** a câmera exige `https://`. Com o GitHub Pages: no repositório, **Settings → Pages → Build and deployment → Deploy from a branch**, escolha a branch e a pasta **/docs** e salve; o endereço sai como `https://<usuário>.github.io/<repositório>/`. Atenção: esse endereço é **público**. O arquivo não contém chave nenhuma (cada pessoa usa a própria, guardada no próprio navegador), mas qualquer um poderá abrir o Orion. Páginas publicadas pelo claude.ai **não** servem para isso, porque bloqueiam câmera e microfone.
 
 ## Início rápido (versão com servidor)
 
