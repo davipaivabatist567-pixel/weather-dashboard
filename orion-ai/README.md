@@ -95,6 +95,10 @@ O Orion aprende guardando e consultando o que você envia (o modelo de IA em si 
 - **Controle:** tudo pode ser visto, buscado, editado e apagado; o aprendizado automático e a memória podem ser desligados. Credenciais evidentes (chaves `sk-…`, chaves privadas, números de cartão) são removidas antes de guardar.
 - Sem a IA: `aprenda: <texto>` guarda conteúdo e `o que você sabe sobre X?` mostra os trechos encontrados.
 
+### Orion Ring (controle físico, em desenvolvimento)
+
+Em Configurações → **Orion Ring**, o Orion aceita um botão físico que envie uma tecla (padrão `F9`, reaprendível): clique liga/desliga o ditado, duplo clique lê a última resposta em voz alta, pressão longa interrompe tudo. O anel nunca confirma exclusões. Hoje funciona com qualquer teclado (inclusive Bluetooth); o anel em si ainda não existe. Veja `../acessorios/orion-ring/README.md`.
+
 ### Segurança e permissões
 
 - **Baixo risco:** calculadora, data/hora (executam direto).
@@ -122,10 +126,10 @@ Nenhuma página consegue pular a permissão de câmera do navegador. O que o Ori
 ## Testes
 
 ```bash
-npm test                           # 86 testes unitários e de integração (Vitest)
+npm test                           # 94 testes unitários e de integração (Vitest)
 ./tests/e2e/prepare-fixtures.sh    # gera vídeos de câmera falsa a partir de imagens de exemplo do MediaPipe
 npm run build:html                 # gera orion.html (testado também via file://)
-npx playwright test                # 18 testes ponta a ponta no Chromium (câmera falsa + API Claude simulada)
+npx playwright test                # 20 testes ponta a ponta no Chromium (câmera falsa + API Claude simulada)
 ```
 
 Os testes de ponta a ponta usam um servidor que imita a API de streaming da Anthropic (`tests/e2e/mock-anthropic.mjs`), então nenhuma chamada paga é feita.
@@ -158,5 +162,6 @@ Veja a seção “Status” no fim deste arquivo (atualizada a cada entrega).
 | Versão HTML em arquivo único (`orion.html`), aberta via file:// | Implementada e testada: conversa, ferramentas, persistência e câmera |
 | App Android (`orion.apk`, WebView com o HTML dentro) | Empacotado e assinado (v1/v2/v3, verificado com `apksigner`); a lógica web foi testada no Chromium; **não foi executado em aparelho ou emulador Android** |
 | Voz (ditado) dentro do APK | **Indisponível**: WebView não tem Web Speech API |
+| Orion Ring: lado do Orion (decodificador de um botão, ações, configuração) | Implementado e testado com teclado; **o anel físico ainda não existe** |
 | Lembretes com o navegador fechado (push/e-mail) | **Não implementado**: exige um serviço de push externo |
 | Integrações externas (e-mail, calendário, mensagens) | **Não implementadas** |

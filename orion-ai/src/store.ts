@@ -62,6 +62,8 @@ export interface Settings {
   calibration: Calibration;
   appearance: { particles: boolean; reducedMotion: boolean };
   privacy: { saveChatHistory: boolean; speechNoticeAccepted: boolean };
+  /** Orion Ring: controle físico de um botão (ver lib/ring.ts) */
+  ring: { enabled: boolean; key: string };
   permissions: Permissions;
   showDiagnostics: boolean;
 }
@@ -74,6 +76,7 @@ export const DEFAULT_SETTINGS: Settings = {
   calibration: DEFAULT_CALIBRATION,
   appearance: { particles: true, reducedMotion: false },
   privacy: { saveChatHistory: true, speechNoticeAccepted: false },
+  ring: { enabled: false, key: "F9" },
   permissions: { readMemory: true, writeMemory: true, manageProjects: true, webSearch: true },
   showDiagnostics: true,
 };
@@ -87,6 +90,12 @@ export interface VisionDiag {
   gesture: { id: GestureId; confidence: number } | null;
   delegate: "GPU" | "CPU" | null;
   resolution: string | null;
+}
+
+export interface RingLogEntry {
+  event: "clique" | "duplo" | "longo";
+  at: number;
+  result: string;
 }
 
 export interface Toast {
@@ -115,6 +124,9 @@ interface OrionState {
   speaking: boolean;
   vision: VisionDiag;
   gestureLog: GestureLogEntry[];
+  ringLog: RingLogEntry[];
+  /** true enquanto o Orion espera a próxima tecla para usá-la como botão do anel */
+  ringLearning: boolean;
   toasts: Toast[];
 
   setPage: (p: Page) => void;
@@ -128,6 +140,7 @@ interface OrionState {
   clearMessages: () => void;
   set: (patch: Partial<OrionState>) => void;
   logGesture: (e: GestureLogEntry) => void;
+  logRing: (e: RingLogEntry) => void;
   toast: (text: string, kind?: Toast["kind"]) => void;
   dismissToast: (id: number) => void;
 }
@@ -156,6 +169,8 @@ export const useOrion = create<OrionState>()(
       speaking: false,
       vision: { fps: null, inferenceMs: null, hands: 0, handedness: [], body: null, gesture: null, delegate: null, resolution: null },
       gestureLog: [],
+      ringLog: [],
+      ringLearning: false,
       toasts: [],
 
       setPage: (page) => set({ page }),
@@ -169,6 +184,7 @@ export const useOrion = create<OrionState>()(
       clearMessages: () => set({ messages: [] }),
       set: (patch) => set(patch),
       logGesture: (e) => set((s) => ({ gestureLog: [e, ...s.gestureLog].slice(0, 50) })),
+      logRing: (e) => set((s) => ({ ringLog: [e, ...s.ringLog].slice(0, 20) })),
       toast: (text, kind = "info") => {
         const id = toastSeq++;
         set((s) => ({ toasts: [...s.toasts, { id, text, kind }].slice(-4) }));

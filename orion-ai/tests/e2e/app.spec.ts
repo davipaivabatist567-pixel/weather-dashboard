@@ -179,3 +179,35 @@ test("aprende com o que o usuário ensina e envia", async ({ page }) => {
   await expect(page.getByText("Camberra").first()).toBeVisible();
   await page.screenshot({ path: "test-results/09-aprendizado-pagina.png", fullPage: true });
 });
+
+test("Orion Ring: um botão vira clique, duplo e longo, e a tecla pode ser reaprendida", async ({ page }) => {
+  await page.addInitScript(() => {
+    const raw = JSON.parse(localStorage.getItem("orion-state") ?? '{"state":{},"version":1}');
+    raw.state.settings = { ...(raw.state.settings ?? {}), ring: { enabled: true, key: "F9" } };
+    localStorage.setItem("orion-state", JSON.stringify(raw));
+  });
+  await page.goto("/#/assistente");
+  await page.getByLabel("Mensagem").fill("Olá, Orion");
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".msg.assistant").last()).toContainText("resposta simulada");
+  await page.locator("body").click({ position: { x: 5, y: 5 } });
+
+  await page.keyboard.press("F9");
+  await page.keyboard.press("F9");
+  await expect(page.locator(".toast").filter({ hasText: "Duplo clique" })).toBeVisible();
+
+  await page.keyboard.down("F9");
+  await page.waitForTimeout(800);
+  await page.keyboard.up("F9");
+  await expect(page.locator(".toast").filter({ hasText: "Pressão longa — Tudo interrompido" })).toBeVisible();
+
+  await nav(page, "Configurações");
+  const log = page.locator(".ring-log");
+  await expect(log).toContainText("Duplo clique");
+  await expect(log).toContainText("Pressão longa");
+
+  // Aprender outra tecla
+  await page.getByRole("button", { name: "Aprender tecla" }).click();
+  await page.keyboard.press("F8");
+  await expect(page.getByText("Tecla atual:")).toContainText("F8");
+});

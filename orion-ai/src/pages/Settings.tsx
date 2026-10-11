@@ -3,6 +3,8 @@ import { AiConnection } from "../components/AiConnection";
 import { Toggle } from "../components/Shell";
 import { STANDALONE } from "../lib/env";
 import { refreshStatus } from "../lib/actions";
+import { RING_DEFAULT_KEY, RING_LABELS, runRingAction } from "../lib/ring";
+import type { RingEvent } from "../lib/ringDecoder";
 import { api } from "../lib/api";
 import { listVoices, pickVoice, speak, speechRecognitionSupported, speechSynthesisSupported, stopSpeaking } from "../lib/voice";
 import { useOrion, type Settings } from "../store";
@@ -143,6 +145,44 @@ export function SettingsPage() {
             Apagar todos os meus dados
           </button>
         </div>
+      </div>
+
+      <div className="panel">
+        <h2>Orion Ring (controle físico)</h2>
+        <p className="small muted">
+          Um botão físico que o Orion entende como teclado: o anel (ou qualquer teclado Bluetooth) envia uma tecla, e o Orion transforma o tempo do toque em comandos. Por segurança, o anel nunca confirma exclusões. <strong>Nenhum anel foi construído ou testado ainda</strong>: use um teclado para experimentar.
+        </p>
+        <Toggle label="Ativar o botão do anel" checked={st.ring.enabled} onChange={(enabled) => set("ring", { enabled })} />
+        <div className="row" style={{ margin: "8px 0" }}>
+          <span className="small">Tecla atual: <span className="mono">{st.ring.key}</span></span>
+          <button className="btn small" onClick={() => { s.set({ ringLearning: true }); s.toast("Aperte agora a tecla do anel (Esc cancela).", "info"); }}>
+            {s.ringLearning ? "Aguardando tecla…" : "Aprender tecla"}
+          </button>
+          <button className="btn small ghost" onClick={() => set("ring", { key: RING_DEFAULT_KEY })}>Restaurar {RING_DEFAULT_KEY}</button>
+        </div>
+        <table className="diag-table">
+          <tbody>
+            <tr><td>Clique</td><td>Liga/desliga o microfone (ditado)</td></tr>
+            <tr><td>Duplo clique</td><td>Lê em voz alta a última resposta (ou para a leitura)</td></tr>
+            <tr><td>Pressão longa (0,6 s)</td><td>Interrompe resposta, fala e microfone</td></tr>
+          </tbody>
+        </table>
+        <div className="row" style={{ marginTop: 10 }}>
+          {(["clique", "duplo", "longo"] as RingEvent[]).map((e) => (
+            <button key={e} className="btn small ghost" onClick={() => runRingAction(e)}>Testar: {RING_LABELS[e].toLowerCase()}</button>
+          ))}
+        </div>
+        <h3 style={{ marginTop: 12 }}>Últimos comandos recebidos</h3>
+        {s.ringLog.length === 0 ? (
+          <p className="small muted">Nada recebido ainda.</p>
+        ) : (
+          <ul className="small ring-log">
+            {s.ringLog.slice(0, 6).map((l) => (
+              <li key={l.at}>{new Date(l.at).toLocaleTimeString("pt-BR")} · <strong>{RING_LABELS[l.event]}</strong> — {l.result}</li>
+            ))}
+          </ul>
+        )}
+        {!speechRecognitionSupported && <p className="small muted">Este navegador/app não tem ditado por voz: o clique avisa e não liga o microfone.</p>}
       </div>
 
       <div className="panel">
