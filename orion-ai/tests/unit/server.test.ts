@@ -7,10 +7,11 @@ import type { ChatEvent, ChatRequest, Permissions } from "../../shared/types";
 import { buildSystemPrompt, runChat, toolsFor } from "../../server/ai/core";
 import type { AIProvider, ProviderChatRequest, ProviderHandlers } from "../../server/ai/provider";
 import { createApp } from "../../server/app";
-import { looksSensitive, Store } from "../../server/storage/store";
+import { createFileStore } from "../../server/storage/filePersistence";
+import { looksSensitive } from "../../server/storage/store";
 import { executeTool, findTool, PendingActions, toJsonSchema, TOOLS } from "../../server/tools/registry";
 
-const tmpStore = () => new Store(join(mkdtempSync(join(tmpdir(), "orion-")), "db.json"));
+const tmpStore = () => createFileStore(join(mkdtempSync(join(tmpdir(), "orion-")), "db.json"));
 const ALL: Permissions = { readMemory: true, writeMemory: true, manageProjects: true, webSearch: true };
 const NONE: Permissions = { readMemory: false, writeMemory: false, manageProjects: false, webSearch: false };
 
@@ -47,7 +48,7 @@ describe("armazenamento", () => {
     const s = tmpStore();
     s.addMemory("Gosto de TypeScript", "preferencia");
     s.createProject({ name: "Jogo" });
-    const again = new Store(s.path);
+    const again = createFileStore(s.path);
     expect(again.listMemory()[0].content).toBe("Gosto de TypeScript");
     expect(again.listProjects()[0].name).toBe("Jogo");
   });

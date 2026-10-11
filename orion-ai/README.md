@@ -4,7 +4,17 @@ Assistente pessoal multimodal com interface holográfica: conversa com IA (texto
 
 > Inspirado em assistentes de laboratório futuristas, com identidade própria. O Orion é um modelo de linguagem com ferramentas, não um ser consciente, e não finge ser.
 
-## Início rápido
+## Versão HTML (arquivo único, sem instalar nada)
+
+O arquivo **`orion.html`** contém o Orion inteiro. Basta abri-lo no Chrome ou no Edge, com dois cliques ou arrastando para o navegador.
+
+- Funciona sem servidor: memória, projetos, tarefas e lembretes ficam no `localStorage` do navegador.
+- Para conversar com a IA, abra **Configurações → Conexão com a IA** e cole sua chave da Anthropic (`sk-ant-…`). Sem a chave, o Orion funciona em modo local limitado.
+- Precisa de internet para baixar o MediaPipe (jsDelivr e Google Storage) e para falar com a API.
+- **Segurança:** nessa versão, a chave fica guardada no navegador e as chamadas saem dele direto para a API da Anthropic. Use apenas em um dispositivo pessoal e **nunca publique o arquivo em um site com a sua chave**. Para uso compartilhado ou publicado, use a versão com servidor abaixo, em que a chave fica no backend.
+- Para gerar o arquivo de novo depois de mudar o código: `npm run build:html`.
+
+## Início rápido (versão com servidor)
 
 Requisitos: Node.js 20+ e um navegador baseado em Chromium (Chrome/Edge) para ter todos os recursos de voz.
 
@@ -82,7 +92,8 @@ Cada modo muda o comportamento real: instruções do sistema, ferramentas libera
 ```bash
 npm test                           # 72 testes unitários e de integração (Vitest)
 ./tests/e2e/prepare-fixtures.sh    # gera vídeos de câmera falsa a partir de imagens de exemplo do MediaPipe
-npx playwright test                # ponta a ponta no Chromium (câmera falsa + API Claude simulada)
+npm run build:html                 # gera orion.html (testado também via file://)
+npx playwright test                # 15 testes ponta a ponta no Chromium (câmera falsa + API Claude simulada)
 ```
 
 Os testes de ponta a ponta usam um servidor que imita a API de streaming da Anthropic (`tests/e2e/mock-anthropic.mjs`), então nenhuma chamada paga é feita.
@@ -111,5 +122,6 @@ Veja a seção “Status” no fim deste arquivo (atualizada a cada entrega).
 | Memória persistente com gerenciamento e desativação | Implementada e testada |
 | Projetos, tarefas, lembretes (notificação com o Orion aberto) | Implementados e testados |
 | Diagnóstico somente com valores medidos | Implementado e testado |
+| Versão HTML em arquivo único (`orion.html`), aberta via file:// | Implementada e testada: conversa, ferramentas, persistência e câmera |
 | Lembretes com o navegador fechado (push/e-mail) | **Não implementado**: exige um serviço de push externo |
 | Integrações externas (e-mail, calendário, mensagens) | **Não implementadas** |

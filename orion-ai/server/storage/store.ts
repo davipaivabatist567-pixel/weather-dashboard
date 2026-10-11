@@ -1,9 +1,15 @@
-// Armazenamento persistente simples em arquivo JSON, com gravação atômica.
-// Guarda memória, projetos, tarefas, lembretes e configurações do servidor.
-import { randomUUID } from "node:crypto";
-import { mkdirSync, readFileSync, renameSync, writeFileSync, existsSync, chmodSync } from "node:fs";
-import { dirname } from "node:path";
+// Armazenamento persistente de memória, projetos, tarefas, lembretes e configurações.
+// Independente de plataforma: a gravação fica a cargo de um adaptador de persistência
+// (arquivo JSON no servidor Node, localStorage na versão HTML).
 import type { MemoryItem, Project, Reminder, Task } from "../../shared/types";
+import { uid as randomUUID } from "../../shared/uid";
+
+export interface Persistence {
+  /** Descrição de onde os dados ficam (exibida no diagnóstico). */
+  label: string;
+  load(): unknown | null;
+  save(json: string): void;
+}
 
 export interface DbShape {
   version: 1;
@@ -38,34 +44,22 @@ export function looksSensitive(text: string): boolean {
 export class Store {
   private db: DbShape;
 
-  constructor(readonly path: string) {
+  constructor(readonly persistence: Persistence) {
     this.db = this.load();
   }
 
+  get path() {
+    return this.persistence.label;
+  }
+
   private load(): DbShape {
-    if (!existsSync(this.path)) return empty();
-    try {
-      const parsed = JSON.parse(readFileSync(this.path, "utf8")) as Partial<DbShape>;
-      return { ...empty(), ...parsed, settings: { ...empty().settings, ...parsed.settings } } as DbShape;
-    } catch (err) {
-      // Arquivo corrompido: preserva uma cópia e recomeça, em vez de travar o servidor.
-      const backup = `${this.path}.corrompido-${Date.now()}`;
-      renameSync(this.path, backup);
-      console.error(`[orion] Banco de dados ilegível, cópia salva em ${backup}:`, err);
-      return empty();
-    }
+    const parsed = this.persistence.load() as Partial<DbShape> | null;
+    if (!parsed || typeof parsed !== "object") return empty();
+    return { ...empty(), ...parsed, settings: { ...empty().settings, ...parsed.settings } } as DbShape;
   }
 
   private save() {
-    mkdirSync(dirname(this.path), { recursive: true });
-    const tmp = `${this.path}.tmp`;
-    writeFileSync(tmp, JSON.stringify(this.db, null, 2), { mode: 0o600 });
-    renameSync(tmp, this.path);
-    try {
-      chmodSync(this.path, 0o600);
-    } catch {
-      /* sistemas sem suporte a chmod */
-    }
+    this.persistence.save(JSON.stringify(this.db, null, 2));
   }
 
   /** Verifica se o armazenamento está gravável. */

@@ -1,6 +1,7 @@
 // Ações centrais do cliente: enviar mensagens, executar comandos locais,
 // atualizar o estado do servidor e confirmar ações sensíveis.
 import type { ChatAttachment, ChatTurn, OrionMode } from "../../shared/types";
+import { HOW_TO_CONNECT } from "./env";
 import { useOrion, uid, type ChatMessage } from "../store";
 import { getVisionEngine } from "../vision/engine";
 import { GESTURE_LABELS } from "../vision/gestures";
@@ -132,10 +133,12 @@ export async function sendMessage(raw: string, opts: SendOptions = {}): Promise<
   st.setCore("processando");
   const patch = (fn: (m: ChatMessage) => ChatMessage) => useOrion.getState().patchMessage(reply.id, fn);
 
-  // 2) Modo local (sem IA configurada)
-  if (!st.server?.ai.configured) {
+  // 2) Modo local (sem IA configurada). Se o estado ainda não foi carregado, consulta antes
+  //    para não responder em modo local por engano logo após abrir o Orion.
+  if (!useOrion.getState().server) await refreshStatus();
+  if (!useOrion.getState().server?.ai.configured) {
     let content: string;
-    if (opts.attachments?.length) content = "**Modo local limitado** — a análise de arquivos e imagens precisa de um modelo de IA conectado (ANTHROPIC_API_KEY).";
+    if (opts.attachments?.length) content = `**Modo local limitado** — a análise de arquivos e imagens precisa de um modelo de IA conectado: ${HOW_TO_CONNECT}.`;
     else content = await localReply(text);
     patch((m) => ({ ...m, content, streaming: false, local: true }));
     finish(opts.viaVoice, content);

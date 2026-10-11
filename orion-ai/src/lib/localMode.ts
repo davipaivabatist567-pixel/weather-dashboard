@@ -1,6 +1,7 @@
 // Modo local limitado: usado quando nenhum modelo de IA está configurado.
 // Responde apenas ao que pode ser resolvido de verdade, sem fingir inteligência.
 import { evaluateExpression, formatNumber } from "../../shared/math";
+import { HOW_TO_CONNECT } from "./env";
 import { api } from "./api";
 import { normalize } from "./commands";
 
@@ -17,7 +18,7 @@ Sem a IA, eu consigo fazer apenas o que é processado localmente:
 - **Comandos**: \`ative o modo scanner\`, \`desative a câmera\`, \`abra o modo programação\`, \`pare de falar\`
 - **Visão computacional, gestos e voz** funcionam sem a IA.
 
-Para conversar de verdade, defina \`ANTHROPIC_API_KEY\` no arquivo \`.env\` do servidor e reinicie o Orion.`;
+Para conversar de verdade, ${HOW_TO_CONNECT}.`;
 
 /** Tenta extrair uma expressão matemática da frase. */
 export function extractMath(text: string): string | null {
@@ -58,7 +59,7 @@ export async function localReply(input: string): Promise<string> {
   if (remember) {
     try {
       await api.memory.add(remember[1].trim());
-      return `${LOCAL_PREFIX}\n\nMemória salva (confirmado pelo servidor): “${remember[1].trim()}”.`;
+      return `${LOCAL_PREFIX}\n\nMemória salva (gravação confirmada): “${remember[1].trim()}”.`;
     } catch (err) {
       return `${LOCAL_PREFIX}\n\nNão salvei: ${(err as Error).message}`;
     }

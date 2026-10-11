@@ -19,6 +19,7 @@ export default defineConfig({
   projects: [
     { name: "geral", testMatch: /app\.spec/, use: { launchOptions: { executablePath, args: chromiumArgs("pessoa_maos.y4m") } } },
     { name: "camera-pessoa", testMatch: /vision-pessoa\.spec/, use: { launchOptions: { executablePath, args: chromiumArgs("pessoa_maos.y4m") } } },
+    { name: "html", testMatch: /html\.spec/, use: { launchOptions: { executablePath, args: chromiumArgs("pessoa_maos.y4m") } } },
     { name: "camera-polegar", testMatch: /vision-polegar\.spec/, use: { launchOptions: { executablePath, args: chromiumArgs("polegar.y4m") } } },
   ],
   webServer: [

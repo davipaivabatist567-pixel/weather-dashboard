@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "ORION AI — assistente pessoal multimodal (chat com IA, voz, visão computacional e gestos)",
+  "description": "ORION AI \u2014 assistente pessoal multimodal (chat com IA, voz, vis\u00e3o computacional e gestos)",
   "scripts": {
     "dev": "concurrently -k -n server,web -c cyan,blue \"npm:dev:server\" \"npm:dev:web\"",
     "dev:server": "tsx watch server/index.ts",
@@ -13,7 +13,8 @@
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.server.json --noEmit",
     "setup:models": "node scripts/download-models.mjs",
-    "postinstall": "node scripts/copy-mediapipe-wasm.mjs"
+    "postinstall": "node scripts/copy-mediapipe-wasm.mjs",
+    "build:html": "tsc -p tsconfig.json --noEmit && vite build --mode html && node scripts/finish-html.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",
@@ -39,6 +40,7 @@
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.4",
+    "vite-plugin-singlefile": "^2.3.3",
     "vitest": "^5.0.3"
   }
 }

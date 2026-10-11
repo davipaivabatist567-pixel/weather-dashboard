@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { AiConnection } from "../components/AiConnection";
 import { Toggle } from "../components/Shell";
+import { STANDALONE } from "../lib/env";
 import { refreshStatus } from "../lib/actions";
 import { api } from "../lib/api";
 import { listVoices, pickVoice, speak, speechRecognitionSupported, speechSynthesisSupported, stopSpeaking } from "../lib/voice";
@@ -25,6 +27,12 @@ export function SettingsPage() {
 
   return (
     <div className="grid-2">
+      {api.aiConfig && (
+        <div className="panel">
+          <h2>Conexão com a IA</h2>
+          <AiConnection />
+        </div>
+      )}
       <div className="panel">
         <h2>Voz</h2>
         {!speechSynthesisSupported ? (
@@ -106,7 +114,7 @@ export function SettingsPage() {
           <li>Vídeo processado localmente (MediaPipe no navegador); nenhum quadro é gravado ou enviado automaticamente.</li>
           <li>Sem reconhecimento de identidade de pessoas.</li>
           <li>Imagens só vão para a IA quando você anexa um arquivo ou confirma “Analisar quadro”.</li>
-          <li>A chave da API fica apenas no servidor.</li>
+          <li>{STANDALONE ? "A chave da API fica apenas neste navegador e só é enviada à API da Anthropic." : "A chave da API fica apenas no servidor."}</li>
         </ul>
         <div className="stack">
           <button className="btn small" onClick={() => { getVisionEngine().stop(); s.toast("Câmera desligada.", "ok"); }}>Desligar câmera agora</button>
@@ -135,10 +143,10 @@ export function SettingsPage() {
         <h2>Integrações</h2>
         <table className="diag-table">
           <tbody>
-            <tr><td>Servidor do Orion</td><td>{s.serverError ? "Inacessível" : s.server ? `Online (v${s.server.version})` : "Verificando…"}</td></tr>
+            <tr><td>{STANDALONE ? "Versão" : "Servidor do Orion"}</td><td>{STANDALONE ? `HTML independente (v${s.server?.version ?? "?"})` : s.serverError ? "Inacessível" : s.server ? `Online (v${s.server.version})` : "Verificando…"}</td></tr>
             <tr><td>Modelo de IA</td><td>{s.server?.ai.configured ? `${s.server.ai.provider} · ${s.server.ai.model}` : "Não configurado"}</td></tr>
             <tr><td>Pesquisa na internet</td><td>{s.server?.ai.webSearch ? "web_search (Anthropic)" : "Indisponível"}</td></tr>
-            <tr><td>Armazenamento</td><td>{s.server?.storage.ok ? "Arquivo JSON local no servidor" : "Indisponível"}</td></tr>
+            <tr><td>Armazenamento</td><td>{s.server?.storage.ok ? s.server.storage.path : "Indisponível"}</td></tr>
             <tr><td>Notificações</td><td>{"Notification" in window ? Notification.permission : "Sem suporte"}</td></tr>
           </tbody>
         </table>
@@ -148,7 +156,7 @@ export function SettingsPage() {
             <button className="btn small" onClick={() => void Notification.requestPermission().then(() => s.toast("Permissão de notificações atualizada."))}>Permitir notificações</button>
           )}
         </div>
-        {!s.server?.ai.configured && (
+        {!s.server?.ai.configured && !STANDALONE && (
           <p className="small muted" style={{ marginTop: 10 }}>
             Para conectar a IA: crie o arquivo <span className="mono">.env</span> no servidor com <span className="mono">ANTHROPIC_API_KEY=…</span> e reinicie. A chave nunca é enviada ao navegador.
           </p>

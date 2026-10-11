@@ -54,7 +54,7 @@ describe("AnthropicProvider (API simulada)", () => {
         { type: "message_stop" },
       ]),
     ];
-    const provider = new AnthropicProvider("sk-test", "claude-opus-5-5", "medium", true, baseURL);
+    const provider = new AnthropicProvider("sk-test", "claude-opus-5-5", "medium", true, { baseURL });
 
     let text = "";
     const calls: { name: string; input: unknown }[] = [];
@@ -107,7 +107,7 @@ describe("AnthropicProvider (API simulada)", () => {
       res.end(JSON.stringify({ type: "error", error: { type: "authentication_error", message: "invalid x-api-key" } }));
     });
     await new Promise<void>((r) => errServer.listen(0, "127.0.0.1", r));
-    const provider = new AnthropicProvider("sk-bad", "claude-opus-5-5", "medium", false, `http://127.0.0.1:${(errServer.address() as AddressInfo).port}`);
+    const provider = new AnthropicProvider("sk-bad", "claude-opus-5-5", "medium", false, { baseURL: `http://127.0.0.1:${(errServer.address() as AddressInfo).port}` });
     await expect(
       provider.chat(
         { system: "", messages: [{ role: "user", content: "oi" }], tools: [], webSearch: false, signal: new AbortController().signal },

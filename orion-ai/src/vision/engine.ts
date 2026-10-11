@@ -3,6 +3,7 @@
 // Nenhum quadro é gravado ou enviado para fora sem uma ação explícita do usuário.
 import { FilesetResolver, HandLandmarker, PoseLandmarker } from "@mediapipe/tasks-vision";
 import { bus } from "../lib/bus";
+import { STANDALONE } from "../lib/env";
 import { useOrion } from "../store";
 import { GestureController, optionsFromSensitivity } from "./gestureController";
 import { bodyMetrics, classifyHand, classifyPose, SwipeDetector, type GestureCandidate, type Pt } from "./gestures";
@@ -34,7 +35,11 @@ export interface VisionFrame {
   candidates: GestureCandidate[];
 }
 
+// Versão HTML: o WASM vem da CDN (versão fixa, igual à do pacote instalado).
+const WASM_PATH = STANDALONE ? "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.0/wasm" : "/mediapipe/wasm";
+
 async function pickModel(m: { local: string; remote: string }) {
+  if (STANDALONE) return m.remote;
   try {
     const r = await fetch(m.local, { method: "HEAD" });
     const type = r.headers.get("content-type") ?? "";
@@ -153,7 +158,7 @@ class VisionEngine {
 
   private loadModels() {
     this.modelsLoading ??= (async () => {
-      const fileset = await FilesetResolver.forVisionTasks("/mediapipe/wasm");
+      const fileset = await FilesetResolver.forVisionTasks(WASM_PATH);
       const [poseUrl, handUrl] = await Promise.all([pickModel(MODEL_URLS.pose), pickModel(MODEL_URLS.hand)]);
       const make = async (delegate: "GPU" | "CPU") => {
         const pose = await PoseLandmarker.createFromOptions(fileset, {

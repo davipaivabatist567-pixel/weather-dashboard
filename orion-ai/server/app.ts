@@ -3,6 +3,7 @@ import express, { type NextFunction, type Request, type Response } from "express
 import { z } from "zod";
 import type { ChatEvent, ServerStatus } from "../shared/types";
 import { runChat } from "./ai/core";
+import { planProject } from "./ai/planner";
 import { ProviderError, type AIProvider } from "./ai/provider";
 import { StoreError, type Store } from "./storage/store";
 import { PendingActions } from "./tools/registry";
@@ -73,7 +74,7 @@ export function createApp({ store, provider, version }: AppDeps) {
         model: provider?.model ?? null,
         webSearch: !!provider?.supportsWebSearch,
       },
-      storage: { ok: store.healthCheck(), path: "data/orion-db.json" },
+      storage: { ok: store.healthCheck(), path: "arquivo JSON no servidor" },
       memoryEnabled: store.memoryEnabled,
       version,
     };
@@ -128,28 +129,7 @@ export function createApp({ store, provider, version }: AppDeps) {
       const project = store.getProject(String(req.params.id));
       if (!project) return res.status(404).json({ error: "Projeto não encontrado." });
       if (!provider) return res.status(503).json({ error: "Modelo de IA não configurado; o planejamento automático está indisponível." });
-      const schema = {
-        type: "object",
-        properties: {
-          etapas: { type: "array", items: { type: "string" } },
-          proximo_passo: { type: "string" },
-          riscos: { type: "array", items: { type: "string" } },
-        },
-        required: ["etapas", "proximo_passo", "riscos"],
-        additionalProperties: false,
-      };
-      const prompt = `Divida o projeto abaixo em 4 a 10 etapas pequenas, concretas e em ordem de execução (cada uma com até 120 caracteres, em português). Considere as etapas já existentes e não as repita. Indique o próximo passo imediato e até 3 riscos.
-
-<projeto>
-Nome: ${project.name}
-Descrição: ${project.description || "(sem descrição)"}
-Objetivo: ${project.objective || "(sem objetivo)"}
-Prazo: ${project.deadline ?? "(sem prazo)"}
-Etapas existentes: ${project.steps.map((s) => `${s.done ? "[feita]" : "[pendente]"} ${s.title}`).join("; ") || "(nenhuma)"}
-Notas: ${project.notes || "(sem notas)"}
-</projeto>`;
-      const result = await provider.structured<{ etapas: string[]; proximo_passo: string; riscos: string[] }>(prompt, schema);
-      res.json(result);
+      res.json(await planProject(provider, project));
     }),
   );
 

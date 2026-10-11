@@ -1,4 +1,5 @@
 // Painel de diagnóstico: apenas valores medidos de verdade; o resto aparece como "Indisponível".
+import { api } from "../lib/api";
 import { speechRecognitionSupported, speechSynthesisSupported } from "../lib/voice";
 import { useOrion } from "../store";
 import { GESTURE_LABELS } from "../vision/gestures";
@@ -21,12 +22,12 @@ export function DiagnosticsPanel({ onClose }: { onClose?: () => void }) {
   const cameraOn = s.camera === "ativa" || s.camera === "pausada";
   const rows: [string, string, [string, string][]][] = [
     ["sistema", "Sistema", [
-      ["Servidor", s.serverError ? "Inacessível" : s.server ? "Conectado" : "Verificando…"],
+      [api.kind === "navegador" ? "Execução" : "Servidor", api.kind === "navegador" ? "Neste navegador" : s.serverError ? "Inacessível" : s.server ? "Conectado" : "Verificando…"],
       ["Modelo de IA", s.server ? (s.server.ai.configured ? s.server.ai.model ?? "Conectado" : "Não configurado") : NA],
       ["Provedor", s.server?.ai.provider ?? NA],
       ["Pesquisa na internet", s.server ? (s.server.ai.webSearch ? "Disponível" : "Indisponível") : NA],
       ["Latência (1º token)", s.lastLatencyMs !== null ? `${s.lastLatencyMs} ms` : NA],
-      ["Armazenamento", s.server ? (s.server.storage.ok ? "OK" : "Falha") : NA],
+      ["Armazenamento", s.server ? (s.server.storage.ok ? (api.kind === "navegador" ? "Navegador" : "OK") : "Falha") : NA],
       ["Memória persistente", s.server ? (s.server.memoryEnabled ? "Ativada" : "Desativada") : NA],
     ]],
     ["dispositivos", "Dispositivos", [

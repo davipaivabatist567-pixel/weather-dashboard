@@ -23,10 +23,18 @@ export class AnthropicProvider implements AIProvider {
     readonly model: string,
     private effort: Effort,
     webSearch: boolean,
-    /** Permite apontar para outro endpoint compatível (usado nos testes). */
-    baseURL?: string,
+    opts: {
+      /** Outro endpoint compatível (usado nos testes). */
+      baseURL?: string;
+      /** Versão HTML: a chamada parte do navegador com a chave do próprio usuário. */
+      browser?: boolean;
+    } = {},
   ) {
-    this.client = new Anthropic({ apiKey, ...(baseURL ? { baseURL } : {}) });
+    this.client = new Anthropic({
+      apiKey,
+      ...(opts.baseURL ? { baseURL: opts.baseURL } : {}),
+      ...(opts.browser ? { dangerouslyAllowBrowser: true } : {}),
+    });
     this.supportsWebSearch = webSearch;
   }
 

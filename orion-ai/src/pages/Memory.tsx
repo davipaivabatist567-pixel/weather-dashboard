@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { DATA_LOCATION } from "../lib/env";
 import type { MemoryItem } from "../../shared/types";
 import { Toggle } from "../components/Shell";
 import { refreshStatus } from "../lib/actions";
@@ -50,7 +51,7 @@ export function MemoryPage() {
         <div className="panel">
           <h2>Memória persistente</h2>
           <p className="small muted">
-            Informações que você autorizou o Orion a guardar no servidor (projetos, preferências, metas). São incluídas no contexto da IA quando a leitura está permitida.
+            Informações que você autorizou o Orion a guardar {DATA_LOCATION} (projetos, preferências, metas). São incluídas no contexto da IA quando a leitura está permitida.
             Senhas, chaves e números de cartão são recusados automaticamente.
           </p>
           <Toggle label="Memória persistente ativada" hint="Desativada: nada é salvo nem enviado à IA" checked={enabled} onChange={(v) => void run(() => api.memory.setEnabled(v), v ? "Memória ativada." : "Memória desativada.")} />

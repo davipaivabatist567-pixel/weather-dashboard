@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { HOW_TO_CONNECT } from "../lib/env";
 import { evaluateExpression, formatNumber } from "../../shared/math";
 import type { ChatAttachment } from "../../shared/types";
 import { Markdown } from "../components/Markdown";
@@ -55,9 +56,9 @@ export function ResearchPage() {
       <div className="panel">
         <h2>Pesquisa na internet</h2>
         {!ai?.configured ? (
-          <div className="notice">A pesquisa precisa de um modelo de IA conectado. Configure <span className="mono">ANTHROPIC_API_KEY</span> no servidor.</div>
+          <div className="notice">A pesquisa precisa de um modelo de IA conectado: {HOW_TO_CONNECT}.</div>
         ) : !ai.webSearch ? (
-          <div className="notice">A ferramenta de pesquisa na internet está desativada no servidor (<span className="mono">ORION_WEB_SEARCH=false</span>). As respostas virão apenas do conhecimento do modelo.</div>
+          <div className="notice">A ferramenta de pesquisa na internet está desativada na configuração da IA. As respostas virão apenas do conhecimento do modelo.</div>
         ) : !s.settings.permissions.webSearch ? (
           <div className="notice">Você desativou a permissão de pesquisa na internet em Configurações → Permissões.</div>
         ) : (

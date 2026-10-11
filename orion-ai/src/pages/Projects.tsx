@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { DATA_LOCATION } from "../lib/env";
 import type { Project, ProjectStatus, Reminder, Task } from "../../shared/types";
 import { api } from "../lib/api";
 import { useOrion } from "../store";
@@ -191,7 +192,7 @@ export function ProjectsPage() {
       await api.reminders.create(remText, new Date(remAt).toISOString());
       setRemText("");
       setRemAt("");
-    }, "Lembrete agendado (confirmado pelo servidor).");
+    }, "Lembrete agendado (gravação confirmada).");
   };
 
   return (
@@ -260,7 +261,7 @@ export function ProjectsPage() {
         </div>
         <div className="panel">
           <h2>Lembretes</h2>
-          <p className="small muted">Os lembretes ficam salvos no servidor e aparecem como notificação do navegador <b>enquanto o Orion estiver aberto</b>.</p>
+          <p className="small muted">Os lembretes ficam salvos {DATA_LOCATION} e aparecem como notificação do navegador <b>enquanto o Orion estiver aberto</b>.</p>
           <div className="row" style={{ marginBottom: 8 }}>
             <input className="input" style={{ flex: 2, minWidth: 160 }} placeholder="Lembrar de…" value={remText} onChange={(e) => setRemText(e.target.value)} />
             <input className="input" style={{ flex: 1, minWidth: 190 }} type="datetime-local" value={remAt} onChange={(e) => setRemAt(e.target.value)} aria-label="Data e hora" />

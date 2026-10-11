@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { AnthropicProvider } from "./ai/anthropicProvider";
 import type { AIProvider } from "./ai/provider";
 import { createApp } from "./app";
-import { Store } from "./storage/store";
+import { createFileStore } from "./storage/filePersistence";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const port = Number(process.env.ORION_PORT ?? 8787);
@@ -24,7 +24,7 @@ function createProvider(): AIProvider | null {
   return new AnthropicProvider(key, model, effort, webSearch);
 }
 
-const store = new Store(process.env.ORION_DB_PATH ?? join(root, "data", "orion-db.json"));
+const store = createFileStore(process.env.ORION_DB_PATH ?? join(root, "data", "orion-db.json"));
 const provider = createProvider();
 const app = createApp({ store, provider, version: "0.1.0" });
 

@@ -7,3 +7,4 @@ public/models/
 test-results/
 playwright-report/
 tests/e2e/fixtures/
+dist-html

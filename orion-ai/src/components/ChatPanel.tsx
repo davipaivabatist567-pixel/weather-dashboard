@@ -1,5 +1,6 @@
 // Painel de conversa: histórico, texto, voz, anexos, interrupção e limpeza.
 import { useEffect, useRef, useState } from "react";
+import { HOW_TO_CONNECT } from "../lib/env";
 import { MODES } from "../../shared/types";
 import type { ChatAttachment } from "../../shared/types";
 import { abortChat, resolvePending, sendMessage } from "../lib/actions";
@@ -139,7 +140,7 @@ export function ChatPanel() {
         <div className="notice err">{serverError}</div>
       ) : aiConfigured === false ? (
         <div className="notice">
-          <b>Modo local limitado:</b> nenhum modelo de IA está conectado. Cálculos, comandos, memória e projetos funcionam; para conversar, configure <span className="mono">ANTHROPIC_API_KEY</span> no servidor.
+          <b>Modo local limitado:</b> nenhum modelo de IA está conectado. Cálculos, comandos, memória e projetos funcionam; para conversar, {HOW_TO_CONNECT}.
         </div>
       ) : null}
       <div className="messages" ref={listRef} aria-live="polite">

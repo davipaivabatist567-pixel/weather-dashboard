@@ -1,8 +1,8 @@
 // Camada de ferramentas do Orion: cada ferramenta tem parâmetros validados,
 // nível de risco, permissão exigida e resultado verificável.
-import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { evaluateExpression, formatNumber } from "../../shared/math";
+import { uid as randomUUID } from "../../shared/uid";
 import type { PendingAction, Permissions, RiskLevel } from "../../shared/types";
 import { Store, StoreError } from "../storage/store";
 
