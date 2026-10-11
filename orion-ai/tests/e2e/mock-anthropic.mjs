@@ -20,8 +20,27 @@ createServer((req, res) => {
     const last = body.messages?.at(-1);
     const lastText = typeof last?.content === "string" ? last.content : (last?.content ?? []).map((b) => b.text ?? "").join(" ");
     const isToolResult = Array.isArray(last?.content) && last.content.some((b) => b.type === "tool_result");
+    // Pedidos não-streaming: saídas estruturadas (aprendizado, planejamento, transcrição)
+    if (!body.stream) {
+      let out = {};
+      if (lastText.includes("módulo de aprendizado")) {
+        const convo = lastText.split("<conversa>")[1] ?? "";
+        out = { aprendizados: /cachorro se chama Thor/i.test(convo) ? [{ conteudo: "O usuário tem um cachorro chamado Thor.", categoria: "geral" }] : [] };
+      } else if (lastText.includes("Divida o projeto")) {
+        out = { etapas: ["Etapa A", "Etapa B"], proximo_passo: "Etapa A", riscos: [] };
+      } else {
+        out = { titulo: "Documento", conteudo: "Conteúdo transcrito." };
+      }
+      res.writeHead(200, { "content-type": "application/json" });
+      res.end(JSON.stringify({ id: "msg_json", type: "message", role: "assistant", model: "claude-opus-5-5", content: [{ type: "text", text: JSON.stringify(out) }], stop_reason: "end_turn", stop_sequence: null, usage: { input_tokens: 5, output_tokens: 5 } }));
+      return;
+    }
+    const system = Array.isArray(body.system) ? body.system.map((b) => b.text).join("\n") : String(body.system ?? "");
+    const knowledge = system.match(/<conhecimento_do_usuario>\n\[[^\]]*\]\n([^\n]+)/);
     let events;
-    if (!isToolResult && /projeto/i.test(lastText) && body.tools?.some((t) => t.name === "projeto_criar")) {
+    if (knowledge && !isToolResult) {
+      events = [start("msg_k"), ...text(0, `Segundo o seu material: ${knowledge[1]}`), ...end("end_turn")];
+    } else if (!isToolResult && /projeto/i.test(lastText) && body.tools?.some((t) => t.name === "projeto_criar")) {
       events = [
         start("msg_tool"),
         ...text(0, "Vou registrar o projeto."),

@@ -1,6 +1,6 @@
 // Contrato entre a inteligência central do Orion e um provedor de modelo de linguagem.
 // Para trocar de provedor, basta implementar esta interface e registrá-la em index.ts.
-import type { ChatTurn } from "../../shared/types";
+import type { ChatAttachment, ChatTurn } from "../../shared/types";
 
 export interface ProviderTool {
   name: string;
@@ -40,8 +40,8 @@ export interface AIProvider {
   readonly supportsWebSearch: boolean;
   /** Executa uma conversa com ciclo de ferramentas até a resposta final. */
   chat(req: ProviderChatRequest, handlers: ProviderHandlers): Promise<ProviderChatResult>;
-  /** Gera uma saída JSON que obedece ao schema informado. */
-  structured<T>(prompt: string, schema: Record<string, unknown>, signal?: AbortSignal): Promise<T>;
+  /** Gera uma saída JSON que obedece ao schema informado (opcionalmente lendo anexos). */
+  structured<T>(prompt: string, schema: Record<string, unknown>, opts?: { signal?: AbortSignal; attachments?: ChatAttachment[] }): Promise<T>;
 }
 
 export class ProviderError extends Error {

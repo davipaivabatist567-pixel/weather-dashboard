@@ -1,7 +1,8 @@
 // Backend local da versão HTML: roda a mesma inteligência central, ferramentas e
 // armazenamento do servidor, mas dentro do navegador. Os dados ficam no localStorage
 // deste navegador e a IA é chamada diretamente com a chave do próprio usuário.
-import type { ChatEvent, ChatRequest, MemoryItem, Project, ServerStatus, Task } from "../../../shared/types";
+import type { ChatAttachment, ChatEvent, ChatRequest, ChatTurn, MemoryItem, Project, ServerStatus, Task } from "../../../shared/types";
+import { learnFromAttachments, learnFromConversation } from "../../../server/ai/learner";
 import { AnthropicProvider } from "../../../server/ai/anthropicProvider";
 import { runChat } from "../../../server/ai/core";
 import { planProject } from "../../../server/ai/planner";
@@ -92,6 +93,8 @@ export const backend: Backend = {
         ai: { configured: !!p, provider: p?.name ?? "nenhum", model: p?.model ?? null, webSearch: !!p?.supportsWebSearch },
         storage: { ok: getStore().healthCheck(), path: localPersistence.label },
         memoryEnabled: getStore().memoryEnabled,
+        learningEnabled: getStore().learningSetting,
+        knowledge: getStore().knowledgeStats(),
         version: "0.1.0-html",
       };
     }),
@@ -107,6 +110,33 @@ export const backend: Backend = {
         getStore().setMemoryEnabled(enabled);
         return { enabled: getStore().memoryEnabled };
       }),
+  },
+  knowledge: {
+    list: () => run(() => getStore().listKnowledge()),
+    get: (id: string) =>
+      run(() => {
+        const doc = getStore().getKnowledge(id);
+        if (!doc) throw new StoreError("Documento não encontrado.", 404);
+        return doc;
+      }),
+    add: (title: string, content: string) => run(() => getStore().addKnowledge(title, content, "texto")),
+    remove: (id: string) => run(() => getStore().deleteKnowledge(id)),
+    clear: () => run(() => getStore().clearKnowledge()),
+    search: (q: string) => run(() => getStore().searchKnowledge(q, 8)),
+  },
+  learning: {
+    setEnabled: (enabled: boolean) =>
+      run(() => {
+        getStore().setLearningEnabled(enabled);
+        return { enabled: getStore().learningSetting };
+      }),
+    conversation: (messages: Pick<ChatTurn, "role" | "content">[], explicit = false) =>
+      run(() => {
+        const provider = getProvider();
+        if (!provider) throw new StoreError("Aprender com conversas exige um modelo de IA conectado.", 503);
+        return learnFromConversation(provider, getStore(), messages, { explicit });
+      }),
+    files: (attachments: ChatAttachment[], explicit = false) => run(() => learnFromAttachments(getProvider(), getStore(), attachments, { explicit })),
   },
   projects: {
     list: () => run(() => getStore().listProjects()),

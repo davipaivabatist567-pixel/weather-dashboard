@@ -1,5 +1,6 @@
 // Backend HTTP: o frontend conversa com o servidor Node do Orion (a chave da API fica no servidor).
-import type { ChatEvent, ChatRequest, MemoryItem, Project, Reminder, ServerStatus, Task } from "../../../shared/types";
+import type { ChatAttachment, ChatEvent, ChatRequest, ChatTurn, KnowledgeDoc, KnowledgeMeta, LearnResult, MemoryItem, Project, Reminder, ServerStatus, Task } from "../../../shared/types";
+import type { SearchHit } from "../../../server/knowledge/search";
 import { ApiError } from "./errors";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -27,6 +28,20 @@ const api = {
     remove: (id: string) => request<void>(`/api/memory/${id}`, json("DELETE")),
     clear: () => request<void>("/api/memory", json("DELETE")),
     setEnabled: (enabled: boolean) => request<{ enabled: boolean }>("/api/memory/enabled", json("PUT", { enabled })),
+  },
+  knowledge: {
+    list: () => request<KnowledgeMeta[]>("/api/knowledge"),
+    get: (id: string) => request<KnowledgeDoc>(`/api/knowledge/${id}`),
+    add: (title: string, content: string) => request<KnowledgeMeta & { redacted: number }>("/api/knowledge", json("POST", { title, content })),
+    remove: (id: string) => request<void>(`/api/knowledge/${id}`, json("DELETE")),
+    clear: () => request<void>("/api/knowledge", json("DELETE")),
+    search: (q: string) => request<SearchHit[]>(`/api/knowledge/search?q=${encodeURIComponent(q)}`),
+  },
+  learning: {
+    setEnabled: (enabled: boolean) => request<{ enabled: boolean }>("/api/learning/enabled", json("PUT", { enabled })),
+    conversation: (messages: Pick<ChatTurn, "role" | "content">[], explicit = false) =>
+      request<LearnResult>("/api/learn/conversation", json("POST", { messages, explicit })),
+    files: (attachments: ChatAttachment[], explicit = false) => request<LearnResult>("/api/learn/files", json("POST", { attachments, explicit })),
   },
   projects: {
     list: () => request<Project[]>("/api/projects"),

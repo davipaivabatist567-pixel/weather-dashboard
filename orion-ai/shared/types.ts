@@ -74,12 +74,34 @@ export interface PendingAction {
   createdAt: string;
 }
 
+export type MemoryCategory = "projeto" | "preferencia" | "meta" | "configuracao" | "geral" | "aprendizado";
+
 export interface MemoryItem {
   id: string;
   content: string;
-  category: "projeto" | "preferencia" | "meta" | "configuracao" | "geral";
+  category: MemoryCategory;
+  /** "automatico" quando o Orion aprendeu sozinho a partir de uma conversa. */
+  origin?: "usuario" | "automatico";
   createdAt: string;
   updatedAt: string;
+}
+
+/** Documento da base de conhecimento (textos e arquivos que o usuário ensinou). */
+export interface KnowledgeDoc {
+  id: string;
+  title: string;
+  source: "arquivo" | "texto" | "conversa";
+  content: string;
+  chars: number;
+  createdAt: string;
+}
+export type KnowledgeMeta = Omit<KnowledgeDoc, "content"> & { preview: string };
+
+/** Resultado do aprendizado automático após uma conversa ou arquivo. */
+export interface LearnResult {
+  learned: MemoryItem[];
+  knowledge: KnowledgeMeta[];
+  skipped: string[];
 }
 
 export type ProjectStatus = "planejado" | "em_andamento" | "pausado" | "concluido";
@@ -131,5 +153,7 @@ export interface ServerStatus {
   };
   storage: { ok: boolean; path: string };
   memoryEnabled: boolean;
+  learningEnabled: boolean;
+  knowledge: { docs: number; chars: number };
   version: string;
 }

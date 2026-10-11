@@ -122,7 +122,7 @@ export const TOOLS: ToolDef[] = [
     permission: "writeMemory",
     schema: z.object({
       conteudo: z.string().min(1).max(2000),
-      categoria: z.enum(["projeto", "preferencia", "meta", "configuracao", "geral"]).default("geral"),
+      categoria: z.enum(["projeto", "preferencia", "meta", "configuracao", "geral", "aprendizado"]).default("geral"),
     }),
     run: ({ conteudo, categoria }, { store }) => {
       const item = store.addMemory(conteudo, categoria);
@@ -149,6 +149,49 @@ export const TOOLS: ToolDef[] = [
         content: "Pedido de exclusão criado. A memória NÃO foi apagada ainda: o usuário precisa confirmar na interface.",
         pendingAction: action,
       };
+    },
+  }),
+  define({
+    name: "conhecimento_buscar",
+    label: "Buscar no conhecimento",
+    description:
+      "Busca trechos na base de conhecimento que o usuário ensinou ao Orion (arquivos, textos e anotações). " +
+      "Use quando a pergunta puder depender do material do usuário.",
+    risk: "autorizacao",
+    permission: "readMemory",
+    schema: z.object({ consulta: z.string().min(1).max(500), limite: z.number().int().min(1).max(10).default(5) }),
+    run: ({ consulta, limite }, { store }) => {
+      const hits = store.searchKnowledge(consulta, limite);
+      return ok(
+        `${hits.length} trecho(s) encontrado(s)`,
+        hits.length ? hits.map((h) => ({ documento: h.title, trecho: h.text })) : "Nada encontrado na base de conhecimento para essa busca.",
+      );
+    },
+  }),
+  define({
+    name: "conhecimento_listar",
+    label: "Listar conhecimento",
+    description: "Lista os documentos da base de conhecimento do usuário (título, origem e tamanho).",
+    risk: "autorizacao",
+    permission: "readMemory",
+    schema: z.object({}),
+    run: (_i, { store }) => {
+      const docs = store.listKnowledge();
+      return ok(`${docs.length} documento(s)`, docs.map((d) => ({ id: d.id, titulo: d.title, origem: d.source, caracteres: d.chars })));
+    },
+  }),
+  define({
+    name: "aprender_texto",
+    label: "Aprender conteúdo",
+    description:
+      "Guarda um texto na base de conhecimento do usuário para consultas futuras. Use quando o usuário pedir para o Orion " +
+      "aprender, estudar ou guardar um conteúdo (anotações, matéria, instruções, informações de um projeto). Não guarde senhas ou dados sensíveis.",
+    risk: "autorizacao",
+    permission: "writeMemory",
+    schema: z.object({ titulo: z.string().min(1).max(160), conteudo: z.string().min(1).max(400_000) }),
+    run: ({ titulo, conteudo }, { store }) => {
+      const doc = store.addKnowledge(titulo, conteudo, "texto");
+      return ok(`Aprendido: ${doc.title}`, { salvo: true, id: doc.id, caracteres: doc.chars, dados_sensiveis_removidos: doc.redacted });
     },
   }),
   define({
@@ -261,7 +304,7 @@ export const TOOLS: ToolDef[] = [
 export function availableTools(permissions: Permissions, memoryEnabled: boolean): ToolDef[] {
   return TOOLS.filter((t) => {
     if (t.permission && !permissions[t.permission]) return false;
-    if (t.name.startsWith("memoria_") && !memoryEnabled) return false;
+    if (/^(memoria_|conhecimento_|aprender_)/.test(t.name) && !memoryEnabled) return false;
     return true;
   });
 }

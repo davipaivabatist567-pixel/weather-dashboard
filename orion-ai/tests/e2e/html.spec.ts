@@ -21,7 +21,7 @@ async function setup(page: Page) {
     if (req.method() === "OPTIONS") return route.fulfill({ status: 204, headers: CORS });
     apiCalls.push({ headers: req.headers(), body: req.postDataJSON() });
     const res = await fetch("http://127.0.0.1:8790/v1/messages", { method: "POST", body: req.postData() ?? "{}" });
-    await route.fulfill({ status: res.status, headers: { ...CORS, "content-type": "text/event-stream" }, body: await res.text() });
+    await route.fulfill({ status: res.status, headers: { ...CORS, "content-type": res.headers.get("content-type") ?? "application/json" }, body: await res.text() });
   });
   await page.route("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.0/wasm/**", (route) => {
     const name = new URL(route.request().url()).pathname.split("/").pop()!;
@@ -53,7 +53,10 @@ test("abre direto do arquivo, conecta com a chave do usuário e conversa", async
   await page.getByLabel("Mensagem").fill("Olá, Orion");
   await page.keyboard.press("Enter");
   await expect(page.locator(".msg.assistant").last()).toContainText("resposta simulada");
-  expect(apiCalls).toHaveLength(1);
+  const chatCalls = apiCalls.filter((c) => c.body.stream === true);
+  expect(chatCalls).toHaveLength(1);
+  // depois da resposta, uma chamada curta de aprendizado (não-streaming)
+  await expect.poll(() => apiCalls.filter((c) => !c.body.stream).length).toBe(1);
   expect(apiCalls[0].headers["x-api-key"]).toBe("sk-ant-teste-html");
   expect(apiCalls[0].headers["anthropic-dangerous-direct-browser-access"]).toBe("true");
   expect(apiCalls[0].body.model).toBe("claude-opus-5-5");
@@ -98,5 +101,18 @@ test("câmera e rastreamento funcionam abrindo o arquivo", async ({ page }) => {
   await expect(diag.locator("tr", { hasText: "Corpo detectado" })).toContainText("Sim");
   await page.getByRole("button", { name: /Desligar câmera/ }).click();
   await expect(page.locator(".topbar")).toContainText("Câmera desligada");
+  expect(errors).toEqual([]);
+});
+
+test("sem chave, aprende e responde com o que foi ensinado", async ({ page }) => {
+  const errors = await setup(page);
+  await page.goto(FILE_URL + "#/assistente");
+  await page.getByLabel("Mensagem").fill("aprenda: O Orion foi criado pelo Davi em 2026 para ajudar nos estudos.");
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".msg.assistant").last()).toContainText("Guardado na base de conhecimento");
+  await page.getByLabel("Mensagem").fill("o que você sabe sobre quem criou o Orion?");
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".msg.assistant").last()).toContainText("criado pelo Davi em 2026");
+  expect(apiCalls).toHaveLength(0);
   expect(errors).toEqual([]);
 });

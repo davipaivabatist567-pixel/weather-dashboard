@@ -29,7 +29,7 @@ test("todas as páginas abrem sem recarregar", async ({ page }) => {
   const marker = await page.evaluate(() => ((window as unknown as { __m: number }).__m = Math.random()));
   for (const [label, hash] of [
     ["Assistente", "assistente"], ["Visão Computacional", "visao"], ["Laboratório", "laboratorio"], ["Meus Projetos", "projetos"],
-    ["Pesquisa", "pesquisa"], ["Memória", "memoria"], ["Configurações", "configuracoes"], ["Início", "inicio"],
+    ["Pesquisa", "pesquisa"], ["Memória e Aprendizado", "memoria"], ["Configurações", "configuracoes"], ["Início", "inicio"],
   ]) {
     await nav(page, label);
     await expect(page).toHaveURL(new RegExp(`#/${hash}$`));
@@ -106,9 +106,9 @@ test("memória salva, recusa dados sensíveis e pode ser desativada", async ({ p
   await page.getByPlaceholder("Algo para o Orion lembrar").fill("senha: 12345");
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
   await expect(page.locator(".toast.erro")).toContainText("não armazena senhas");
-  await page.locator("label.toggle", { hasText: "Memória persistente ativada" }).click();
+  await page.locator("label.toggle", { hasText: /^Memória persistente/ }).click();
   await expect(page.getByPlaceholder("Algo para o Orion lembrar")).toBeDisabled();
-  await page.locator("label.toggle", { hasText: "Memória persistente ativada" }).click();
+  await page.locator("label.toggle", { hasText: /^Memória persistente/ }).click();
   await expect(page.getByPlaceholder("Algo para o Orion lembrar")).toBeEnabled();
 });
 
@@ -142,4 +142,38 @@ test("layout de celular sem rolagem horizontal", async ({ page }) => {
   }
   await page.goto("/#/inicio");
   await page.screenshot({ path: "test-results/03-celular.png", fullPage: true });
+});
+
+test("aprende com o que o usuário ensina e envia", async ({ page }) => {
+  await page.goto("/#/memoria");
+  await page.getByPlaceholder("ex.: Matéria de história").fill("Regras do meu jogo");
+  await page.getByPlaceholder("Cole aqui anotações").fill("No jogo Aventura do Pinguim, o chefe final é a Morsa Gigante.");
+  await page.getByRole("button", { name: "📚 Ensinar" }).click();
+  await expect(page.locator(".task", { hasText: "Regras do meu jogo" })).toBeVisible();
+
+  // A resposta usa o conhecimento ensinado (recuperado e enviado à IA)
+  await page.getByRole("navigation").getByRole("button", { name: "Assistente" }).click();
+  await page.getByLabel("Mensagem").fill("Quem é o chefe final do meu jogo do pinguim?");
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".msg.assistant").last()).toContainText("Morsa Gigante");
+
+  // Aprendizado automático a partir da conversa
+  await page.getByLabel("Mensagem").fill("Meu cachorro se chama Thor");
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".msg.system", { hasText: "🧠 Aprendi" })).toContainText("cachorro chamado Thor");
+
+  // Arquivo anexado no chat vai para a base de conhecimento
+  await page.locator('input[type="file"]').first().setInputFiles({ name: "notas-da-aula.txt", mimeType: "text/plain", buffer: Buffer.from("A capital da Austrália é Camberra.") });
+  await page.getByLabel("Mensagem").fill("Guarde estas notas");
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".msg.system", { hasText: "📚 Guardei" })).toContainText("notas-da-aula.txt");
+  await page.screenshot({ path: "test-results/08-aprendizado-chat.png" });
+
+  await page.getByRole("navigation").getByRole("button", { name: "Memória e Aprendizado" }).click();
+  await expect(page.locator(".task", { hasText: "cachorro chamado Thor" })).toContainText("🧠");
+  await expect(page.locator(".task", { hasText: "notas-da-aula.txt" })).toBeVisible();
+  await page.getByPlaceholder("O que o Orion sabe sobre…").fill("capital da Austrália");
+  await page.getByRole("button", { name: "Buscar", exact: true }).click();
+  await expect(page.getByText("Camberra").first()).toBeVisible();
+  await page.screenshot({ path: "test-results/09-aprendizado-pagina.png", fullPage: true });
 });

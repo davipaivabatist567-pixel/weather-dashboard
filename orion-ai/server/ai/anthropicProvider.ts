@@ -1,7 +1,7 @@
 // Provedor Anthropic (Claude) para a inteligência central do Orion.
 // A chave da API fica somente no backend (variável de ambiente ANTHROPIC_API_KEY).
 import Anthropic from "@anthropic-ai/sdk";
-import type { ChatTurn } from "../../shared/types";
+import type { ChatAttachment, ChatTurn } from "../../shared/types";
 import {
   ProviderError,
   type AIProvider,
@@ -134,18 +134,21 @@ export class AnthropicProvider implements AIProvider {
     return { stopReason: lastStop, model: this.model, usage: { input: usageIn, output: usageOut } };
   }
 
-  async structured<T>(prompt: string, schema: Record<string, unknown>, signal?: AbortSignal): Promise<T> {
+  async structured<T>(prompt: string, schema: Record<string, unknown>, opts: { signal?: AbortSignal; attachments?: ChatAttachment[] } = {}): Promise<T> {
     try {
-      const response = await this.client.messages.create(
+      const response = await this.client.beta.messages.create(
         {
           model: this.model,
           max_tokens: 16000,
           output_config: { effort: "low", format: { type: "json_schema", schema } },
-          messages: [{ role: "user", content: prompt }],
+          messages: [toMessageParam({ role: "user", content: prompt, attachments: opts.attachments })],
+          betas: ["server-side-fallback-2026-07-01"],
+          fallbacks: "default",
         },
-        { signal },
+        { signal: opts.signal },
       );
       if (response.stop_reason === "refusal") throw new ProviderError("O modelo recusou o pedido.", 422);
+      if (response.stop_reason === "max_tokens") throw new ProviderError("A resposta estruturada ficou longa demais e foi cortada.", 422);
       const text = response.content.flatMap((b) => (b.type === "text" ? [b.text] : [])).join("");
       return JSON.parse(text) as T;
     } catch (err) {

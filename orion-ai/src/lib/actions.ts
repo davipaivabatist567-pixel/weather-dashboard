@@ -1,6 +1,6 @@
 // Ações centrais do cliente: enviar mensagens, executar comandos locais,
 // atualizar o estado do servidor e confirmar ações sensíveis.
-import type { ChatAttachment, ChatTurn, OrionMode } from "../../shared/types";
+import type { ChatAttachment, ChatTurn, KnowledgeMeta, LearnResult, MemoryItem, OrionMode } from "../../shared/types";
 import { HOW_TO_CONNECT } from "./env";
 import { useOrion, uid, type ChatMessage } from "../store";
 import { getVisionEngine } from "../vision/engine";
@@ -142,6 +142,7 @@ export async function sendMessage(raw: string, opts: SendOptions = {}): Promise<
     else content = await localReply(text);
     patch((m) => ({ ...m, content, streaming: false, local: true }));
     finish(opts.viaVoice, content);
+    void learnAfterReply(userMsg, null);
     return reply.id;
   }
 
@@ -153,6 +154,7 @@ export async function sendMessage(raw: string, opts: SendOptions = {}): Promise<
     .map((m) => ({ role: m.role as "user" | "assistant", content: m.content, attachments: m.attachmentData }));
 
   controller = new AbortController();
+  const signal = controller.signal;
   const started = performance.now();
   let firstToken = true;
   try {
@@ -212,7 +214,48 @@ export async function sendMessage(raw: string, opts: SendOptions = {}): Promise<
   }
   const final = useOrion.getState().messages.find((m) => m.id === reply.id);
   finish(opts.viaVoice, final?.content ?? "", !!final?.error);
+  if (final && !final.error && final.content && !signal.aborted) void learnAfterReply(userMsg, final.content);
   return reply.id;
+}
+
+/**
+ * Aprendizado contínuo: depois de cada resposta, guarda os arquivos enviados na base de
+ * conhecimento e pede à IA para extrair o que o usuário ensinou na conversa.
+ * Roda em segundo plano e mostra no chat exatamente o que foi guardado.
+ */
+async function learnAfterReply(user: ChatMessage, replyContent: string | null) {
+  const st = useOrion.getState();
+  const server = st.server;
+  if (!server?.memoryEnabled || !server.learningEnabled || !st.settings.permissions.writeMemory) return;
+  const jobs: Promise<LearnResult>[] = [];
+  if (user.attachmentData?.length) jobs.push(api.learning.files(user.attachmentData));
+  if (server.ai.configured && replyContent && user.content.trim()) {
+    jobs.push(
+      api.learning.conversation([
+        { role: "user", content: user.content },
+        { role: "assistant", content: replyContent.slice(0, 4000) },
+      ]),
+    );
+  }
+  if (!jobs.length) return;
+  const results = await Promise.allSettled(jobs);
+  const learned = results.flatMap((r) => (r.status === "fulfilled" ? r.value.learned : []));
+  const docs = results.flatMap((r) => (r.status === "fulfilled" ? r.value.knowledge : []));
+  const skipped = results.flatMap((r) => (r.status === "fulfilled" ? r.value.skipped : [`aprendizado indisponível: ${(r.reason as Error).message}`]));
+  reportLearning(learned, docs, skipped);
+  void refreshStatus();
+}
+
+/** Mostra no chat o que foi aprendido (somente o que o armazenamento confirmou). */
+export function reportLearning(learned: MemoryItem[], docs: KnowledgeMeta[], skipped: string[] = []) {
+  const st = useOrion.getState();
+  const lines: string[] = [];
+  if (learned.length) lines.push(`🧠 Aprendi: ${learned.map((m) => m.content).join(" · ")}`);
+  if (docs.length) lines.push(`📚 Guardei na base de conhecimento: ${docs.map((d) => d.title).join(", ")}`);
+  if (skipped.length) lines.push(`⚠ Não aprendi: ${skipped.join("; ")}`);
+  if (!lines.length) return;
+  st.addMessage({ id: uid(), role: "system", content: lines.join("\n"), at: new Date().toISOString(), local: true });
+  if (learned.length || docs.length) window.dispatchEvent(new Event("orion:data-changed"));
 }
 
 function finish(viaVoice: boolean | undefined, content: string, isError = false) {

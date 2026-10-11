@@ -14,7 +14,7 @@ export const PAGES: { id: Page; label: string; icon: string }[] = [
   { id: "laboratorio", label: "Laboratório", icon: "⌬" },
   { id: "projetos", label: "Meus Projetos", icon: "▦" },
   { id: "pesquisa", label: "Pesquisa", icon: "⌕" },
-  { id: "memoria", label: "Memória", icon: "◇" },
+  { id: "memoria", label: "Memória e Aprendizado", icon: "◇" },
   { id: "configuracoes", label: "Configurações", icon: "⚙" },
 ];
 

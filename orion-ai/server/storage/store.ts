@@ -1,7 +1,8 @@
 // Armazenamento persistente de memória, projetos, tarefas, lembretes e configurações.
 // Independente de plataforma: a gravação fica a cargo de um adaptador de persistência
 // (arquivo JSON no servidor Node, localStorage na versão HTML).
-import type { MemoryItem, Project, Reminder, Task } from "../../shared/types";
+import type { KnowledgeDoc, KnowledgeMeta, MemoryCategory, MemoryItem, Project, Reminder, Task } from "../../shared/types";
+import { KnowledgeIndex, normalizeText, type SearchHit } from "../knowledge/search";
 import { uid as randomUUID } from "../../shared/uid";
 
 export interface Persistence {
@@ -13,8 +14,9 @@ export interface Persistence {
 
 export interface DbShape {
   version: 1;
-  settings: { memoryEnabled: boolean };
+  settings: { memoryEnabled: boolean; learningEnabled: boolean };
   memory: MemoryItem[];
+  knowledge: KnowledgeDoc[];
   projects: Project[];
   tasks: Task[];
   reminders: Reminder[];
@@ -22,24 +24,38 @@ export interface DbShape {
 
 const empty = (): DbShape => ({
   version: 1,
-  settings: { memoryEnabled: true },
+  settings: { memoryEnabled: true, learningEnabled: true },
   memory: [],
+  knowledge: [],
   projects: [],
   tasks: [],
   reminders: [],
 });
 
-/** Padrões que parecem credenciais — nunca devem ir para a memória. */
-const SECRET_PATTERNS = [
-  /sk-[a-z0-9_-]{16,}/i,
-  /\b(senha|password|passwd|api[_ -]?key|token|segredo|secret)\b\s*[:=]/i,
-  /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
-  /\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b/, // número de cartão
+/** Credenciais inequívocas: removidas de qualquer conteúdo aprendido. */
+const HARD_SECRETS = [
+  /\bsk-[a-z0-9_-]{16,}/gi,
+  /-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?(-----END [A-Z ]*PRIVATE KEY-----|$)/g,
+  /\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b/g, // número de cartão
 ];
+/** Padrões que parecem credenciais — nunca devem ir para a memória. */
+const SECRET_PATTERNS = [...HARD_SECRETS.map((r) => new RegExp(r.source, "i")), /\b(senha|password|passwd|api[_ -]?key|token|segredo|secret)\b\s*[:=]/i];
 
 export function looksSensitive(text: string): boolean {
   return SECRET_PATTERNS.some((re) => re.test(text));
 }
+
+/** Remove credenciais evidentes de documentos (que podem citar a palavra "senha" legitimamente). */
+export function redactSecrets(text: string): { text: string; redacted: number } {
+  let redacted = 0;
+  let out = text;
+  for (const re of HARD_SECRETS) out = out.replace(re, () => (redacted++, "[dado sensível removido]"));
+  return { text: out, redacted };
+}
+
+const MAX_DOC_CHARS = 400_000;
+const MAX_TOTAL_KNOWLEDGE = 8_000_000;
+const same = (a: string, b: string) => normalizeText(a).replace(/\W+/g, " ").trim() === normalizeText(b).replace(/\W+/g, " ").trim();
 
 export class Store {
   private db: DbShape;
@@ -52,14 +68,28 @@ export class Store {
     return this.persistence.label;
   }
 
+  private lastSaved: string | null = null;
+  private index: KnowledgeIndex | null = null;
+
   private load(): DbShape {
     const parsed = this.persistence.load() as Partial<DbShape> | null;
     if (!parsed || typeof parsed !== "object") return empty();
-    return { ...empty(), ...parsed, settings: { ...empty().settings, ...parsed.settings } } as DbShape;
+    const db = { ...empty(), ...parsed, settings: { ...empty().settings, ...parsed.settings } } as DbShape;
+    this.lastSaved = JSON.stringify(db);
+    return db;
   }
 
+  /** Grava; se falhar (ex.: armazenamento cheio), desfaz a alteração em memória. */
   private save() {
-    this.persistence.save(JSON.stringify(this.db, null, 2));
+    const json = JSON.stringify(this.db);
+    try {
+      this.persistence.save(json);
+      this.lastSaved = json;
+    } catch (err) {
+      this.db = this.lastSaved ? (JSON.parse(this.lastSaved) as DbShape) : empty();
+      this.index = null;
+      throw err instanceof StoreError ? err : new StoreError(`Falha ao salvar: ${err instanceof Error ? err.message : String(err)}`, 507);
+    }
   }
 
   /** Verifica se o armazenamento está gravável. */
@@ -80,19 +110,76 @@ export class Store {
     this.db.settings.memoryEnabled = enabled;
     this.save();
   }
+  /** Aprendizado automático (conversas e arquivos). Só tem efeito com a memória ativada. */
+  get learningEnabled() {
+    return this.db.settings.learningEnabled && this.db.settings.memoryEnabled;
+  }
+  get learningSetting() {
+    return this.db.settings.learningEnabled;
+  }
+  setLearningEnabled(enabled: boolean) {
+    this.db.settings.learningEnabled = enabled;
+    this.save();
+  }
+
+  // ---------- Base de conhecimento ----------
+  listKnowledge(): KnowledgeMeta[] {
+    return this.db.knowledge.map(({ content, ...meta }) => ({ ...meta, preview: content.slice(0, 220) }));
+  }
+  getKnowledge(id: string): KnowledgeDoc | undefined {
+    return this.db.knowledge.find((k) => k.id === id);
+  }
+  knowledgeStats() {
+    return { docs: this.db.knowledge.length, chars: this.db.knowledge.reduce((s, k) => s + k.chars, 0) };
+  }
+  addKnowledge(title: string, content: string, source: KnowledgeDoc["source"] = "texto"): KnowledgeMeta & { redacted: number } {
+    if (!this.db.settings.memoryEnabled) throw new StoreError("A memória está desativada; ative-a para o Orion aprender.");
+    const clean = redactSecrets(content.replace(/\u0000/g, "").trim());
+    if (!clean.text) throw new StoreError("Conteúdo vazio: nada para aprender.");
+    if (clean.text.length > MAX_DOC_CHARS) throw new StoreError(`Conteúdo muito grande (máx. ${MAX_DOC_CHARS.toLocaleString("pt-BR")} caracteres por documento).`);
+    if (this.knowledgeStats().chars + clean.text.length > MAX_TOTAL_KNOWLEDGE) throw new StoreError("A base de conhecimento está cheia. Apague documentos antigos.");
+    const name = (title.trim() || clean.text.slice(0, 60)).slice(0, 160);
+    const existing = this.db.knowledge.find((k) => k.title === name && k.content === clean.text);
+    if (existing) return { ...this.listKnowledge().find((m) => m.id === existing.id)!, redacted: clean.redacted };
+    const doc: KnowledgeDoc = { id: randomUUID(), title: name, source, content: clean.text, chars: clean.text.length, createdAt: new Date().toISOString() };
+    this.db.knowledge.push(doc);
+    this.index = null;
+    this.save();
+    return { ...this.listKnowledge().find((m) => m.id === doc.id)!, redacted: clean.redacted };
+  }
+  deleteKnowledge(id: string) {
+    const before = this.db.knowledge.length;
+    this.db.knowledge = this.db.knowledge.filter((k) => k.id !== id);
+    if (this.db.knowledge.length === before) throw new StoreError("Documento não encontrado.", 404);
+    this.index = null;
+    this.save();
+  }
+  clearKnowledge() {
+    this.db.knowledge = [];
+    this.index = null;
+    this.save();
+  }
+  /** Trechos mais relevantes para a consulta (vazio se a memória estiver desativada). */
+  searchKnowledge(query: string, limit = 5): SearchHit[] {
+    if (!this.db.settings.memoryEnabled || !this.db.knowledge.length) return [];
+    this.index ??= new KnowledgeIndex(this.db.knowledge);
+    return this.index.search(query, limit);
+  }
 
   // ---------- Memória ----------
   listMemory(): MemoryItem[] {
     return [...this.db.memory];
   }
-  addMemory(content: string, category: MemoryItem["category"] = "geral"): MemoryItem {
+  addMemory(content: string, category: MemoryCategory = "geral", origin: MemoryItem["origin"] = "usuario"): MemoryItem {
     if (!this.db.settings.memoryEnabled) throw new StoreError("A memória persistente está desativada.");
     const text = content.trim();
     if (!text) throw new StoreError("Memória vazia.");
     if (text.length > 2000) throw new StoreError("Memória muito longa (máx. 2000 caracteres).");
     if (looksSensitive(text)) throw new StoreError("Por segurança, o Orion não armazena senhas, chaves ou dados de cartão.");
+    const duplicate = this.db.memory.find((m) => same(m.content, text));
+    if (duplicate) return duplicate;
     const now = new Date().toISOString();
-    const item: MemoryItem = { id: randomUUID(), content: text, category, createdAt: now, updatedAt: now };
+    const item: MemoryItem = { id: randomUUID(), content: text, category, origin, createdAt: now, updatedAt: now };
     this.db.memory.push(item);
     this.save();
     return item;
@@ -242,11 +329,12 @@ export class Store {
     this.save();
   }
 
-  /** Apaga todos os dados pessoais (memória, projetos, tarefas, lembretes). */
+  /** Apaga todos os dados pessoais (memória, conhecimento, projetos, tarefas, lembretes). */
   wipeAll() {
-    const memoryEnabled = this.db.settings.memoryEnabled;
+    const settings = { ...this.db.settings };
     this.db = empty();
-    this.db.settings.memoryEnabled = memoryEnabled;
+    this.db.settings = settings;
+    this.index = null;
     this.save();
   }
 }

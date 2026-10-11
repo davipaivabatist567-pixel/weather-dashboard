@@ -95,8 +95,8 @@ export function SettingsPage() {
       <div className="panel">
         <h2>Permissões do Orion</h2>
         <p className="small muted">Ferramentas não autorizadas não são oferecidas ao modelo. Exclusões sempre exigem sua confirmação final.</p>
-        <Toggle label="Ler a memória persistente" hint="Nível: com autorização" checked={st.permissions.readMemory} onChange={(readMemory) => set("permissions", { readMemory })} />
-        <Toggle label="Salvar memórias quando eu pedir" hint="Nível: com autorização" checked={st.permissions.writeMemory} onChange={(writeMemory) => set("permissions", { writeMemory })} />
+        <Toggle label="Ler a memória e o conhecimento aprendido" hint="Nível: com autorização" checked={st.permissions.readMemory} onChange={(readMemory) => set("permissions", { readMemory })} />
+        <Toggle label="Salvar memórias e aprender" hint="Nível: com autorização (inclui o aprendizado automático)" checked={st.permissions.writeMemory} onChange={(writeMemory) => set("permissions", { writeMemory })} />
         <Toggle label="Ler e criar projetos, tarefas e lembretes" hint="Nível: com autorização" checked={st.permissions.manageProjects} onChange={(manageProjects) => set("permissions", { manageProjects })} />
         <Toggle label="Pesquisar na internet" hint="Nível: com autorização (serviço externo)" checked={st.permissions.webSearch} onChange={(webSearch) => set("permissions", { webSearch })} />
         <table className="diag-table" style={{ marginTop: 10 }}>

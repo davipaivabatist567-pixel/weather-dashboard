@@ -71,6 +71,16 @@ Cada modo muda o comportamento real: instruções do sistema, ferramentas libera
 | Laboratório | não | não | medições reais da câmera enviadas como contexto |
 | Pesquisa | sim | não | cita fontes e indica o grau de confiança |
 
+### Aprendizado
+
+O Orion aprende guardando e consultando o que você envia (o modelo de IA em si não é modificado; ninguém consegue retreinar um modelo assim em casa):
+
+- **Base de conhecimento:** textos que você cola, arquivos de texto/código e (com a IA conectada) imagens e PDFs transcritos são divididos em trechos e indexados com busca BM25 local, adaptada ao português (acentos, plurais). A cada pergunta, os trechos mais relevantes vão para o contexto da IA, que também tem as ferramentas `conhecimento_buscar` e `aprender_texto`.
+- **Aprendizado automático:** depois de cada resposta, uma chamada curta à IA extrai o que você ensinou ou revelou (fatos, preferências, projetos, correções) e guarda como memória marcada com 🧠. Arquivos anexados no chat entram na base. O chat mostra exatamente o que foi guardado.
+- **Aprender com o histórico:** em Memória e Aprendizado, o Orion estuda a conversa já salva no navegador.
+- **Controle:** tudo pode ser visto, buscado, editado e apagado; o aprendizado automático e a memória podem ser desligados. Credenciais evidentes (chaves `sk-…`, chaves privadas, números de cartão) são removidas antes de guardar.
+- Sem a IA: `aprenda: <texto>` guarda conteúdo e `o que você sabe sobre X?` mostra os trechos encontrados.
+
 ### Segurança e permissões
 
 - **Baixo risco:** calculadora, data/hora (executam direto).
@@ -90,10 +100,10 @@ Cada modo muda o comportamento real: instruções do sistema, ferramentas libera
 ## Testes
 
 ```bash
-npm test                           # 72 testes unitários e de integração (Vitest)
+npm test                           # 86 testes unitários e de integração (Vitest)
 ./tests/e2e/prepare-fixtures.sh    # gera vídeos de câmera falsa a partir de imagens de exemplo do MediaPipe
 npm run build:html                 # gera orion.html (testado também via file://)
-npx playwright test                # 15 testes ponta a ponta no Chromium (câmera falsa + API Claude simulada)
+npx playwright test                # 17 testes ponta a ponta no Chromium (câmera falsa + API Claude simulada)
 ```
 
 Os testes de ponta a ponta usam um servidor que imita a API de streaming da Anthropic (`tests/e2e/mock-anthropic.mjs`), então nenhuma chamada paga é feita.
@@ -120,6 +130,7 @@ Veja a seção “Status” no fim deste arquivo (atualizada a cada entrega).
 | Gestos com limiar, confirmação por quadros, intervalo, sem repetição, sensibilidade, calibração, histórico | Implementados; polegar para cima testado com imagem real; demais gestos com testes unitários |
 | Voz: reconhecimento pt-BR e síntese com escolha de voz, velocidade, volume, silenciar e parar | Implementados; dependem do navegador (não testáveis no Chromium sem interface) |
 | Memória persistente com gerenciamento e desativação | Implementada e testada |
+| Aprendizado: base de conhecimento com busca, aprendizado automático das conversas e arquivos, aprender com o histórico | Implementado e testado (IA simulada nos testes) |
 | Projetos, tarefas, lembretes (notificação com o Orion aberto) | Implementados e testados |
 | Diagnóstico somente com valores medidos | Implementado e testado |
 | Versão HTML em arquivo único (`orion.html`), aberta via file:// | Implementada e testada: conversa, ferramentas, persistência e câmera |
