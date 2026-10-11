@@ -1,5 +1,7 @@
 // Controles da câmera: ativar, desligar, pausar/retomar, escolher dispositivo e modo de visualização.
+import { useState } from "react";
 import { useOrion, type ViewMode } from "../store";
+import { diagnoseCamera, type DiagStep } from "../vision/diagnose";
 import { getVisionEngine } from "../vision/engine";
 import { useCameraPermission } from "../vision/permission";
 
@@ -21,6 +23,17 @@ export function CameraControls() {
   const permission = useCameraPermission();
   const autoStart = useOrion((s) => s.settings.camera.autoStart);
   const isFile = location.protocol === "file:";
+  const [report, setReport] = useState<DiagStep[] | null>(null);
+  const [diagBusy, setDiagBusy] = useState(false);
+  const runDiagnosis = async () => {
+    setDiagBusy(true);
+    setReport(null);
+    try {
+      setReport(await diagnoseCamera());
+    } finally {
+      setDiagBusy(false);
+    }
+  };
 
   return (
     <div className="stack">
@@ -40,6 +53,20 @@ export function CameraControls() {
           </>
         )}
       </div>
+      <div className="row">
+        <button className="btn small ghost" onClick={() => void runDiagnosis()} disabled={diagBusy}>
+          {diagBusy ? "Diagnosticando…" : "Diagnosticar câmera"}
+        </button>
+      </div>
+      {report && (
+        <ul className="small cam-diag" aria-label="Resultado do diagnóstico da câmera">
+          {report.map((r) => (
+            <li key={r.name} className={r.ok ? "ok" : "falha"}>
+              {r.ok ? "✓" : "✗"} <b>{r.name}</b>: {r.detail}
+            </li>
+          ))}
+        </ul>
+      )}
       <div className="row">
         <span className="small muted">Visualização:</span>
         {VIEW_MODES.map((m) => (

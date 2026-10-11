@@ -120,15 +120,43 @@ test("sem chave, aprende e responde com o que foi ensinado", async ({ page }) =>
 test.describe("dentro do app Android (WebView)", () => {
   test.use({ userAgent: "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36 OrionApp/1.0" });
 
-  test("a câmera liga sozinha, porque o app é quem pede a permissão ao sistema", async ({ page }) => {
-    const errors = await setup(page);
-    // Simula um navegador que ainda não guardou a permissão: só o sufixo OrionApp pode ligar sozinho.
+  // Imita o que o MainActivity faz: serve o HTML, o WASM do MediaPipe e os modelos de um endereço
+  // https interno (appassets.orion). Qualquer pedido à CDN ou ao Google Storage é registrado.
+  test("a câmera liga sozinha com MediaPipe e modelos de dentro do APK, sem CDN", async ({ page }) => {
+    const root = join(import.meta.dirname, "..", "..");
+    const errors: string[] = [];
+    const external: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.route(/cdn\.jsdelivr\.net|storage\.googleapis\.com/, (route) => {
+      external.push(route.request().url());
+      return route.abort();
+    });
+    await page.route("https://appassets.orion/**", (route) => {
+      const path = new URL(route.request().url()).pathname;
+      if (path === "/" || path === "/index.html") return route.fulfill({ status: 200, contentType: "text/html", body: readFileSync(join(root, "orion.html")) });
+      const file = path.startsWith("/mediapipe/wasm/")
+        ? join(WASM_DIR, path.split("/").pop()!)
+        : path.startsWith("/models/")
+          ? join(root, "public", "models", path.split("/").pop()!)
+          : null;
+      if (!file) return route.fulfill({ status: 404, body: "" });
+      const type = file.endsWith(".wasm") ? "application/wasm" : file.endsWith(".js") ? "text/javascript" : "application/octet-stream";
+      return route.fulfill({ status: 200, contentType: type, body: readFileSync(file) });
+    });
+    // Simula um WebView que ainda não tem a permissão guardada: só o sufixo OrionApp liga sozinho.
     await page.addInitScript(() => {
       const fake = { state: "prompt", addEventListener() {}, removeEventListener() {} };
       navigator.permissions.query = () => Promise.resolve(fake as unknown as PermissionStatus);
     });
-    await page.goto(FILE_URL + "#/visao");
+    await page.goto("https://appassets.orion/#/visao");
     await expect(page.locator(".vision-status")).toHaveText("Detectando movimentos", { timeout: 90_000 });
+    expect(external).toEqual([]);
+
+    // O diagnóstico mostra tudo certo e aponta para os arquivos de dentro do app
+    await page.getByRole("button", { name: "Diagnosticar câmera" }).click();
+    const report = page.getByLabel("Resultado do diagnóstico da câmera");
+    await expect(report).toContainText("Arquivo do MediaPipe (WASM): /mediapipe/wasm");
+    await expect(report.locator("li.falha")).toHaveCount(0);
     expect(errors).toEqual([]);
   });
 });

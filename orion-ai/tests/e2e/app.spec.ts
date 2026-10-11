@@ -211,3 +211,14 @@ test("Orion Ring: um botão vira clique, duplo e longo, e a tecla pode ser reapr
   await page.keyboard.press("F8");
   await expect(page.getByText("Tecla atual:")).toContainText("F8");
 });
+
+test("diagnóstico da câmera lista cada passo com o resultado real", async ({ page }) => {
+  await page.goto("/#/visao");
+  await page.getByRole("button", { name: "Diagnosticar câmera" }).click();
+  const report = page.getByLabel("Resultado do diagnóstico da câmera");
+  await expect(report).toContainText("Contexto seguro");
+  await expect(report).toContainText("Abrir a câmera");
+  await expect(report.locator("li.ok", { hasText: "Abrir a câmera" })).toBeVisible();
+  await expect(report.locator("li.ok", { hasText: "Modelo de mãos" })).toBeVisible();
+  await expect(report.locator("li.falha")).toHaveCount(0);
+});

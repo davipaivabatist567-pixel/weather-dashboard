@@ -8,3 +8,6 @@ export const HOW_TO_CONNECT = STANDALONE
 
 /** Onde ficam memória, projetos, tarefas e lembretes. */
 export const DATA_LOCATION = STANDALONE ? "neste navegador" : "no servidor";
+
+/** true dentro do app Android (WebView): o app serve o MediaPipe e os modelos de dentro do APK. */
+export const IN_ANDROID_APP = typeof navigator !== "undefined" && /OrionApp\//.test(navigator.userAgent);

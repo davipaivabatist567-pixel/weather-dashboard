@@ -358,3 +358,6 @@ details summary { cursor: pointer; color: var(--cyan-soft); }
 }
 
 .ring-log { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; }
+.cam-diag { list-style: none; margin: 0; padding: 8px 10px; display: grid; gap: 4px; border: 1px solid var(--line, #123); border-radius: 8px; word-break: break-word; }
+.cam-diag .ok { color: var(--cyan-soft); }
+.cam-diag .falha { color: #ff6b6b; }

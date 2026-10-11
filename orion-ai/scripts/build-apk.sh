@@ -19,6 +19,15 @@ trap 'rm -rf "$BUILD"' EXIT
 # 1. Assets: o app inteiro é o HTML.
 mkdir -p "$BUILD/assets" "$BUILD/classes"
 cp "$HTML" "$BUILD/assets/index.html"
+# MediaPipe (WASM com e sem SIMD) e modelos de visão, para a câmera funcionar sem internet.
+WASM_SRC="node_modules/@mediapipe/tasks-vision/wasm"
+[ -d "$WASM_SRC" ] || { echo "Falta $WASM_SRC. Rode: npm install"; exit 1; }
+mkdir -p "$BUILD/assets/mediapipe/wasm" "$BUILD/assets/models"
+cp "$WASM_SRC"/vision_wasm_internal.* "$WASM_SRC"/vision_wasm_nosimd_internal.* "$BUILD/assets/mediapipe/wasm/"
+for m in pose_landmarker_lite hand_landmarker; do
+  [ -f "public/models/$m.task" ] || node scripts/download-models.mjs
+  cp "public/models/$m.task" "$BUILD/assets/models/"
+done
 
 # 2. Compila o Java (bytecode Java 8, exigido pelo dx).
 javac -nowarn --release 8 -classpath "$ANDROID_JAR" -d "$BUILD/classes" android/src/com/orion/assistente/*.java 2>&1 | grep -v "^Picked up\|^warning: \[options\]\|^Note:" || true

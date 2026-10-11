@@ -2,14 +2,13 @@
 // Nenhuma página consegue pular a permissão do navegador; o que o Orion faz é ligar a
 // câmera sozinho quando o navegador JÁ guardou a permissão para este endereço.
 import { useEffect, useState } from "react";
+import { IN_ANDROID_APP } from "../lib/env";
 import { useOrion } from "../store";
 import { getVisionEngine } from "./engine";
 
 export type CameraPermission = "granted" | "prompt" | "denied" | "unknown";
 
 /** No app Android (WebView) quem pede a permissão é o próprio app, que a guarda no sistema. */
-const IN_ANDROID_APP = typeof navigator !== "undefined" && /OrionApp\//.test(navigator.userAgent);
-
 export async function cameraPermission(): Promise<CameraPermission> {
   if (IN_ANDROID_APP) return "granted";
   try {

@@ -22,10 +22,13 @@ O arquivo **`orion.apk`** é o Orion como app de celular: uma casca nativa míni
 
 **Instalar:** passe o `orion.apk` para o celular (WhatsApp, e-mail, USB ou baixando do repositório), toque nele e autorize "Instalar apps desconhecidos" para o app que o abriu. O Play Protect pode avisar que o app não é da loja: é normal, a assinatura é a deste projeto (`android/orion-debug.keystore`).
 
-- Na primeira vez o Android pergunta se o Orion pode usar a câmera (e o microfone); depois disso a câmera liga sozinha ao abrir.
+- Na primeira vez o Android pergunta se o Orion pode usar a câmera (e o microfone); depois disso a câmera liga sozinha ao abrir. Se a permissão for negada, o app avisa e abre as configurações do Android.
+- O MediaPipe (WASM) e os modelos de corpo e mãos vão **dentro do APK** (~18 MB): a visão computacional não depende de internet nem de CDN. Só a conversa com a IA precisa de rede.
+- Se a câmera falhar, abra a página Visão Computacional e toque em **Diagnosticar câmera**: ela lista cada passo (contexto seguro, permissão, abrir a câmera, WebAssembly, WebGL2, arquivos do MediaPipe) com o erro real.
 - Os dados (memória, projetos, chave da API) ficam só no aparelho, no armazenamento do app; o backup do Android está desligado.
 - **Limitações:** o reconhecimento de voz (Web Speech API) **não existe** dentro de WebView, então o microfone para ditado fica indisponível; a síntese de voz e todo o resto funcionam como na versão HTML. Lembretes só disparam com o app aberto.
 - Reinstalar por cima de uma versão antiga só funciona com a mesma assinatura; por isso a chave está no repositório (é uma chave de uso pessoal, no estilo da `debug.keystore`; não use este APK para publicar em loja).
+- O `orion.apk` não fica mais no Git (é grande e muda a cada versão): gere com `npm run build:html && npm run build:apk` ou peça o arquivo.
 - Para gerar de novo: `npm run build:html && npm run build:apk`. Não usa Gradle: precisa de `aapt`, `apksigner`, `zipalign`, `dalvik-exchange` e `android-sdk-platform-23` (no Ubuntu: `sudo apt install aapt apksigner zipalign dalvik-exchange android-sdk-platform-23`).
 
 ## Início rápido (versão com servidor)
@@ -129,7 +132,7 @@ Nenhuma página consegue pular a permissão de câmera do navegador. O que o Ori
 npm test                           # 94 testes unitários e de integração (Vitest)
 ./tests/e2e/prepare-fixtures.sh    # gera vídeos de câmera falsa a partir de imagens de exemplo do MediaPipe
 npm run build:html                 # gera orion.html (testado também via file://)
-npx playwright test                # 20 testes ponta a ponta no Chromium (câmera falsa + API Claude simulada)
+npx playwright test                # 21 testes ponta a ponta no Chromium (câmera falsa + API Claude simulada)
 ```
 
 Os testes de ponta a ponta usam um servidor que imita a API de streaming da Anthropic (`tests/e2e/mock-anthropic.mjs`), então nenhuma chamada paga é feita.

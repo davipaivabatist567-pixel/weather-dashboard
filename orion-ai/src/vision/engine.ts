@@ -3,13 +3,13 @@
 // Nenhum quadro é gravado ou enviado para fora sem uma ação explícita do usuário.
 import { FilesetResolver, HandLandmarker, PoseLandmarker } from "@mediapipe/tasks-vision";
 import { bus } from "../lib/bus";
-import { STANDALONE } from "../lib/env";
+import { IN_ANDROID_APP, STANDALONE } from "../lib/env";
 import { useOrion } from "../store";
 import { GestureController, optionsFromSensitivity } from "./gestureController";
 import { bodyMetrics, classifyHand, classifyPose, SwipeDetector, type GestureCandidate, type Pt } from "./gestures";
 import { LandmarkSmoother } from "./smoothing";
 
-const MODEL_URLS = {
+export const MODEL_URLS = {
   pose: {
     local: "/models/pose_landmarker_lite.task",
     remote: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
@@ -36,9 +36,11 @@ export interface VisionFrame {
 }
 
 // Versão HTML: o WASM vem da CDN (versão fixa, igual à do pacote instalado).
-const WASM_PATH = STANDALONE ? "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.0/wasm" : "/mediapipe/wasm";
+// No app Android, o WASM e os modelos vêm de dentro do APK (sem internet nem CDN).
+export const WASM_PATH = STANDALONE && !IN_ANDROID_APP ? "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.0/wasm" : "/mediapipe/wasm";
 
-async function pickModel(m: { local: string; remote: string }) {
+export async function pickModel(m: { local: string; remote: string }) {
+  if (IN_ANDROID_APP) return m.local;
   if (STANDALONE) return m.remote;
   try {
     const r = await fetch(m.local, { method: "HEAD" });

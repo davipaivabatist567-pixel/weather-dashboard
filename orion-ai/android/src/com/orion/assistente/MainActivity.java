@@ -71,14 +71,25 @@ public class MainActivity extends Activity {
                 Uri u = request.getUrl();
                 if (!"https".equals(u.getScheme()) || !HOST.equals(u.getHost())) return null;
                 String path = u.getPath();
-                if (path == null || path.isEmpty() || "/".equals(path) || "/index.html".equals(path)) {
-                    try {
-                        return new WebResourceResponse("text/html", "utf-8", getAssets().open("index.html"));
-                    } catch (IOException e) {
-                        // cai no 404 abaixo
+                if (path == null || path.isEmpty() || "/".equals(path) || "/index.html".equals(path)) return asset("index.html", "text/html");
+                // MediaPipe (WASM) e modelos de visão vão dentro do APK: a câmera não depende de internet nem de CDN.
+                if (path.startsWith("/mediapipe/wasm/") || path.startsWith("/models/")) {
+                    String file = path.substring(1);
+                    if (!file.contains("..")) {
+                        String type = file.endsWith(".wasm") ? "application/wasm" : file.endsWith(".js") ? "text/javascript" : "application/octet-stream";
+                        WebResourceResponse r = asset(file, type);
+                        if (r != null) return r;
                     }
                 }
                 return new WebResourceResponse("text/plain", "utf-8", 404, "Not Found", null, new ByteArrayInputStream(new byte[0]));
+            }
+
+            private WebResourceResponse asset(String file, String type) {
+                try {
+                    return new WebResourceResponse(type, "utf-8", getAssets().open(file));
+                } catch (IOException e) {
+                    return null;
+                }
             }
 
             @Override
