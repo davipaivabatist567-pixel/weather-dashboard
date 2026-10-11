@@ -16,6 +16,18 @@ O arquivo **`orion.html`** contém o Orion inteiro. Basta abri-lo no Chrome ou n
 
 **Abrir no celular com câmera (endereço https):** a câmera exige `https://`. Com o GitHub Pages: no repositório, **Settings → Pages → Build and deployment → Deploy from a branch**, escolha a branch e a pasta **/docs** e salve; o endereço sai como `https://<usuário>.github.io/<repositório>/`. Atenção: esse endereço é **público**. O arquivo não contém chave nenhuma (cada pessoa usa a própria, guardada no próprio navegador), mas qualquer um poderá abrir o Orion. Páginas publicadas pelo claude.ai **não** servem para isso, porque bloqueiam câmera e microfone.
 
+## App Android (APK)
+
+O arquivo **`orion.apk`** é o Orion como app de celular: uma casca nativa mínima (WebView) que traz o `orion.html` dentro. Com ele não precisa de GitHub Pages nem de endereço https, porque o app serve o HTML por um endereço seguro interno e pede a câmera ao Android.
+
+**Instalar:** passe o `orion.apk` para o celular (WhatsApp, e-mail, USB ou baixando do repositório), toque nele e autorize "Instalar apps desconhecidos" para o app que o abriu. O Play Protect pode avisar que o app não é da loja: é normal, a assinatura é a deste projeto (`android/orion-debug.keystore`).
+
+- Na primeira vez o Android pergunta se o Orion pode usar a câmera (e o microfone); depois disso a câmera liga sozinha ao abrir.
+- Os dados (memória, projetos, chave da API) ficam só no aparelho, no armazenamento do app; o backup do Android está desligado.
+- **Limitações:** o reconhecimento de voz (Web Speech API) **não existe** dentro de WebView, então o microfone para ditado fica indisponível; a síntese de voz e todo o resto funcionam como na versão HTML. Lembretes só disparam com o app aberto.
+- Reinstalar por cima de uma versão antiga só funciona com a mesma assinatura; por isso a chave está no repositório (é uma chave de uso pessoal, no estilo da `debug.keystore`; não use este APK para publicar em loja).
+- Para gerar de novo: `npm run build:html && npm run build:apk`. Não usa Gradle: precisa de `aapt`, `apksigner`, `zipalign`, `dalvik-exchange` e `android-sdk-platform-23` (no Ubuntu: `sudo apt install aapt apksigner zipalign dalvik-exchange android-sdk-platform-23`).
+
 ## Início rápido (versão com servidor)
 
 Requisitos: Node.js 20+ e um navegador baseado em Chromium (Chrome/Edge) para ter todos os recursos de voz.
@@ -144,5 +156,7 @@ Veja a seção “Status” no fim deste arquivo (atualizada a cada entrega).
 | Projetos, tarefas, lembretes (notificação com o Orion aberto) | Implementados e testados |
 | Diagnóstico somente com valores medidos | Implementado e testado |
 | Versão HTML em arquivo único (`orion.html`), aberta via file:// | Implementada e testada: conversa, ferramentas, persistência e câmera |
+| App Android (`orion.apk`, WebView com o HTML dentro) | Empacotado e assinado (v1/v2/v3, verificado com `apksigner`); a lógica web foi testada no Chromium; **não foi executado em aparelho ou emulador Android** |
+| Voz (ditado) dentro do APK | **Indisponível**: WebView não tem Web Speech API |
 | Lembretes com o navegador fechado (push/e-mail) | **Não implementado**: exige um serviço de push externo |
 | Integrações externas (e-mail, calendário, mensagens) | **Não implementadas** |

@@ -14,6 +14,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.server.json --noEmit",
     "setup:models": "node scripts/download-models.mjs",
     "postinstall": "node scripts/copy-mediapipe-wasm.mjs",
+    "build:apk": "bash scripts/build-apk.sh",
     "build:html": "tsc -p tsconfig.json --noEmit && vite build --mode html && node scripts/finish-html.mjs"
   },
   "dependencies": {

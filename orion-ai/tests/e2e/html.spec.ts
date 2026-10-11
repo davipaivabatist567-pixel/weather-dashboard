@@ -116,3 +116,19 @@ test("sem chave, aprende e responde com o que foi ensinado", async ({ page }) =>
   expect(apiCalls).toHaveLength(0);
   expect(errors).toEqual([]);
 });
+
+test.describe("dentro do app Android (WebView)", () => {
+  test.use({ userAgent: "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36 OrionApp/1.0" });
+
+  test("a câmera liga sozinha, porque o app é quem pede a permissão ao sistema", async ({ page }) => {
+    const errors = await setup(page);
+    // Simula um navegador que ainda não guardou a permissão: só o sufixo OrionApp pode ligar sozinho.
+    await page.addInitScript(() => {
+      const fake = { state: "prompt", addEventListener() {}, removeEventListener() {} };
+      navigator.permissions.query = () => Promise.resolve(fake as unknown as PermissionStatus);
+    });
+    await page.goto(FILE_URL + "#/visao");
+    await expect(page.locator(".vision-status")).toHaveText("Detectando movimentos", { timeout: 90_000 });
+    expect(errors).toEqual([]);
+  });
+});

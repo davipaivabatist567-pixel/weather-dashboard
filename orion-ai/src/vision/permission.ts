@@ -7,7 +7,11 @@ import { getVisionEngine } from "./engine";
 
 export type CameraPermission = "granted" | "prompt" | "denied" | "unknown";
 
+/** No app Android (WebView) quem pede a permissão é o próprio app, que a guarda no sistema. */
+const IN_ANDROID_APP = typeof navigator !== "undefined" && /OrionApp\//.test(navigator.userAgent);
+
 export async function cameraPermission(): Promise<CameraPermission> {
+  if (IN_ANDROID_APP) return "granted";
   try {
     const status = await navigator.permissions.query({ name: "camera" as PermissionName });
     return status.state as CameraPermission;
@@ -21,6 +25,10 @@ export function useCameraPermission(): CameraPermission {
   const [state, setState] = useState<CameraPermission>("unknown");
   const camera = useOrion((s) => s.camera);
   useEffect(() => {
+    if (IN_ANDROID_APP) {
+      setState("granted");
+      return;
+    }
     let status: PermissionStatus | null = null;
     const update = () => status && setState(status.state as CameraPermission);
     navigator.permissions
