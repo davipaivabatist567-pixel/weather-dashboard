@@ -1,7 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
+import { disableCameraAutoStart } from "./helpers";
 
 const errors: string[] = [];
 test.beforeEach(async ({ page }) => {
+  await disableCameraAutoStart(page);
   errors.length = 0;
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (m) => {

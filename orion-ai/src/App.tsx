@@ -11,6 +11,7 @@ import { ResearchPage } from "./pages/Research";
 import { SettingsPage } from "./pages/Settings";
 import { VisionPage } from "./pages/Vision";
 import { useOrion } from "./store";
+import { useCameraAutoStart } from "./vision/permission";
 
 const PAGES = {
   inicio: HomePage,
@@ -28,6 +29,7 @@ export function App() {
   useGestureActions();
   useReminderScheduler();
   useHashNavigation();
+  useCameraAutoStart();
   const page = useOrion((s) => s.page);
   const showDiag = useOrion((s) => s.settings.showDiagnostics);
   const particles = useOrion((s) => s.settings.appearance.particles && !s.settings.performance.economy && !s.settings.appearance.reducedMotion);

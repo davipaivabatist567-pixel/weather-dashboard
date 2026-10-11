@@ -1,9 +1,9 @@
+import { ensureCameraOn } from "./helpers";
 import { expect, test } from "@playwright/test";
 
 test("polegar: gesto confirmado uma única vez enquanto mantido", async ({ page }) => {
   await page.goto("/#/visao");
-  await page.getByRole("button", { name: "ATIVAR VISÃO COMPUTACIONAL" }).click();
-  await expect(page.locator(".vision-status")).toHaveText("Detectando movimentos", { timeout: 90_000 });
+  await ensureCameraOn(page);
   const log = page.locator(".gesture-log li", { hasText: "Polegar para cima" });
   await expect(log.first()).toBeVisible({ timeout: 30_000 });
   // A imagem fica parada mostrando o gesto: não pode haver repetições.

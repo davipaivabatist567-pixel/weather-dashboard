@@ -83,6 +83,12 @@ export function SettingsPage() {
             </select>
           </label>
         )}
+        <Toggle
+          label="Ligar a câmera automaticamente ao abrir"
+          hint="Funciona quando o navegador já guardou a permissão (“Permitir ao visitar o site”). A câmera continua indicada como ativa e pode ser desligada a qualquer momento."
+          checked={st.camera.autoStart}
+          onChange={(autoStart) => set("camera", { autoStart })}
+        />
         <Toggle label="Espelhar imagem" hint="Como um espelho (recomendado para câmera frontal)" checked={st.camera.mirror} onChange={(mirror) => set("camera", { mirror })} />
         <Toggle label="Modo econômico" hint="~10 fps de processamento, sem partículas, animações reduzidas" checked={st.performance.economy} onChange={(economy) => set("performance", { economy })} />
         <hr className="sep" />

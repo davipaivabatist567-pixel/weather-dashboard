@@ -1,6 +1,7 @@
 // Versão HTML (arquivo único aberto via file://, sem servidor do Orion).
 // A API da Anthropic é redirecionada para o servidor simulado e a CDN do MediaPipe
 // para os arquivos locais do pacote (a rede de teste não acessa a CDN).
+import { ensureCameraOn } from "./helpers";
 import { expect, test, type Page, type Route } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -94,8 +95,7 @@ test("ferramentas e dados persistem no navegador", async ({ page }) => {
 test("câmera e rastreamento funcionam abrindo o arquivo", async ({ page }) => {
   const errors = await setup(page);
   await page.goto(FILE_URL + "#/visao");
-  await page.getByRole("button", { name: "ATIVAR VISÃO COMPUTACIONAL" }).click();
-  await expect(page.locator(".vision-status")).toHaveText("Detectando movimentos", { timeout: 90_000 });
+  await ensureCameraOn(page);
   const diag = page.locator(".diag");
   await expect(diag.locator("tr", { hasText: "Mãos detectadas" })).toContainText("2", { timeout: 30_000 });
   await expect(diag.locator("tr", { hasText: "Corpo detectado" })).toContainText("Sim");

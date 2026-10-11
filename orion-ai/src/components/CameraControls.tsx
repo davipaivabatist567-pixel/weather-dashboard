@@ -1,6 +1,7 @@
 // Controles da câmera: ativar, desligar, pausar/retomar, escolher dispositivo e modo de visualização.
 import { useOrion, type ViewMode } from "../store";
 import { getVisionEngine } from "../vision/engine";
+import { useCameraPermission } from "../vision/permission";
 
 const VIEW_MODES: { id: ViewMode; label: string }[] = [
   { id: "normal", label: "Normal" },
@@ -17,6 +18,9 @@ export function CameraControls() {
   const engine = getVisionEngine();
   const on = camera !== "desligada" && camera !== "erro";
   const busy = camera === "aguardando_permissao" || camera === "inicializando" || camera === "carregando_modelos";
+  const permission = useCameraPermission();
+  const autoStart = useOrion((s) => s.settings.camera.autoStart);
+  const isFile = location.protocol === "file:";
 
   return (
     <div className="stack">
@@ -44,6 +48,23 @@ export function CameraControls() {
           </button>
         ))}
       </div>
+      {camera === "aguardando_permissao" && (
+        <div className="notice">
+          Na janela do navegador, escolha <b>“Permitir ao visitar o site”</b> (ou “Sempre permitir”). Assim o navegador não pergunta de novo
+          {autoStart ? " e o Orion liga a câmera sozinho quando você abrir" : ""}.
+        </div>
+      )}
+      {permission === "denied" && (
+        <div className="notice err">
+          A câmera está bloqueada para este endereço. Clique no ícone de cadeado/câmera ao lado do endereço, mude Câmera para “Permitir” e recarregue a página.
+        </div>
+      )}
+      {permission === "granted" && autoStart && <div className="small muted">✓ Permissão salva no navegador: a câmera liga sozinha ao abrir o Orion.</div>}
+      {isFile && permission !== "granted" && (
+        <div className="small muted">
+          Aberto como arquivo, alguns navegadores voltam a perguntar a cada vez. Para lembrar de vez, use o Orion pelo endereço http://localhost (versão com servidor).
+        </div>
+      )}
       {cameras.length > 1 && (
         <label className="field">
           Câmera

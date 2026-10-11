@@ -89,6 +89,14 @@ O Orion aprende guardando e consultando o que você envia (o modelo de IA em si 
 - Conteúdo de arquivos e páginas é tratado como dado, não como instrução.
 - A memória recusa senhas, chaves de API e números de cartão.
 
+### Câmera sem pedir autorização toda vez
+
+Nenhuma página consegue pular a permissão de câmera do navegador. O que o Orion faz:
+
+- Na primeira vez, escolha **“Permitir ao visitar o site”** (ou “Sempre permitir”) na janela do navegador; o Orion mostra essa orientação.
+- Com **Configurações → Ligar a câmera automaticamente ao abrir** (ativado por padrão), a câmera liga sozinha sempre que o navegador já tiver guardado a permissão. Sem clique.
+- Aberto como arquivo (`file://`), alguns navegadores voltam a perguntar a cada vez; pelo endereço `http://localhost:8787` (versão com servidor), a permissão fica guardada.
+
 ### Privacidade
 
 - O vídeo é processado localmente (MediaPipe WASM/WebGL). Nenhum quadro é gravado nem enviado. A única exceção é o botão **Analisar quadro com a IA**, que pede confirmação.
@@ -103,7 +111,7 @@ O Orion aprende guardando e consultando o que você envia (o modelo de IA em si 
 npm test                           # 86 testes unitários e de integração (Vitest)
 ./tests/e2e/prepare-fixtures.sh    # gera vídeos de câmera falsa a partir de imagens de exemplo do MediaPipe
 npm run build:html                 # gera orion.html (testado também via file://)
-npx playwright test                # 17 testes ponta a ponta no Chromium (câmera falsa + API Claude simulada)
+npx playwright test                # 18 testes ponta a ponta no Chromium (câmera falsa + API Claude simulada)
 ```
 
 Os testes de ponta a ponta usam um servidor que imita a API de streaming da Anthropic (`tests/e2e/mock-anthropic.mjs`), então nenhuma chamada paga é feita.

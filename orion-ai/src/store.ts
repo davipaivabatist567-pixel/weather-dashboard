@@ -49,7 +49,7 @@ export interface GestureLogEntry {
 
 export interface Settings {
   voice: { voiceURI: string | null; rate: number; volume: number; muted: boolean; autoSpeak: boolean };
-  camera: { deviceId: string | null; resolution: "320x240" | "640x480" | "1280x720"; mirror: boolean };
+  camera: { deviceId: string | null; resolution: "320x240" | "640x480" | "1280x720"; mirror: boolean; autoStart: boolean };
   performance: { economy: boolean };
   gestures: {
     enabled: boolean;
@@ -68,7 +68,7 @@ export interface Settings {
 
 export const DEFAULT_SETTINGS: Settings = {
   voice: { voiceURI: null, rate: 1, volume: 1, muted: false, autoSpeak: false },
-  camera: { deviceId: null, resolution: "640x480", mirror: true },
+  camera: { deviceId: null, resolution: "640x480", mirror: true, autoStart: true },
   performance: { economy: false },
   gestures: { enabled: true, sensitivity: 5, navigation: false, raiseHandToListen: false, pinchSelect: false, disabled: [] },
   calibration: DEFAULT_CALIBRATION,
