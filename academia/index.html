@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Academia</title>
+  <meta name="description" content="Academia de musculação, funcional e lutas. Agende sua aula experimental grátis.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231A0E08'/><circle cx='50' cy='50' r='12' fill='%23F04E23'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;800&display=swap" rel="stylesheet">
+
+  <script>
+    /* =====================================================================
+       EDITE AQUI: todas as informações da academia ficam neste bloco.
+       Tudo que está entre [colchetes] na página é texto de exemplo.
+       ===================================================================== */
+    const ACADEMIA = {
+      nome: "Nome da Academia",
+      desde: "2015",
+      cidade: "Sua Cidade",
+      endereco: "Rua Exemplo, 123 - Bairro, Cidade - UF",
+      linkMaps: "https://maps.app.goo.gl/Ja4ZrsY785aSdR9Y7",
+      telefone: "(00) 00000-0000",
+      whatsapp: "5500000000000",           // só números, com 55 + DDD
+      instagram: "suaacademia",            // sem o @
+      mensagemWhatsapp: "Olá! Vim pelo site e quero agendar minha aula experimental grátis.",
+
+      manifesto: "Aqui ninguém treina sozinho. Tem professor no salão, ferro de verdade e gente que vai notar quando você faltar.",
+
+      numeros: [
+        ["500+", "alunos treinando"],
+        ["12", "professores no salão"],
+        ["7", "dias por semana"],
+      ],
+
+      modalidades: [
+        ["Musculação", "Pesos livres, máquinas e treino montado por professor."],
+        ["Funcional", "Turmas pequenas, circuito intenso, 45 minutos."],
+        ["Cardio", "Esteiras, bikes, escadas e remo."],
+        ["Lutas", "Boxe e muay thai, do iniciante ao avançado."],
+        ["Mobilidade", "Alongamento guiado pra treinar mais e se machucar menos."],
+      ],
+
+      planos: [
+        { nome: "Mensal", preco: "99", centavos: ",90", itens: ["Musculação e cardio", "Avaliação física", "Sem fidelidade"] },
+        { nome: "Trimestral", preco: "89", centavos: ",90", itens: ["Tudo do mensal", "Aulas coletivas", "Reavaliação no 3º mês"], destaque: true },
+        { nome: "Anual", preco: "79", centavos: ",90", itens: ["Todas as modalidades", "Aulas coletivas", "Avaliação a cada 3 meses"] },
+      ],
+
+      horarios: [
+        ["Seg — Sex", "05:30", "23:00"],
+        ["Sábado", "08:00", "14:00"],
+        ["Dom e feriados", "08:00", "12:00"],
+      ],
+    };
+  </script>
+
+  <style>
+    :root {
+      /* cor - bloco de cor: 4 saturadas + tinta escura */
+      --orange: #F04E23;
+      --magenta: #D1126B;
+      --yellow: #FFC928;
+      --ink: #1A0E08;
+      --ink-2: #2A1810;
+      --cream: #FFF4E6;
+      --whats: #25D366;
+
+      --fg: var(--ink);
+      --line: color-mix(in oklab, currentColor 22%, transparent);
+      --muted: color-mix(in oklab, currentColor 72%, transparent);
+
+      /* tipo */
+      --f-display: "Anton", "Impact", "Arial Narrow", sans-serif;
+      --f-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --t-mega: clamp(5rem, 22vw, 24rem);
+      --t-hero: clamp(4.5rem, 17vw, 17rem);
+      --t-h2: clamp(3rem, 9vw, 8rem);
+      --t-h3: clamp(2.25rem, 6vw, 5.5rem);
+      --t-lead: clamp(1.75rem, 4.2vw, 3.75rem);
+      --t-body: clamp(1rem, 1.05vw, 1.125rem);
+      --t-micro: .6875rem;
+
+      /* espaço */
+      --s-1: .5rem; --s-2: 1rem; --s-3: 2rem;
+      --s-4: 4rem; --s-5: 8rem; --s-6: 12rem;
+      --gutter: clamp(1.25rem, 5vw, 6rem);
+      --nav-h: 4.5rem;
+
+      /* forma */
+      --r-pill: 999px;
+      --border: 1px;
+
+      /* movimento */
+      --e-out: cubic-bezier(.16, 1, .3, 1);
+      --d-fast: .25s; --d-base: .6s; --d-slow: 1.2s;
+
+      /* padrão de fundo: anilhas tom sobre tom */
+      --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23000' stroke-width='2'%3E%3Ccircle cx='30' cy='30' r='18'/%3E%3Ccircle cx='30' cy='30' r='5'/%3E%3Ccircle cx='90' cy='90' r='18'/%3E%3Ccircle cx='90' cy='90' r='5'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+    body {
+      margin: 0;
+      font-family: var(--f-body);
+      font-size: var(--t-body);
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--fg);
+      background: var(--ink);
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; }
+    h1, h2, h3, p, ul, ol, dl, dd { margin: 0; }
+    ul, ol { padding: 0; list-style: none; }
+
+    :focus-visible { outline: 3px solid currentColor; outline-offset: 4px; border-radius: var(--border); }
+
+    .display {
+      font-family: var(--f-display);
+      font-weight: 400;
+      text-transform: uppercase;
+      line-height: .9;
+      letter-spacing: -.01em;
+    }
+
+    .kicker {
+      font-size: var(--t-micro);
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .mask { display: block; overflow: hidden; padding-bottom: .06em; }
+    .mask > * { display: block; }
+
+    .wrap { padding-inline: var(--gutter); }
+
+    /* blocos de cor com padrão sutil */
+    .block { position: relative; isolation: isolate; }
+    .block::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image: var(--pattern);
+      background-size: 120px 120px;
+      opacity: .06;
+      pointer-events: none;
+    }
+    .on-orange  { background: var(--orange);  color: var(--ink); }
+    .on-magenta { background: var(--magenta); color: var(--cream); }
+    .on-yellow  { background: var(--yellow);  color: var(--ink); }
+    .on-ink     { background: var(--ink);     color: var(--cream); }
+    .on-cream   { background: var(--cream);   color: var(--ink); }
+    .on-magenta::before, .on-ink::before { filter: invert(1); }
+    .on-ink::before { opacity: .035; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-1);
+      padding: var(--s-2) var(--s-3);
+      border-radius: var(--r-pill);
+      background: var(--ink);
+      color: var(--cream);
+      font-weight: 800;
+      font-size: var(--t-body);
+      text-decoration: none;
+      transition: transform var(--d-fast) var(--e-out), background var(--d-fast) var(--e-out);
+    }
+    .btn:hover { transform: translateY(-3px); }
+    .btn .arrow { transition: transform var(--d-fast) var(--e-out); }
+    .btn:hover .arrow { transform: translateX(4px); }
+
+    /* ---------- Navegação ---------- */
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 40;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s-3);
+      padding-inline: var(--gutter);
+      color: var(--ink);
+      mix-blend-mode: normal;
+      transition: background var(--d-base) var(--e-out), color var(--d-base) var(--e-out);
+    }
+    .nav.solid { background: var(--ink); color: var(--cream); }
+    .nav .brand { font-family: var(--f-display); font-size: 1.5rem; text-transform: uppercase; text-decoration: none; letter-spacing: .01em; }
+    .nav ul { display: flex; gap: var(--s-3); }
+    .nav ul a { text-decoration: none; font-size: var(--t-micro); font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+    .nav ul a:hover { text-decoration: underline; text-underline-offset: 6px; }
+    .nav .btn { padding: var(--s-1) var(--s-2); font-size: var(--t-micro); letter-spacing: .12em; text-transform: uppercase; }
+    .nav.solid .btn { background: var(--orange); color: var(--ink); }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      min-height: 100svh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding-top: var(--nav-h);
+      overflow: hidden;
+    }
+    .hero-stage { position: relative; display: grid; align-content: center; }
+    .hero h1 { font-size: var(--t-hero); line-height: .84; letter-spacing: -.02em; position: relative; z-index: 1; }
+    .hero h1 .l1 { margin-left: -.04em; }
+    .hero h1 .l2 { text-align: right; margin-right: -.06em; }
+    .plate-wrap {
+      position: absolute;
+      z-index: 2;
+      width: clamp(12rem, 27vw, 27rem);
+      aspect-ratio: 1;
+      left: 74%;
+      top: 34%;
+      translate: -50% -50%;
+      filter: drop-shadow(0 2.5rem 2.5rem color-mix(in oklab, var(--ink) 45%, transparent));
+    }
+    .plate { width: 100%; height: 100%; display: block; }
+    .hero-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: var(--s-3);
+      flex-wrap: wrap;
+      padding-block: var(--s-3);
+      border-top: var(--border) solid var(--line);
+    }
+
+    /* ---------- Manifesto + números ---------- */
+    .manifesto { padding-block: var(--s-6) var(--s-5); }
+    .manifesto .kicker { margin-bottom: var(--s-3); }
+    .manifesto-text {
+      font-family: var(--f-display);
+      text-transform: uppercase;
+      font-size: var(--t-lead);
+      line-height: 1;
+      max-width: 22ch;
+    }
+    .manifesto-text .w { display: inline-block; }
+    .numbers {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: var(--s-5);
+      margin-left: auto;
+      max-width: 62rem;
+      border-top: var(--border) solid var(--line);
+    }
+    .numbers li { padding: var(--s-3) var(--s-2) 0 0; }
+    .numbers strong { display: block; font-family: var(--f-display); font-weight: 400; font-size: var(--t-h3); line-height: .9; color: var(--orange); }
+    .numbers span { color: var(--muted); }
+
+    /* ---------- Modalidades ---------- */
+    .classes { padding-block: var(--s-5); }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: var(--s-3); flex-wrap: wrap; margin-bottom: var(--s-4); }
+    .section-head h2 { font-size: var(--t-h2); line-height: .88; letter-spacing: -.02em; }
+    .section-head p { max-width: 32ch; color: var(--muted); }
+    .class-list { border-top: var(--border) solid var(--line); }
+    .class-row {
+      display: grid;
+      grid-template-columns: 4rem 1fr minmax(0, 24rem);
+      gap: var(--s-3);
+      align-items: baseline;
+      padding-block: var(--s-3);
+      border-bottom: var(--border) solid var(--line);
+    }
+    .class-row .n { font-size: var(--t-micro); font-weight: 800; letter-spacing: .18em; color: var(--muted); }
+    .class-row h3 { font-size: var(--t-h3); line-height: .9; transition: color var(--d-fast) var(--e-out), transform var(--d-base) var(--e-out); }
+    .class-row:hover h3 { color: var(--yellow); transform: translateX(var(--s-2)); }
+    .class-row p { color: var(--muted); max-width: 62ch; }
+
+    /* ---------- Planos ---------- */
+    .plans { padding-block: var(--s-5); }
+    .plan-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: var(--border) solid var(--line); }
+    .plan { display: flex; flex-direction: column; padding: var(--s-3) var(--s-3) var(--s-4); border-right: var(--border) solid var(--line); }
+    .plan:last-child { border-right: 0; }
+    .plan.featured { background: var(--ink); color: var(--cream); }
+    .plan .top { display: flex; justify-content: space-between; gap: var(--s-2); }
+    .plan .price { display: flex; align-items: flex-start; gap: .1em; margin-block: var(--s-3); font-family: var(--f-display); line-height: .85; }
+    .plan .price small { font-size: var(--t-body); font-family: var(--f-body); font-weight: 800; padding-top: .6em; }
+    .plan .price strong { font-size: var(--t-h2); font-weight: 400; letter-spacing: -.02em; }
+    .plan .price em { font-style: normal; font-size: var(--t-h3); opacity: .55; }
+    .plan ul { flex: 1; margin-bottom: var(--s-3); }
+    .plan li { padding-block: var(--s-1); border-bottom: var(--border) solid var(--line); }
+    .plan .btn { align-self: flex-start; }
+    .plan.featured .btn { background: var(--yellow); color: var(--ink); }
+    .plans .note { margin-top: var(--s-3); font-size: var(--t-micro); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+    /* ---------- Visite (split editorial) ---------- */
+    .visit { display: grid; grid-template-columns: 1fr 1fr; min-height: 100svh; }
+    .visit-text { padding: var(--s-5) var(--gutter); display: flex; flex-direction: column; justify-content: center; gap: var(--s-4); }
+    .visit-text h2 { font-size: var(--t-h2); line-height: .88; letter-spacing: -.02em; }
+    .status { display: inline-flex; align-items: center; gap: var(--s-1); }
+    .status::before { content: ""; width: .6rem; height: .6rem; border-radius: 50%; background: currentColor; opacity: .4; }
+    .status.open::before { background: var(--whats); opacity: 1; }
+    .status.closed::before { background: var(--magenta); opacity: 1; }
+    .hours { border-top: var(--border) solid var(--line); max-width: 34rem; }
+    .hours li { display: grid; grid-template-columns: 1fr auto; gap: var(--s-2); align-items: baseline; padding-block: var(--s-2); border-bottom: var(--border) solid var(--line); }
+    .hours li span:last-child { font-family: var(--f-display); font-size: clamp(1.5rem, 2.6vw, 2.5rem); line-height: 1; font-variant-numeric: tabular-nums; }
+    .hours li.today { color: var(--magenta); }
+    .address { display: flex; flex-direction: column; gap: var(--s-2); align-items: flex-start; }
+    .address p { max-width: 30ch; font-weight: 300; font-size: clamp(1.25rem, 1.8vw, 1.6rem); line-height: 1.3; }
+    .visit-map { position: relative; min-height: 60svh; background: var(--ink-2); overflow: hidden; }
+    .visit-map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: grayscale(1) contrast(1.1); }
+
+    /* ---------- Rodapé gigante ---------- */
+    .footer { padding-top: var(--s-5); overflow: hidden; }
+    .footer-cta { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--s-4); align-items: end; padding-bottom: var(--s-5); }
+    .footer-cta h2 { font-size: var(--t-h2); line-height: .88; letter-spacing: -.02em; }
+    .footer-cta .btn { background: var(--orange); color: var(--ink); }
+    .footer-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-3); padding-block: var(--s-3); border-top: var(--border) solid var(--line); }
+    .footer-links a { text-decoration: none; }
+    .footer-links a:hover { color: var(--orange); }
+    .footer-links li { padding-block: .25rem; }
+    .footer-links .kicker { display: block; margin-bottom: var(--s-1); }
+    .mega {
+      font-size: var(--t-mega);
+      line-height: .8;
+      letter-spacing: -.03em;
+      color: var(--orange);
+      white-space: nowrap;
+      margin-top: var(--s-4);
+      margin-left: -.03em;
+    }
+    .copy { display: flex; justify-content: space-between; gap: var(--s-2); flex-wrap: wrap; padding-block: var(--s-3); }
+
+    /* ---------- WhatsApp flutuante ---------- */
+    .whats {
+      position: fixed;
+      right: var(--s-2);
+      bottom: var(--s-2);
+      z-index: 50;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--whats);
+      color: var(--ink);
+      transition: transform var(--d-fast) var(--e-out), opacity var(--d-fast) var(--e-out);
+    }
+    .whats.hidden { opacity: 0; pointer-events: none; transform: scale(.6); }
+    .whats:hover { transform: scale(1.08); }
+    .whats svg { width: 1.75rem; height: 1.75rem; fill: currentColor; }
+
+    /* ---------- Responsivo ---------- */
+    @media (max-width: 900px) {
+      .nav ul { display: none; }
+      .class-row { grid-template-columns: 2.5rem 1fr; }
+      .class-row p { grid-column: 2; }
+      .plan-grid { grid-template-columns: 1fr; }
+      .plan { border-right: 0; border-bottom: var(--border) solid var(--line); }
+      .visit { grid-template-columns: 1fr; }
+      .footer-cta { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .plate-wrap { left: 62%; top: 50%; width: 64vw; }
+      .hero h1 .l2 { margin-top: 52vw; }
+      .numbers { grid-template-columns: 1fr; }
+      .footer-links { grid-template-columns: 1fr; }
+      .nav .brand { font-size: 1.15rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav" id="nav">
+    <a href="#inicio" class="brand" data-field="nome">[Nome da Academia]</a>
+    <nav aria-label="Seções">
+      <ul>
+        <li><a href="#modalidades">Modalidades</a></li>
+        <li><a href="#planos">Planos</a></li>
+        <li><a href="#visite">Horários</a></li>
+      </ul>
+    </nav>
+    <a class="btn" data-whats href="#visite">Aula grátis</a>
+  </header>
+
+  <main>
+    <!-- HERO: uma frase, um rótulo, um CTA -->
+    <section class="hero block on-orange wrap" id="inicio" aria-labelledby="hero-title">
+      <div class="hero-stage">
+        <h1 class="display" id="hero-title">
+          <span class="mask l1"><span data-hero-line>Treina</span></span>
+          <span class="mask l2"><span data-hero-line>Pesado.</span></span>
+        </h1>
+        <div class="plate-wrap" aria-hidden="true">
+          <svg class="plate" id="plate" viewBox="0 0 400 400">
+            <defs>
+              <path id="ring" d="M200,200 m-158,0 a158,158 0 1,1 316,0 a158,158 0 1,1 -316,0"/>
+            </defs>
+            <circle cx="200" cy="200" r="198" fill="#1A0E08"/>
+            <circle cx="200" cy="200" r="186" fill="none" stroke="#FFF4E6" stroke-opacity=".14" stroke-width="2"/>
+            <circle cx="200" cy="200" r="132" fill="none" stroke="#FFF4E6" stroke-opacity=".14" stroke-width="2"/>
+            <text font-family="Anton, Impact, sans-serif" font-size="30" fill="#FFF4E6" letter-spacing="4">
+              <textPath href="#ring" textLength="985" lengthAdjust="spacing" id="plate-text">20 KG • NOME DA ACADEMIA • 20 KG • TREINA PESADO •</textPath>
+            </text>
+            <circle cx="200" cy="200" r="122" fill="#2A1810"/>
+            <g fill="#F04E23">
+              <rect x="-40" y="-15" width="80" height="30" rx="15" transform="translate(200 200) rotate(0) translate(0 -92)"/>
+              <rect x="-40" y="-15" width="80" height="30" rx="15" transform="translate(200 200) rotate(120) translate(0 -92)"/>
+              <rect x="-40" y="-15" width="80" height="30" rx="15" transform="translate(200 200) rotate(240) translate(0 -92)"/>
+            </g>
+            <circle cx="200" cy="200" r="58" fill="#1A0E08" stroke="#FFF4E6" stroke-opacity=".2" stroke-width="2"/>
+            <circle cx="200" cy="200" r="26" fill="#F04E23"/>
+          </svg>
+        </div>
+      </div>
+      <div class="hero-foot">
+        <p class="kicker"><span data-field="cidade">[Sua Cidade]</span> · desde <span data-field="desde">[2015]</span></p>
+        <a class="btn" data-whats href="#visite">Agende sua aula grátis <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section class="manifesto block on-ink wrap" aria-labelledby="manifesto-k">
+      <p class="kicker" id="manifesto-k">01 — A casa</p>
+      <p class="manifesto-text" id="manifesto" data-field="manifesto">[Aqui ninguém treina sozinho. Tem professor no salão, ferro de verdade e gente que vai notar quando você faltar.]</p>
+      <ul class="numbers" id="numbers"></ul>
+    </section>
+
+    <!-- MODALIDADES -->
+    <section class="classes block on-magenta wrap" id="modalidades" aria-labelledby="classes-title">
+      <div class="section-head">
+        <div>
+          <p class="kicker">02 — Modalidades</p>
+          <h2 class="display" id="classes-title"><span class="mask"><span data-reveal>Escolhe</span></span><span class="mask"><span data-reveal>o seu jeito.</span></span></h2>
+        </div>
+        <p>Do primeiro treino ao recorde pessoal. Todas as modalidades com professor junto.</p>
+      </div>
+      <ol class="class-list" id="class-list"></ol>
+    </section>
+
+    <!-- PLANOS -->
+    <section class="plans block on-yellow wrap" id="planos" aria-labelledby="plans-title">
+      <div class="section-head">
+        <div>
+          <p class="kicker">03 — Planos</p>
+          <h2 class="display" id="plans-title"><span class="mask"><span data-reveal>Sem letra</span></span><span class="mask"><span data-reveal>miúda.</span></span></h2>
+        </div>
+        <p>Preço por mês. Aula experimental grátis antes de decidir.</p>
+      </div>
+      <div class="plan-grid" id="plan-grid"></div>
+      <p class="note">Valores de exemplo — consulte condições na recepção ou pelo WhatsApp.</p>
+    </section>
+
+    <!-- VISITE: split editorial -->
+    <section class="visit on-cream" id="visite" aria-labelledby="visit-title">
+      <div class="visit-text">
+        <div>
+          <p class="kicker">04 — Visite</p>
+          <h2 class="display" id="visit-title"><span class="mask"><span data-reveal>A porta</span></span><span class="mask"><span data-reveal>tá aberta.</span></span></h2>
+        </div>
+        <div>
+          <p class="kicker status" id="status">Horário de funcionamento</p>
+          <ul class="hours" id="hours"></ul>
+        </div>
+        <div class="address">
+          <p data-field="endereco">[Rua Exemplo, 123 - Bairro, Cidade - UF]</p>
+          <a class="btn" data-maps href="https://maps.app.goo.gl/Ja4ZrsY785aSdR9Y7" target="_blank" rel="noopener">Como chegar <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+      <div class="visit-map">
+        <iframe id="map" title="Mapa da academia" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <!-- RODAPÉ GIGANTE -->
+  <footer class="footer on-ink wrap">
+    <div class="footer-cta">
+      <h2 class="display"><span class="mask"><span data-reveal>Primeiro treino</span></span><span class="mask"><span data-reveal>é por nossa conta.</span></span></h2>
+      <div><a class="btn" data-whats href="#visite">Chamar no WhatsApp <span class="arrow" aria-hidden="true">→</span></a></div>
+    </div>
+    <div class="footer-links">
+      <div>
+        <span class="kicker">Contato</span>
+        <ul>
+          <li><a data-tel href="#">[(00) 00000-0000]</a></li>
+          <li><a data-whats href="#visite">WhatsApp</a></li>
+          <li><a data-insta href="#" target="_blank" rel="noopener">[@suaacademia]</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="kicker">Endereço</span>
+        <ul>
+          <li data-field="endereco">[Rua Exemplo, 123 - Bairro, Cidade - UF]</li>
+          <li><a data-maps href="https://maps.app.goo.gl/Ja4ZrsY785aSdR9Y7" target="_blank" rel="noopener">Abrir no Google Maps →</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="kicker">Navegue</span>
+        <ul>
+          <li><a href="#modalidades">Modalidades</a></li>
+          <li><a href="#planos">Planos</a></li>
+          <li><a href="#visite">Horários</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="mega display" aria-hidden="true" id="mega" data-field="nome">[Nome da Academia]</p>
+    <div class="copy kicker">
+      <span>© <span id="year">2026</span> <span data-field="nome">[Nome da Academia]</span></span>
+      <span>Treina pesado.</span>
+    </div>
+  </footer>
+
+  <a class="whats hidden" id="whats" data-whats href="#visite" aria-label="Falar no WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.3-.5 0-1 .2-3.3-.7a11.5 11.5 0 0 1-4.6-4.1c-.4-.5-1-1.6-1-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c0 .2.1.4 0 .6l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.7-.1l1-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3.1.2.1.7-.1 1.3Z"/></svg>
+  </a>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.13/lenis.min.js"></script>
+
+  <script>
+    /* ---------- 1. Conteúdo (funciona mesmo sem as bibliotecas de animação) ---------- */
+    (() => {
+      const A = ACADEMIA;
+      const $ = (s) => document.querySelector(s);
+      const $$ = (s) => document.querySelectorAll(s);
+      const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+      document.title = `${A.nome} — Treina pesado`;
+      $$("[data-field]").forEach((el) => { el.textContent = A[el.dataset.field]; });
+      $("#plate-text").textContent = `20 KG • ${A.nome.toUpperCase()} • 20 KG • TREINA PESADO •`;
+      $("#year").textContent = new Date().getFullYear();
+
+      const whatsUrl = (msg) => `https://wa.me/${A.whatsapp}?text=${encodeURIComponent(msg)}`;
+      $$("[data-whats]").forEach((el) => { el.href = whatsUrl(A.mensagemWhatsapp); el.target = "_blank"; el.rel = "noopener"; });
+      $$("[data-maps]").forEach((el) => { el.href = A.linkMaps; });
+      $$("[data-tel]").forEach((el) => { el.href = `tel:+${A.telefone.replace(/\D/g, "").replace(/^(?!55)/, "55")}`; el.textContent = A.telefone; });
+      $$("[data-insta]").forEach((el) => { el.href = `https://instagram.com/${A.instagram}`; el.textContent = `@${A.instagram}`; });
+      $("#map").src = `https://www.google.com/maps?q=${encodeURIComponent(A.endereco)}&output=embed`;
+
+      $("#numbers").innerHTML = A.numeros.map(([n, l]) =>
+        `<li data-stagger><strong>${esc(n)}</strong><span>${esc(l)}</span></li>`).join("");
+
+      $("#class-list").innerHTML = A.modalidades.map(([nome, txt], i) => `
+        <li class="class-row" data-stagger>
+          <span class="n">${String(i + 1).padStart(2, "0")}</span>
+          <h3 class="display">${esc(nome)}</h3>
+          <p>${esc(txt)}</p>
+        </li>`).join("");
+
+      $("#plan-grid").innerHTML = A.planos.map((p) => `
+        <article class="plan${p.destaque ? " featured" : ""}" data-stagger>
+          <div class="top"><span class="kicker">${esc(p.nome)}</span>${p.destaque ? `<span class="kicker">Mais escolhido</span>` : ""}</div>
+          <div class="price"><small>R$</small><strong>${esc(p.preco)}</strong><em>${esc(p.centavos)}</em><small>/mês</small></div>
+          <ul>${p.itens.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>
+          <a class="btn" target="_blank" rel="noopener" href="${whatsUrl(`Olá! Tenho interesse no plano ${p.nome}.`)}">Quero o ${esc(p.nome.toLowerCase())} <span class="arrow" aria-hidden="true">→</span></a>
+        </article>`).join("");
+
+      // Horários: destaca hoje e mostra se está aberto agora
+      const dia = new Date().getDay(); // 0 = domingo
+      const hoje = dia === 0 ? 2 : dia === 6 ? 1 : 0;
+      $("#hours").innerHTML = A.horarios.map(([d, ab, fe], i) =>
+        `<li class="${i === hoje ? "today" : ""}"><span>${esc(d)}</span><span>${esc(ab)} — ${esc(fe)}</span></li>`).join("");
+      const [, ab, fe] = A.horarios[hoje] || [];
+      if (ab && fe) {
+        const min = (t) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+        const now = new Date().getHours() * 60 + new Date().getMinutes();
+        const open = now >= min(ab) && now < min(fe);
+        const st = $("#status");
+        st.textContent = open ? `Aberto agora · fecha às ${fe}` : `Fechado agora · abre às ${ab}`;
+        st.classList.add(open ? "open" : "closed");
+      }
+
+      // Navegação fica sólida depois do hero
+      const nav = $("#nav");
+      const hero = $("#inicio");
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(([e]) => {
+          nav.classList.toggle("solid", !e.isIntersecting);
+          $("#whats").classList.toggle("hidden", e.isIntersecting);
+        }, { rootMargin: "-72px 0px 0px 0px" }).observe(hero);
+      } else {
+        $("#whats").classList.remove("hidden");
+      }
+    })();
+
+    /* ---------- 2. Coreografia de scroll (só se as bibliotecas carregarem) ---------- */
+    (() => {
+      if (!window.gsap || !window.ScrollTrigger) return;
+      gsap.registerPlugin(ScrollTrigger);
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (window.Lenis && !reduced) {
+        const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add((t) => lenis.raf(t * 1000));
+        gsap.ticker.lagSmoothing(0);
+        document.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
+          const target = document.querySelector(a.getAttribute("href"));
+          if (target) { e.preventDefault(); lenis.scrollTo(target); }
+        }));
+      }
+
+      // Movimento reduzido: só opacidade, sem deslocamento
+      if (reduced) {
+        gsap.utils.toArray("[data-reveal], [data-stagger], [data-hero-line], .plate-wrap").forEach((el) =>
+          gsap.from(el, { opacity: 0, duration: .6, scrollTrigger: { trigger: el, start: "top 90%" } }));
+        return;
+      }
+
+      // Entrada do hero: linhas sobem da máscara, anilha cai girando
+      gsap.from("[data-hero-line]", { yPercent: 110, duration: 1.1, ease: "power4.out", stagger: .08, delay: .1 });
+      gsap.from("#plate", { y: -60, rotation: -90, scale: .85, opacity: 0, duration: 1.4, ease: "power3.out", delay: .25 });
+
+      // Hero travado: a anilha gira e cresce, as linhas se afastam
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 901px)", () => {
+        gsap.timeline({ scrollTrigger: { trigger: "#inicio", start: "top top", end: "+=90%", pin: true, scrub: 1 } })
+          .to("#plate", { rotation: 270, scale: 1.18, ease: "none" }, 0)
+          .to(".hero h1 .l1", { xPercent: -14, ease: "none" }, 0)
+          .to(".hero h1 .l2", { xPercent: 10, ease: "none" }, 0)
+          .to(".hero-foot", { opacity: 0, ease: "none" }, 0);
+      });
+      mm.add("(max-width: 900px)", () => {
+        gsap.to("#plate", { rotation: 200, ease: "none", scrollTrigger: { trigger: "#inicio", start: "top top", end: "bottom top", scrub: 1 } });
+      });
+
+      // Manifesto: palavras acendem conforme o scroll
+      const m = document.getElementById("manifesto");
+      m.innerHTML = m.textContent.split(/\s+/).map((w) => `<span class="w">${w.replace(/[&<>]/g, "")}</span>`).join(" ");
+      gsap.fromTo("#manifesto .w", { opacity: .15 }, {
+        opacity: 1, stagger: .1, ease: "none",
+        scrollTrigger: { trigger: "#manifesto", start: "top 80%", end: "bottom 45%", scrub: true },
+      });
+
+      // Títulos: a linha sobe de dentro da máscara
+      gsap.utils.toArray("[data-reveal]").forEach((el) => {
+        gsap.from(el, { yPercent: 110, duration: .9, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%" } });
+      });
+
+      // Itens irmãos entram em sequência (stagger de 70ms)
+      ScrollTrigger.batch("[data-stagger]", {
+        start: "top 88%",
+        onEnter: (els) => gsap.from(els, { y: 28, opacity: 0, duration: .7, ease: "power3.out", stagger: .07 }),
+        once: true,
+      });
+
+      // Nome gigante do rodapé desliza com o scroll
+      gsap.fromTo("#mega", { xPercent: 6 }, { xPercent: -8, ease: "none", scrollTrigger: { trigger: ".footer", start: "top bottom", end: "bottom bottom", scrub: 1 } });
+    })();
+  </script>
+</body>
+</html>
