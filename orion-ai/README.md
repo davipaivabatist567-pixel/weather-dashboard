@@ -98,6 +98,15 @@ O Orion aprende guardando e consultando o que você envia (o modelo de IA em si 
 - **Controle:** tudo pode ser visto, buscado, editado e apagado; o aprendizado automático e a memória podem ser desligados. Credenciais evidentes (chaves `sk-…`, chaves privadas, números de cartão) são removidas antes de guardar.
 - Sem a IA: `aprenda: <texto>` guarda conteúdo e `o que você sabe sobre X?` mostra os trechos encontrados.
 
+### Modo VISION (holograma, palmas e comandos)
+
+Inspirado no projeto VISION 1.2 (Python/macOS), refeito para o navegador e o APK:
+
+- **Holograma 3D** na tela inicial e em tela cheia (“abrir holograma” ou ⛶): esfera de dados com onda de varredura, anéis giroscópicos com cometas, anel graduado, órbitas, núcleo em wireframe, cristal pulsante, ondas de choque, palavras flutuantes, arcos de HUD, brilho e linhas de varredura. **Azul em repouso, vermelho enquanto o Orion fala.** Arrastar gira, pinça/roda dá zoom, toque duplo reinicia; com a câmera ligada, **uma mão gira e as duas mãos em pinça dão zoom**. Em aparelhos lentos ou no modo econômico, desenha menos elementos.
+- **Duas palmas ativam o Orion** (Configurações → Ativação, desligado por padrão): o microfone só mede o volume neste aparelho, nada é gravado. Só contam batidas curtas (até 0,15 s) com 0,1 a 0,8 s entre elas, e a sensibilidade é ajustável. Ao ativar: abre o holograma, cumprimenta com o estado real (IA conectada ou modo local) e, se o navegador tiver ditado, entra em **conversa contínua** até “pode dormir” ou dois silêncios seguidos.
+- **Comandos:** “abrir YouTube/Google/WhatsApp/Instagram/Gmail/Maps/Spotify”, “pesquisar X no Google/YouTube” (sem citar o site, a pergunta vai para a IA, que pesquisa e cita fontes), “tocar X” (resultados do YouTube), “tirar foto” (contagem de 3 s; a foto fica só no aparelho até você salvar ou pedir análise), “bateria”, “volume 40” / “aumentar o volume” / “silêncio” (é o volume da **voz do Orion**: o do aparelho só muda pelos botões do sistema), “abrir/fechar holograma”, “quem é você”, “pode dormir”.
+- **O que uma página não consegue fazer** (e o Orion responde isso): tirar print da tela, criar ou abrir pastas, mudar o volume do sistema. No APK não há ditado por voz, então as palmas abrem o holograma e cumprimentam, mas a conversa é por texto.
+
 ### Orion Ring (controle físico, em desenvolvimento)
 
 Em Configurações → **Orion Ring**, o Orion aceita um botão físico que envie uma tecla (padrão `F9`, reaprendível): clique liga/desliga o ditado, duplo clique lê a última resposta em voz alta, pressão longa interrompe tudo. O anel nunca confirma exclusões. Hoje funciona com qualquer teclado (inclusive Bluetooth); o anel em si ainda não existe. Veja `../acessorios/orion-ring/README.md`.
@@ -129,10 +138,10 @@ Nenhuma página consegue pular a permissão de câmera do navegador. O que o Ori
 ## Testes
 
 ```bash
-npm test                           # 94 testes unitários e de integração (Vitest)
+npm test                           # 107 testes unitários e de integração (Vitest)
 ./tests/e2e/prepare-fixtures.sh    # gera vídeos de câmera falsa a partir de imagens de exemplo do MediaPipe
 npm run build:html                 # gera orion.html (testado também via file://)
-npx playwright test                # 21 testes ponta a ponta no Chromium (câmera falsa + API Claude simulada)
+npx playwright test                # 25 testes ponta a ponta no Chromium (câmera falsa + API Claude simulada)
 ```
 
 Os testes de ponta a ponta usam um servidor que imita a API de streaming da Anthropic (`tests/e2e/mock-anthropic.mjs`), então nenhuma chamada paga é feita.
@@ -166,5 +175,6 @@ Veja a seção “Status” no fim deste arquivo (atualizada a cada entrega).
 | App Android (`orion.apk`, WebView com o HTML dentro) | Empacotado e assinado (v1/v2/v3, verificado com `apksigner`); a lógica web foi testada no Chromium; **não foi executado em aparelho ou emulador Android** |
 | Voz (ditado) dentro do APK | **Indisponível**: WebView não tem Web Speech API |
 | Orion Ring: lado do Orion (decodificador de um botão, ações, configuração) | Implementado e testado com teclado; **o anel físico ainda não existe** |
+| Modo VISION: holograma 3D (azul/vermelho), mãos girando e dando zoom, palmas, conversa contínua, comandos de sites/música/foto/bateria/volume da voz | Implementado e testado no Chromium (detecção de palmas com testes unitários de sinais simulados; **não testada com palmas reais** nem no celular) |
 | Lembretes com o navegador fechado (push/e-mail) | **Não implementado**: exige um serviço de push externo |
 | Integrações externas (e-mail, calendário, mensagens) | **Não implementadas** |

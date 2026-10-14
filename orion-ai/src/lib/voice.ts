@@ -52,7 +52,7 @@ const ERRORS: Record<string, string> = {
  * Escuta uma frase. O áudio é processado pelo serviço de fala do próprio navegador
  * (no Chrome, isso envolve os servidores do Google) — o Orion não grava nem armazena o áudio.
  */
-export function listenOnce(onFinal: (text: string) => void) {
+export function listenOnce(onFinal: (text: string) => void, onNothing?: () => void) {
   const st = useOrion.getState();
   if (!Recognition) {
     st.set({ mic: "indisponivel", micError: "Este navegador não oferece reconhecimento de fala. Use o campo de texto (ou o Chrome/Edge)." });
@@ -94,7 +94,7 @@ export function listenOnce(onFinal: (text: string) => void) {
       s.set({ mic: "processando" });
       onFinal(text);
       if (useOrion.getState().mic === "processando") useOrion.getState().set({ mic: "desligado" });
-    }
+    } else onNothing?.();
   };
   try {
     r.start();

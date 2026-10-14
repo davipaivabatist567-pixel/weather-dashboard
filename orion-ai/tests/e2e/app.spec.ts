@@ -19,7 +19,7 @@ const nav = (page: Page, label: string) => page.getByRole("navigation").getByRol
 
 test("início mostra núcleo, saudação e IA conectada", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("img", { name: /Núcleo do Orion/ })).toBeVisible();
+  await expect(page.getByRole("img", { name: /Holograma do Orion/ })).toBeVisible();
   await expect(page.locator(".greeting")).not.toBeEmpty();
   await expect(page.locator(".topbar")).toContainText("IA: claude-opus-5-5");
   await expect(page.locator(".diag")).toContainText("Câmera");
@@ -221,4 +221,91 @@ test("diagnóstico da câmera lista cada passo com o resultado real", async ({ p
   await expect(report.locator("li.ok", { hasText: "Abrir a câmera" })).toBeVisible();
   await expect(report.locator("li.ok", { hasText: "Modelo de mãos" })).toBeVisible();
   await expect(report.locator("li.falha")).toHaveCount(0);
+});
+
+test("holograma estilo VISION: anima, abre em tela cheia e fecha com Esc", async ({ page }) => {
+  await page.goto("/");
+  const canvas = page.locator(".holo-home .holo-canvas");
+  await expect(canvas).toBeVisible();
+  await expect.poll(async () => Number(await canvas.getAttribute("data-quadros")), { timeout: 15_000 }).toBeGreaterThan(20);
+  // o centro do holograma tem pixels acesos (núcleo/cristal), não é um quadro preto
+  const aceso = await canvas.evaluate((c: HTMLCanvasElement) => {
+    const g = c.getContext("2d")!.getImageData(c.width / 2 - 20, c.height / 2 - 20, 40, 40).data;
+    let max = 0;
+    for (let i = 0; i < g.length; i += 4) max = Math.max(max, g[i + 1] + g[i + 2]);
+    return max;
+  });
+  expect(aceso).toBeGreaterThan(200);
+  // arrastar gira (a imagem muda)
+  const antes = await canvas.screenshot();
+  const box = (await canvas.boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 120, box.y + box.height / 2 + 30, { steps: 8 });
+  await page.mouse.up();
+  expect(Buffer.compare(antes, await canvas.screenshot())).not.toBe(0);
+  await page.screenshot({ path: "test-results/09-holograma.png" });
+  await page.getByRole("button", { name: "⛶ Tela cheia" }).click();
+  await expect(page.getByRole("dialog", { name: /Holograma do Orion em tela cheia/ })).toBeVisible();
+  await page.screenshot({ path: "test-results/10-holograma-tela-cheia.png" });
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog", { name: /Holograma do Orion em tela cheia/ })).toHaveCount(0);
+});
+
+test("comandos estilo VISION: sites, volume da voz, bateria, apresentação e holograma", async ({ page }) => {
+  await page.addInitScript(() => {
+    (window as unknown as { __abertos: string[] }).__abertos = [];
+    window.open = ((u: string) => {
+      (window as unknown as { __abertos: string[] }).__abertos.push(String(u));
+      return {} as Window;
+    }) as typeof window.open;
+  });
+  await page.goto("/#/assistente");
+  const enviar = async (t: string) => {
+    await page.getByLabel("Mensagem").fill(t);
+    await page.keyboard.press("Enter");
+  };
+  await enviar("abrir YouTube");
+  await expect(page.locator(".msg").last()).toContainText("Abrindo YouTube");
+  await enviar("tocar Believer");
+  await expect(page.locator(".msg").last()).toContainText("believer");
+  await enviar("pesquisar receita de bolo no google");
+  await expect(page.locator(".msg").last()).toContainText("receita de bolo");
+  expect(await page.evaluate(() => (window as unknown as { __abertos: string[] }).__abertos)).toEqual([
+    "https://www.youtube.com",
+    "https://www.youtube.com/results?search_query=believer",
+    "https://www.google.com/search?q=receita%20de%20bolo",
+  ]);
+  await enviar("volume 40");
+  await expect(page.locator(".msg").last()).toContainText("Volume da voz do Orion em 40%");
+  await enviar("bateria");
+  await expect(page.locator(".msg").last()).toContainText(/Bateria em \d+%|não informa/);
+  await enviar("quem é você?");
+  await expect(page.locator(".msg").last()).toContainText("Eu sou o Orion");
+  await enviar("tira um print da tela");
+  await expect(page.locator(".msg").last()).toContainText("Não consigo tirar print");
+  await enviar("abrir holograma");
+  await expect(page.getByRole("dialog", { name: /Holograma do Orion em tela cheia/ })).toBeVisible();
+  await page.getByRole("button", { name: "Fechar holograma" }).click();
+  await expect(page.getByRole("dialog", { name: /Holograma/ })).toHaveCount(0);
+});
+
+test("tirar foto por comando: liga a câmera, conta 3 s e mostra a foto só no aparelho", async ({ page }) => {
+  await page.goto("/#/assistente");
+  await page.getByLabel("Mensagem").fill("tira uma foto");
+  await page.keyboard.press("Enter");
+  const foto = page.getByRole("dialog", { name: "Foto tirada" });
+  await expect(foto).toBeVisible({ timeout: 90_000 });
+  await expect(foto.locator("img")).toHaveAttribute("src", /^data:image\/jpeg;base64,/);
+  await page.getByRole("button", { name: "Fechar e apagar" }).click();
+  await expect(foto).toHaveCount(0);
+});
+
+test("ativação por palmas: liga a escuta só do volume e mostra o aviso", async ({ page }) => {
+  await page.goto("/#/configuracoes");
+  await page.getByText("Ativar com duas palmas").click();
+  await expect(page.locator(".topbar")).toContainText("Ouvindo palmas", { timeout: 15_000 });
+  await expect(page.getByLabel("Nível do microfone")).toBeVisible();
+  await page.locator(".topbar").getByRole("button", { name: /Ouvindo palmas/ }).click();
+  await expect(page.locator(".topbar")).not.toContainText("Ouvindo palmas");
 });

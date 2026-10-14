@@ -2,13 +2,68 @@ import { useEffect, useState } from "react";
 import { AiConnection } from "../components/AiConnection";
 import { Toggle } from "../components/Shell";
 import { STANDALONE } from "../lib/env";
-import { refreshStatus } from "../lib/actions";
+import { ativarOrion, refreshStatus } from "../lib/actions";
+import { thresholdFromSensitivity } from "../lib/clap";
 import { RING_DEFAULT_KEY, RING_LABELS, runRingAction } from "../lib/ring";
 import type { RingEvent } from "../lib/ringDecoder";
 import { api } from "../lib/api";
 import { listVoices, pickVoice, speak, speechRecognitionSupported, speechSynthesisSupported, stopSpeaking } from "../lib/voice";
 import { useOrion, type Settings } from "../store";
 import { getVisionEngine } from "../vision/engine";
+
+/** Ativação no estilo VISION: duas palmas, conversa contínua e mãos controlando o holograma. */
+function AtivacaoPanel() {
+  const s = useOrion();
+  const a = s.settings.activation;
+  const set = (patch: Partial<Settings["activation"]>) => s.updateSettings((x) => ({ ...x, activation: { ...x.activation, ...patch } }));
+  const [nivel, setNivel] = useState(0);
+  useEffect(() => {
+    if (!s.clapListening) return;
+    const id = setInterval(() => setNivel(window.__orionClapLevel ?? 0), 100);
+    return () => clearInterval(id);
+  }, [s.clapListening]);
+  const limiar = thresholdFromSensitivity(a.clapSensitivity);
+  return (
+    <div className="panel">
+      <h2>Ativação (estilo VISION)</h2>
+      <Toggle
+        label="Ativar com duas palmas"
+        hint="O microfone fica ligado só para medir o volume e detectar duas batidas curtas. Nada é gravado nem enviado. Ao detectar, o Orion abre o holograma e cumprimenta."
+        checked={a.clap}
+        onChange={(clap) => set({ clap })}
+      />
+      <label className="field">
+        Sensibilidade das palmas: {a.clapSensitivity}
+        <input type="range" min={1} max={10} value={a.clapSensitivity} onChange={(e) => set({ clapSensitivity: Number(e.target.value) })} />
+      </label>
+      {s.clapListening && (
+        <div className="small" aria-label="Nível do microfone">
+          Nível agora: <span className="mono">{(nivel * 100).toFixed(1)}</span> (palma conta acima de <span className="mono">{(limiar * 100).toFixed(1)}</span>)
+          <div className="meter"><div style={{ width: `${Math.min(100, (nivel / (limiar * 2)) * 100)}%` }} /><span style={{ left: "50%" }} /></div>
+        </div>
+      )}
+      <Toggle
+        label="Conversa contínua depois de ativar"
+        hint="Depois de cada resposta falada, o Orion volta a ouvir, até você dizer “pode dormir” ou ficar em silêncio duas vezes. Precisa de ditado por voz (Chrome)."
+        checked={a.activeConversation}
+        onChange={(activeConversation) => set({ activeConversation })}
+      />
+      <Toggle
+        label="Controlar o holograma com as mãos"
+        hint="Com a câmera ligada: uma mão gira o holograma, as duas mãos em pinça dão zoom."
+        checked={a.handsHologram}
+        onChange={(handsHologram) => set({ handsHologram })}
+      />
+      <div className="row" style={{ marginTop: 8 }}>
+        <button className="btn small" onClick={() => ativarOrion()}>Testar ativação</button>
+        <button className="btn small ghost" onClick={() => s.set({ hologramOpen: true })}>Abrir holograma</button>
+      </div>
+      <p className="small muted" style={{ marginTop: 8 }}>
+        Comandos: “abrir YouTube”, “pesquisar gatos no Google”, “tocar Believer”, “tirar foto”, “bateria”, “volume 40”, “abrir holograma”, “quem é você”, “pode dormir”.
+      </p>
+    </div>
+  );
+}
 
 export function SettingsPage() {
   const s = useOrion();
@@ -146,6 +201,8 @@ export function SettingsPage() {
           </button>
         </div>
       </div>
+
+      <AtivacaoPanel />
 
       <div className="panel">
         <h2>Orion Ring (controle físico)</h2>

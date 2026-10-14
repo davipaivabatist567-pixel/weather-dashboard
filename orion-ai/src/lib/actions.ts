@@ -1,14 +1,14 @@
 // Ações centrais do cliente: enviar mensagens, executar comandos locais,
 // atualizar o estado do servidor e confirmar ações sensíveis.
 import type { ChatAttachment, ChatTurn, KnowledgeMeta, LearnResult, MemoryItem, OrionMode } from "../../shared/types";
-import { HOW_TO_CONNECT } from "./env";
+import { HOW_TO_CONNECT, IN_ANDROID_APP } from "./env";
 import { useOrion, uid, type ChatMessage } from "../store";
 import { getVisionEngine } from "../vision/engine";
 import { GESTURE_LABELS } from "../vision/gestures";
 import { api, ApiError, streamChat } from "./api";
-import { describeCommand, parseCommand, stripWakeWord, type LocalCommand } from "./commands";
+import { describeCommand, parseCommand, searchUrl, SITES, stripWakeWord, type LocalCommand } from "./commands";
 import { localReply } from "./localMode";
-import { speak, stopSpeaking } from "./voice";
+import { listenOnce, speak, speechRecognitionSupported, stopListening, stopSpeaking } from "./voice";
 
 let controller: AbortController | null = null;
 
@@ -21,7 +21,8 @@ export async function refreshStatus() {
   }
 }
 
-export function executeCommand(c: LocalCommand) {
+/** Executa um comando local e devolve a resposta (texto) que o Orion mostra e fala. */
+export async function executeCommand(c: LocalCommand): Promise<string> {
   const st = useOrion.getState();
   const engine = getVisionEngine();
   switch (c.type) {
@@ -63,8 +64,140 @@ export function executeCommand(c: LocalCommand) {
     case "clear_chat":
       st.clearMessages();
       break;
+    case "open_site": {
+      const site = SITES[c.site];
+      return abrirLink(site.url, `Abrindo ${site.label}.`);
+    }
+    case "web_search":
+      return abrirLink(searchUrl(c.platform, c.query), describeCommand(c));
+    case "play":
+      return abrirLink(searchUrl("youtube", c.query), describeCommand(c));
+    case "photo":
+      return tirarFoto();
+    case "battery":
+      return lerBateria();
+    case "hologram":
+      st.set({ hologramOpen: c.open });
+      break;
+    case "sleep":
+      st.set({ activeMode: false });
+      stopListening();
+      break;
+    case "voice_volume": {
+      const v = st.settings.voice;
+      if (c.mode === "mute" || c.mode === "unmute") {
+        st.updateSettings((x) => ({ ...x, voice: { ...x.voice, muted: c.mode === "mute" } }));
+        return c.mode === "mute" ? "Voz do Orion silenciada." : "Voz do Orion ativada.";
+      }
+      const atual = Math.round(v.volume * 100);
+      const alvo = Math.max(0, Math.min(100, c.mode === "set" ? (c.value ?? atual) : atual + (c.mode === "up" ? 10 : -10)));
+      st.updateSettings((x) => ({ ...x, voice: { ...x.voice, volume: alvo / 100, muted: alvo === 0 ? x.voice.muted : false } }));
+      return `Volume da voz do Orion em ${alvo}%. O volume do aparelho só muda pelos botões do sistema.`;
+    }
+    case "introduce":
+    case "unsupported":
+      break;
+  }
+  return describeCommand(c);
+}
+
+/** Abre um link fora do Orion. Sem um toque do usuário o navegador pode bloquear: então devolve o link. */
+function abrirLink(url: string, texto: string): string {
+  if (IN_ANDROID_APP) {
+    // o app Android intercepta a navegação e abre o navegador do sistema
+    window.location.href = url;
+    return texto;
+  }
+  const w = window.open(url, "_blank", "noopener");
+  return w === null ? `${texto} O navegador bloqueou a janela: [toque aqui para abrir](${url}).` : `${texto} [Link](${url})`;
+}
+
+async function lerBateria(): Promise<string> {
+  const nav = navigator as Navigator & { getBattery?: () => Promise<{ level: number; charging: boolean }> };
+  if (!nav.getBattery) return "Este navegador não informa o nível da bateria.";
+  try {
+    const b = await nav.getBattery();
+    return `Bateria em ${Math.round(b.level * 100)}%, ${b.charging ? "carregando" : "sem carregar"}.`;
+  } catch {
+    return "Não consegui ler a bateria neste aparelho.";
   }
 }
+
+const esperar = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** Tira uma foto com a câmera (contagem de 3 s, como o VISION). A foto fica só em memória. */
+async function tirarFoto(): Promise<string> {
+  const st = useOrion.getState();
+  const engine = getVisionEngine();
+  if (!engine.running) {
+    st.toast("Ligando a câmera…");
+    void engine.start(st.settings.camera.deviceId);
+    for (let i = 0; i < 40 && !engine.running && useOrion.getState().camera !== "erro"; i++) await esperar(250);
+    for (let i = 0; i < 40 && engine.video.readyState < 2 && useOrion.getState().camera !== "erro"; i++) await esperar(250);
+  }
+  if (useOrion.getState().camera === "erro" || !engine.running) return `Não consegui ligar a câmera: ${useOrion.getState().cameraError ?? "erro desconhecido"}`;
+  for (const n of [3, 2, 1]) {
+    useOrion.getState().toast(`Foto em ${n}…`);
+    await esperar(1000);
+  }
+  const data = engine.captureFrame();
+  if (!data) return "Não consegui capturar a foto.";
+  useOrion.getState().set({ photo: { data, at: Date.now() } });
+  return "Foto tirada. Ela fica só neste aparelho até você salvar ou fechar.";
+}
+
+/**
+ * Ativação no estilo VISION (duas palmas): abre o holograma, cumprimenta com o estado real do
+ * Orion e, se o navegador tiver ditado, começa a conversa contínua.
+ */
+export function ativarOrion() {
+  const st = useOrion.getState();
+  if (st.chatBusy || st.mic === "escutando") return;
+  st.set({ hologramOpen: true });
+  const h = new Date().getHours();
+  const saudacao = h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite";
+  const ia = st.server?.ai.configured ? "Inteligência central conectada" : "Estou em modo local limitado";
+  const texto = `${saudacao}. Orion online. ${ia}. Qual é o plano?`;
+  st.addMessage({ id: uid(), role: "assistant", content: texto, at: new Date().toISOString(), local: true });
+  speak(texto);
+  if (st.settings.activation.activeConversation && speechRecognitionSupported) {
+    st.set({ activeMode: true });
+    continuarConversa();
+  } else if (!speechRecognitionSupported) {
+    st.toast("Ditado por voz indisponível aqui: digite sua pergunta.", "info");
+  }
+}
+
+let vaziosSeguidos = 0;
+/** Na conversa contínua, volta a ouvir quando o Orion termina de falar (até "pode dormir"). */
+export function continuarConversa() {
+  const tentar = (n = 0) => {
+    const s = useOrion.getState();
+    if (!s.activeMode) return;
+    if (s.speaking || s.chatBusy || s.mic === "escutando") {
+      if (n < 600) setTimeout(() => tentar(n + 1), 250);
+      return;
+    }
+    listenOnce(
+      (texto) => {
+        vaziosSeguidos = 0;
+        void sendMessage(texto, { viaVoice: true }).finally(() => continuarConversa());
+      },
+      () => {
+        // ninguém falou: depois de 2 silêncios seguidos, o Orion descansa (não deixa o microfone aberto à toa)
+        vaziosSeguidos++;
+        if (vaziosSeguidos >= 2) {
+          vaziosSeguidos = 0;
+          useOrion.getState().set({ activeMode: false });
+          useOrion.getState().toast("Conversa encerrada por silêncio. Bata palmas duas vezes para chamar de novo.");
+        } else continuarConversa();
+      },
+    );
+  };
+  setTimeout(() => tentar(), 400);
+}
+
+
 
 /** Resumo das medições reais da visão computacional, enviado como contexto à IA. */
 export function visionContext(): string | undefined {
@@ -108,10 +241,9 @@ export async function sendMessage(raw: string, opts: SendOptions = {}): Promise<
     const cmd = parseCommand(text);
     if (cmd) {
       st.addMessage({ id: uid(), role: "user", content: raw, at: new Date().toISOString() });
-      executeCommand(cmd);
-      const reply = describeCommand(cmd);
+      const reply = await executeCommand(cmd);
       st.addMessage({ id: uid(), role: "system", content: `⚙ Comando local executado: ${reply}`, at: new Date().toISOString(), local: true });
-      if (opts.viaVoice && cmd.type !== "stop_speaking" && cmd.type !== "speak_last") speak(reply);
+      if (opts.viaVoice && cmd.type !== "stop_speaking" && cmd.type !== "speak_last") speak(reply.replace(/\[[^\]]*\]\([^)]*\)/g, ""));
       return null;
     }
   }

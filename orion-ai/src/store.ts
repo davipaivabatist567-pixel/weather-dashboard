@@ -64,6 +64,8 @@ export interface Settings {
   privacy: { saveChatHistory: boolean; speechNoticeAccepted: boolean };
   /** Orion Ring: controle físico de um botão (ver lib/ring.ts) */
   ring: { enabled: boolean; key: string };
+  /** Ativação no estilo VISION: duas palmas e mãos controlando o holograma */
+  activation: { clap: boolean; clapSensitivity: number; handsHologram: boolean; activeConversation: boolean };
   permissions: Permissions;
   showDiagnostics: boolean;
 }
@@ -77,6 +79,7 @@ export const DEFAULT_SETTINGS: Settings = {
   appearance: { particles: true, reducedMotion: false },
   privacy: { saveChatHistory: true, speechNoticeAccepted: false },
   ring: { enabled: false, key: "F9" },
+  activation: { clap: false, clapSensitivity: 5, handsHologram: true, activeConversation: true },
   permissions: { readMemory: true, writeMemory: true, manageProjects: true, webSearch: true },
   showDiagnostics: true,
 };
@@ -125,6 +128,14 @@ interface OrionState {
   vision: VisionDiag;
   gestureLog: GestureLogEntry[];
   ringLog: RingLogEntry[];
+  /** holograma em tela cheia aberto */
+  hologramOpen: boolean;
+  /** escuta de palmas ligada agora (microfone em uso só para isso) */
+  clapListening: boolean;
+  /** conversa contínua: depois de cada resposta falada, o Orion volta a ouvir */
+  activeMode: boolean;
+  /** última foto tirada pelo comando "tirar foto" (só em memória) */
+  photo: { data: string; at: number } | null;
   /** true enquanto o Orion espera a próxima tecla para usá-la como botão do anel */
   ringLearning: boolean;
   toasts: Toast[];
@@ -170,6 +181,10 @@ export const useOrion = create<OrionState>()(
       vision: { fps: null, inferenceMs: null, hands: 0, handedness: [], body: null, gesture: null, delegate: null, resolution: null },
       gestureLog: [],
       ringLog: [],
+      hologramOpen: false,
+      clapListening: false,
+      activeMode: false,
+      photo: null,
       ringLearning: false,
       toasts: [],
 

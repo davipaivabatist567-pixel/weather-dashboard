@@ -2,6 +2,9 @@ import { DiagnosticsPanel } from "./components/Diagnostics";
 import { Particles } from "./components/Particles";
 import { PinchCursor, Sidebar, SpecialEffect, Toasts, TopBar } from "./components/Shell";
 import { useRing } from "./lib/ring";
+import { ativarOrion } from "./lib/actions";
+import { useClapActivation } from "./lib/clap";
+import { HologramOverlay, PhotoOverlay } from "./components/VisionOverlays";
 import { useGestureActions, useHashNavigation, useReminderScheduler, useServerStatus } from "./lib/systemEffects";
 import { AssistantPage } from "./pages/Assistant";
 import { HomePage } from "./pages/Home";
@@ -32,6 +35,7 @@ export function App() {
   useHashNavigation();
   useCameraAutoStart();
   useRing();
+  useClapActivation(ativarOrion);
   const page = useOrion((s) => s.page);
   const showDiag = useOrion((s) => s.settings.showDiagnostics);
   const particles = useOrion((s) => s.settings.appearance.particles && !s.settings.performance.economy && !s.settings.appearance.reducedMotion);
@@ -52,6 +56,8 @@ export function App() {
       <Toasts />
       <PinchCursor />
       <SpecialEffect />
+      <HologramOverlay />
+      <PhotoOverlay />
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { HoloCore } from "../components/HoloCore";
+import { Hologram } from "../components/Hologram";
 import { sendMessage } from "../lib/actions";
 import { pickGreeting } from "../lib/greetings";
 import { listenOnce, speechRecognitionSupported } from "../lib/voice";
@@ -21,7 +21,15 @@ export function HomePage() {
   return (
     <div className="grid">
       <section className="hero">
-        <HoloCore size={340} />
+        <div className="stack holo-home">
+          <Hologram />
+          <div className="row" style={{ justifyContent: "center" }}>
+            <button className="btn small" onClick={() => s.set({ hologramOpen: true })}>⛶ Tela cheia</button>
+            <span className="small muted">
+              {s.settings.activation.clap ? "👏 Bata palmas duas vezes para ativar" : "Arraste para girar · pinça para aproximar"}
+            </span>
+          </div>
+        </div>
         <div className="stack">
           <p className="greeting">{greeting}</p>
           <div className="row">

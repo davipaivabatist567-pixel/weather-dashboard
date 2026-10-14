@@ -52,6 +52,16 @@ export function TopBar() {
       ) : (
         <span className="chip"><span className="dot" />Microfone desligado</span>
       )}
+      {s.clapListening && (
+        <button className="chip live" onClick={() => s.updateSettings((x) => ({ ...x, activation: { ...x.activation, clap: false } }))} title="O microfone só mede o volume neste aparelho para detectar palmas. Clique para desligar.">
+          <span className="dot" />Ouvindo palmas · desligar
+        </button>
+      )}
+      {s.activeMode && (
+        <button className="chip on" onClick={() => { s.set({ activeMode: false }); stopListening(); }} title="O Orion volta a ouvir depois de cada resposta">
+          <span className="dot" />Conversa contínua · encerrar
+        </button>
+      )}
       {s.speaking && (
         <button className="chip on" onClick={stopSpeaking}><span className="dot" />Falando · parar</button>
       )}
