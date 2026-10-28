@@ -1,10 +1,14 @@
 # Cardápio digital – Bruthus Burger (Parnaíba-PI)
 
-Estilo bruto: preto, vermelho e mostarda, fonte Big Shoulders Display. Com o
-scroll, um hambúrguer 3D realista (three.js, feito em código: pão com gergelim,
-carne, cheddar e alface) gira e ganha mais carnes (1× → 4×), com o número
-gigante atrás. Sem WebGL, aparece a ilustração com a mesma animação.
-Um único arquivo: `index.html`.
+Estilo bruto: preto, vermelho e mostarda, fonte Big Shoulders Display.
+No topo, um Duplo realista; com o scroll ele se abre camada por camada no ar
+(pão com gergelim, carne + cheddar, carne + cheddar, tomate, alface, pão), com
+o nome de cada camada ao lado, e depois fecha de novo.
+
+As imagens ficam em `img/`: `camada-0` a `camada-5` (de baixo para cima) e as
+fotos do cardápio (`simples`, `duplo`, `triplo`, `bruto`). São renderizações 3D
+ilustrativas. Para usar fotos reais da casa, troque os arquivos mantendo os
+nomes (cada camada recortada com fundo transparente, no mesmo enquadramento).
 
 ## Pedido pelo WhatsApp
 - Cada burger e acompanhamento tem "+ Adicionar", que vira contador (− 1 +)

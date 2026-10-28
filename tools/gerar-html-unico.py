@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gera a versão "arquivo único" de cada cardápio: bibliotecas e fontes embutidas no HTML.
+"""Gera a versão "arquivo único" de cada cardápio: bibliotecas, fontes e imagens embutidas no HTML.
 
 O arquivo gerado abre em qualquer lugar (navegador do celular, anexo do WhatsApp,
 sem internet) com as animações e as fontes certas.
@@ -9,6 +9,7 @@ Saída: html-unico/cardapio-<pasta>.html
 """
 import base64
 import io
+import mimetypes
 import re
 import sys
 import tarfile
@@ -60,12 +61,19 @@ def inline_script(match):
     return f'<script>/* {pkg}@{ver} */\n{code}\n</script>'
 
 
+def inline_image(folder, match):
+    path = ROOT / folder / match.group(2)
+    mime = mimetypes.guess_type(path.name)[0] or ('image/webp' if path.suffix == '.webp' else 'application/octet-stream')
+    return f'{match.group(1)}data:{mime};base64,{base64.b64encode(path.read_bytes()).decode("ascii")}"'
+
+
 def build(folder):
     html = (ROOT / folder / 'index.html').read_text(encoding='utf-8')
+    html = re.sub(r'(src=")(img/[^"]+)"', lambda m: inline_image(folder, m), html)
     html = re.sub(r'\s*<link rel="preconnect"[^>]*>', '', html)
     html = re.sub(r'<link href="(https://fonts\.googleapis\.com/[^"]+)" rel="stylesheet">', inline_fonts, html)
     html = re.sub(r'<script src="https://cdn\.jsdelivr\.net/npm/([^@"]+)@([^/"]+)/([^"]+)"></script>', inline_script, html)
-    assert 'cdn.jsdelivr.net' not in html and 'fonts.googleapis.com' not in html, folder
+    assert 'cdn.jsdelivr.net' not in html and 'fonts.googleapis.com' not in html and 'src="img/' not in html, folder
     OUT.mkdir(exist_ok=True)
     dest = OUT / f'cardapio-{folder}.html'
     dest.write_text(html, encoding='utf-8')

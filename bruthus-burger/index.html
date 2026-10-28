@@ -20,14 +20,6 @@
     --bone: #F2EADB;
     --mustard: #F6B91A;
     --glow: rgba(227, 38, 27, .42);
-    /* cor — ilustração */
-    --bun: #D98A3A;
-    --bun-shade: #B86C24;
-    --bun-hi: #F2B062;
-    --patty: #6A3219;
-    --patty-hi: #8F4725;
-    --cheese: #F6B91A;
-    --seed: #F2EADB;
     /* textura de aço */
     --hatch-dark: repeating-linear-gradient(45deg, rgba(242, 234, 219, .035) 0 2px, transparent 2px 12px);
     --hatch-light: repeating-linear-gradient(45deg, rgba(15, 14, 13, .04) 0 2px, transparent 2px 12px);
@@ -38,7 +30,7 @@
     --t-h2: clamp(3.5rem, 19vw, 9rem);
     --t-item: clamp(3rem, 15vw, 7rem);
     --t-price: clamp(1.75rem, 3.6vw, 3rem);
-    --t-cap: clamp(3rem, 14vw, 7rem);
+    --t-cap: clamp(2.5rem, 11vw, 6rem);
     --t-track: clamp(4.5rem, 18vw, 13rem);
     --t-footer: clamp(4.5rem, 26vw, 14rem);
     --t-body: clamp(1rem, 1.05vw, 1.125rem);
@@ -112,14 +104,14 @@
   .btn-bone { background: var(--bone); color: var(--black); }
   .btn-mustard { background: var(--mustard); color: var(--black); }
 
-  /* ============ HERO: quanto mais rola, mais carne ============ */
+  /* ============ HERO: o burger se abre camada por camada ============ */
   .hero {
     position: relative; overflow: hidden; height: calc(var(--vh) * 100); min-height: 36rem;
-    --f: min(calc(92vw / 3.36), calc((var(--vh) * 100 - 13rem) / 1.33));
-    --bw: calc(var(--f) * 1.25);
+    --f: min(calc(92vw / 3.36), calc((var(--vh) * 100 - 15rem) / 1.55));
+    --bw: calc(var(--f) * 1.05);
   }
   @media (max-aspect-ratio: 1/1), (max-width: 599px) {
-    .hero { --bw: min(94vw, calc(var(--vh) * 50)); }
+    .hero { --bw: min(86vw, calc(var(--vh) * 44)); }
   }
   .top {
     position: absolute; inset: var(--demo-h) 0 auto; z-index: 5;
@@ -135,52 +127,42 @@
   .lockup .word { font-size: var(--f); }
   .burger-wrap {
     position: relative; z-index: 2; display: block; width: var(--bw);
-    margin-top: calc(var(--bw) * -.36 - var(--f) * .3);
+    margin-top: calc(var(--f) * -.32 - var(--bw) * .07);
   }
   .burger-wrap::before {
-    content: ""; position: absolute; z-index: -1; inset: 30% -10% -5%;
+    content: ""; position: absolute; z-index: -1; inset: 25% -12% 0;
     background: radial-gradient(closest-side, var(--glow), transparent);
   }
-  .burger { display: block; width: 100%; height: auto; overflow: visible; }
-  .burger .o { stroke: var(--black); stroke-width: 6; stroke-linejoin: round; }
-  .burger .bun { fill: var(--bun); }
-  .burger .bun-line { fill: none; stroke: var(--bun-shade); stroke-width: 6; stroke-linecap: round; }
-  .burger .bun-hi { fill: none; stroke: var(--bun-hi); stroke-width: 9; stroke-linecap: round; }
-  .burger .seeds ellipse { fill: var(--seed); stroke: var(--black); stroke-width: 2.5; }
-  .burger .patty { fill: var(--patty); }
-  .burger .grill { fill: none; stroke: var(--patty-hi); stroke-width: 4; stroke-linecap: round; }
-  .burger .cheese { fill: var(--cheese); }
-  .burger .extra { visibility: hidden; }
+  /* cada camada é uma imagem recortada, posicionada no mesmo quadro */
+  .stack { position: relative; display: block; aspect-ratio: 1; }
+  .stack .layer { position: absolute; display: block; }
+  .stack img { display: block; width: 100%; height: auto; }
 
-  /* número gigante e legendas (só existem com animação) */
-  .numeral, .captions { display: none; }
-  .js-motion .numeral {
-    display: block; position: absolute; z-index: 1; left: 50%; top: 44%; translate: -50% -50%;
-    font-size: min(62vh, 96vw); pointer-events: none;
-  }
-  .numeral span {
-    position: absolute; left: 50%; top: 50%; translate: -50% -50%; opacity: 0;
-    color: transparent; -webkit-text-stroke: max(2px, .006em) var(--red); white-space: nowrap;
-  }
+  /* legendas e nomes das camadas (só existem com animação) */
+  .captions, .lbl { display: none; }
   .js-motion .captions {
-    display: block; position: absolute; z-index: 3; height: 0;
-    left: var(--gutter); right: var(--gutter); bottom: var(--s-3); pointer-events: none;
+    display: block; position: absolute; z-index: 3; left: var(--gutter); right: var(--gutter);
+    top: calc(var(--demo-h) + 4.75rem); pointer-events: none;
   }
-  .cap { position: absolute; left: 0; bottom: 0; max-width: 30rem; opacity: 0; }
+  .cap { position: absolute; left: 0; top: 0; max-width: 30rem; opacity: 0; }
   .cap .kicker { color: var(--mustard); }
   .cap-t { display: block; font-size: var(--t-cap); margin-block: .12em .08em; }
+  .js-motion .lbl {
+    display: flex; position: absolute; z-index: 3; align-items: center; gap: .5em; translate: 0 -50%; opacity: 0;
+    font: 900 clamp(1rem, 4.6vw, 1.75rem)/1 var(--font-display); text-transform: uppercase; color: var(--bone); pointer-events: none;
+  }
+  .lbl::before { content: ""; flex: none; width: 1.1em; height: 3px; background: var(--mustard); }
   @media (min-aspect-ratio: 1/1) and (min-width: 600px) {
-    .js-motion .numeral { left: 64%; top: 52%; font-size: min(78vh, 52vw); }
-    .js-motion .captions { right: auto; bottom: auto; top: 50%; width: min(34vw, 28rem); }
-    .cap { bottom: auto; top: 0; translate: 0 -50%; }
+    .js-motion .captions { right: auto; top: 50%; width: min(26vw, 22rem); }
+    .cap { translate: 0 -50%; }
   }
 
   /* entrada da página (CSS puro) */
   @keyframes rise { from { transform: translateY(180%); } }
-  @keyframes drop { from { transform: translateY(-200px); opacity: 0; } }
+  @keyframes drop { from { transform: translateY(-160px); opacity: 0; } }
   @keyframes fade-up { from { transform: translateY(16px); opacity: 0; } }
   .js-motion .hero .mask > span { animation: rise var(--d-slow) var(--e-out) both; }
-  .js-motion .hero .drop { animation: drop .7s var(--e-pop) both; animation-delay: calc(.3s + var(--k) * .12s); }
+  .js-motion .hero .drop { animation: drop .7s var(--e-pop) both; animation-delay: calc(.3s + var(--k) * .1s); }
   .js-motion .hero .intro { animation: fade-up var(--d-base) var(--e-out) .95s both; }
 
   /* ============ CARDÁPIO ============ */
@@ -197,15 +179,21 @@
   .items { list-style: none; }
   .item {
     --rule: 100%;
-    display: grid; grid-template-columns: auto 1fr auto; column-gap: var(--s-2); align-items: end;
-    padding-block: var(--s-3);
+    display: grid; grid-template-columns: var(--ph) 1fr auto; grid-template-areas: "ph name price" "ph desc desc" "ph order order";
+    column-gap: var(--s-2); align-items: end; padding-block: var(--s-3);
+    --ph: clamp(7rem, 30vw, 13rem);
     background: linear-gradient(var(--line), var(--line)) 0 0 / var(--rule) var(--stroke) no-repeat;
   }
   .item:last-of-type { border-bottom: var(--stroke) solid var(--line); }
-  .item .x { font-size: calc(var(--t-item) * .62); color: transparent; -webkit-text-stroke: max(2px, .02em) var(--red); }
-  .item-name { font-size: var(--t-item); transition: transform var(--d-base) var(--e-out); }
+  .ph { grid-area: ph; position: relative; align-self: center; }
+  .ph img { display: block; width: 100%; height: auto; filter: drop-shadow(0 .9rem 1rem rgba(15, 14, 13, .35)); transition: transform var(--d-base) var(--e-out); }
+  @media (hover: hover) { .item:hover .ph img { transform: rotate(-4deg) scale(1.04); } }
+  .item .x { position: absolute; left: -.15em; top: -.2em; font-size: clamp(1.75rem, 7vw, 3rem); color: transparent; -webkit-text-stroke: max(2px, .03em) var(--red); }
+  .item .item-name { grid-area: name; }
+  .item .price { grid-area: price; }
+  .item-name { font-size: clamp(2.4rem, 10vw, 6rem); transition: transform var(--d-base) var(--e-out); }
   .price { font: 900 var(--t-price)/1 var(--font-display); white-space: nowrap; }
-  .desc { grid-column: 2 / -1; margin-top: max(var(--s-1), calc(var(--t-item) * .22)); max-width: 44ch; }
+  .desc { grid-area: desc; margin-top: var(--s-1); max-width: 44ch; }
   @media (hover: hover) { .item:hover .item-name { transform: translateX(.05em) skewX(-4deg); } }
   .sides { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1) var(--s-2); margin-top: var(--s-3); }
   .sides ul { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-1); }
@@ -239,12 +227,9 @@
   }
   .fab.is-hidden { transform: translateY(calc(100% + 2rem)); opacity: 0; pointer-events: none; }
 
-  /* hambúrguer 3D: substitui a ilustração quando o navegador tem WebGL */
-  .gl { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; }
-  .has-3d .burger { visibility: hidden; }
-
   /* ============ PEDIDO ============ */
-  .order { grid-column: 2 / -1; justify-self: start; margin-top: var(--s-2); }
+  .order { justify-self: start; margin-top: var(--s-2); }
+  .item .order { grid-area: order; }
   .order .add, .stepper button {
     border: 2px solid var(--black); background: var(--black); color: var(--bone); cursor: pointer; text-decoration: none;
     font: 700 var(--t-micro)/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase;
@@ -314,68 +299,34 @@
       <a class="tag-btn tag-mustard" href="https://wa.me/5586994552629?text=Ol%C3%A1!%20Vim%20pelo%20card%C3%A1pio%20digital%20e%20quero%20fazer%20um%20pedido." target="_blank" rel="noopener">Pedir ↗</a>
     </header>
 
-    <div class="numeral display" aria-hidden="true"><span>1×</span><span>2×</span><span>3×</span><span>4×</span></div>
-
     <div class="hero-stage">
       <p class="kicker hero-kicker"><span class="intro">Hamburgueria genuinamente piauiense</span></p>
       <h1 class="lockup display" aria-label="Bruthus Burger">
         <span class="mask word"><span>Bruthus</span></span>
         <span class="burger-wrap" aria-hidden="true">
-          <svg class="burger" viewBox="0 120 400 392" focusable="false">
-            <g class="drop" style="--k:0">
-              <path class="o bun" d="M56 440H344C344 472 326 492 296 492H104C74 492 56 472 56 440Z"/>
-              <path class="bun-line" d="M82 474C94 484 106 487 120 487H280C294 487 306 484 318 474"/>
-            </g>
-            <g class="unit"><g class="drop" style="--k:1">
-              <path class="o patty" d="M72 402H328C346 402 358 413 358 423C358 434 346 444 328 444H72C54 444 42 434 42 423C42 413 54 402 72 402Z"/>
-              <path class="grill" d="M86 428H140M170 432H250M276 426H330"/>
-              <path class="o cheese" d="M44 396H356L350 410H318V422A9 9 0 0 1 300 422V410H230V428A10 10 0 0 1 210 428V410H126V420A8 8 0 0 1 110 420V410H50Z"/>
-            </g></g>
-            <g class="unit extra">
-              <path class="o patty" d="M72 358H328C346 358 358 369 358 379C358 390 346 400 328 400H72C54 400 42 390 42 379C42 369 54 358 72 358Z"/>
-              <path class="grill" d="M86 384H140M170 388H250M276 382H330"/>
-              <path class="o cheese" d="M44 352H356L350 366H290V382A10 10 0 0 1 270 382V366H190V376A8 8 0 0 1 174 376V366H100V380A9 9 0 0 1 82 380V366H50Z"/>
-            </g>
-            <g class="unit extra">
-              <path class="o patty" d="M72 314H328C346 314 358 325 358 335C358 346 346 356 328 356H72C54 356 42 346 42 335C42 325 54 314 72 314Z"/>
-              <path class="grill" d="M86 340H140M170 344H250M276 338H330"/>
-              <path class="o cheese" d="M44 308H356L350 322H318V334A9 9 0 0 1 300 334V322H230V340A10 10 0 0 1 210 340V322H126V332A8 8 0 0 1 110 332V322H50Z"/>
-            </g>
-            <g class="unit extra">
-              <path class="o patty" d="M72 270H328C346 270 358 281 358 291C358 302 346 312 328 312H72C54 312 42 302 42 291C42 281 54 270 72 270Z"/>
-              <path class="grill" d="M86 296H140M170 300H250M276 294H330"/>
-              <path class="o cheese" d="M44 264H356L350 278H290V294A10 10 0 0 1 270 294V278H190V288A8 8 0 0 1 174 288V278H100V292A9 9 0 0 1 82 292V278H50Z"/>
-            </g>
-            <!-- pão de cima: desenhado no topo da torre de 4 carnes e descido 3 andares (132) para o Simples -->
-            <g transform="translate(0 132)"><g class="topbun"><g class="drop" style="--k:2">
-              <path class="o bun" d="M50 266C50 190 116 132 200 132C284 132 350 190 350 266C350 274 344 278 336 278H64C56 278 50 274 50 266Z"/>
-              <path class="bun-hi" d="M94 206C106 180 132 160 164 154"/>
-              <g class="seeds">
-                <ellipse cx="150" cy="174" rx="8" ry="3.6" transform="rotate(-24 150 174)"/>
-                <ellipse cx="204" cy="162" rx="8" ry="3.6" transform="rotate(8 204 162)"/>
-                <ellipse cx="256" cy="176" rx="8" ry="3.6" transform="rotate(26 256 176)"/>
-                <ellipse cx="116" cy="216" rx="8" ry="3.6" transform="rotate(-38 116 216)"/>
-                <ellipse cx="178" cy="204" rx="8" ry="3.6" transform="rotate(-6 178 204)"/>
-                <ellipse cx="234" cy="206" rx="8" ry="3.6" transform="rotate(14 234 206)"/>
-                <ellipse cx="292" cy="216" rx="8" ry="3.6" transform="rotate(36 292 216)"/>
-                <ellipse cx="148" cy="244" rx="8" ry="3.6" transform="rotate(-18 148 244)"/>
-                <ellipse cx="208" cy="238" rx="8" ry="3.6" transform="rotate(4 208 238)"/>
-                <ellipse cx="264" cy="246" rx="8" ry="3.6" transform="rotate(22 264 246)"/>
-              </g>
-            </g></g></g>
-          </svg>
+          <span class="stack">
+            <span class="layer" style="left:11.3%;top:60.4%;width:77.4%"><img class="drop" style="--k:0" src="img/camada-0.webp" alt="" width="774" height="341"></span>
+            <span class="layer" style="left:5.8%;top:58.6%;width:86.8%"><img class="drop" style="--k:1" src="img/camada-1.webp" alt="" width="868" height="263"></span>
+            <span class="layer" style="left:15.1%;top:56.8%;width:70.2%"><img class="drop" style="--k:2" src="img/camada-2.webp" alt="" width="702" height="157"></span>
+            <span class="layer" style="left:1.1%;top:44.1%;width:97.7%"><img class="drop" style="--k:3" src="img/camada-3.webp" alt="" width="977" height="340"></span>
+            <span class="layer" style="left:0.6%;top:34.4%;width:97.0%"><img class="drop" style="--k:4" src="img/camada-4.webp" alt="" width="970" height="306"></span>
+            <span class="layer" style="left:9.0%;top:7.4%;width:82.0%"><img class="drop" style="--k:5" src="img/camada-5.webp" alt="" width="820" height="426"></span>
+          </span>
         </span>
       </h1>
       <div class="hero-cta"><a class="btn btn-bone intro" href="#burgers">Ver cardápio ↓</a></div>
     </div>
 
     <div class="captions" aria-hidden="true">
-      <p class="cap"><span class="kicker">1 carne</span><span class="cap-t display">Simples</span><span>O começo de tudo.</span></p>
-      <p class="cap"><span class="kicker">2 carnes</span><span class="cap-t display">Duplo</span><span>Agora sim.</span></p>
-      <p class="cap"><span class="kicker">3 carnes</span><span class="cap-t display">Triplo</span><span>Respeito.</span></p>
-      <p class="cap"><span class="kicker">4 carnes</span><span class="cap-t display">Bruto.</span><span>Pra quem aguenta.</span></p>
-      <p class="cap cap-final"><span class="kicker">Bruthus Burger</span><span class="cap-t display">Quanto mais,<br>mais bruto.</span><span>Escolha o seu peso ↓</span></p>
+      <p class="cap cap-a"><span class="kicker">O Duplo, aberto</span><span class="cap-t display">Camada<br>por camada.</span></p>
+      <p class="cap cap-b"><span class="kicker">Fechou.</span><span class="cap-t display">Agora é<br>com você.</span><span>Escolha o seu ↓</span></p>
     </div>
+    <p class="lbl" aria-hidden="true">Pão selado</p>
+    <p class="lbl" aria-hidden="true">Alface</p>
+    <p class="lbl" aria-hidden="true">Tomate</p>
+    <p class="lbl" aria-hidden="true">Carne + cheddar</p>
+    <p class="lbl" aria-hidden="true">Carne + cheddar</p>
+    <p class="lbl" aria-hidden="true">Pão com gergelim</p>
   </section>
 
   <!--
@@ -387,33 +338,33 @@
     <div class="menu-head">
       <p class="kicker">01 — Burgers</p>
       <h2 class="menu-title display reveal" id="t-peso"><span class="mask"><span>Escolha</span></span><span class="mask"><span>o peso.</span></span></h2>
-      <p class="menu-note"><strong>Itens e preços de exemplo.</strong> Na versão final, entra aqui o cardápio real da casa.</p>
+      <p class="menu-note"><strong>Itens e preços de exemplo.</strong> Na versão final, entra aqui o cardápio real da casa. Imagens ilustrativas.</p>
     </div>
     <div>
       <ul class="items">
         <li class="item">
-          <span class="x display" aria-hidden="true">1×</span>
+          <figure class="ph"><img src="img/simples.webp" alt="Burger Simples, 1 carne com cheddar (imagem ilustrativa)" width="712" height="617" loading="lazy"><span class="x display" aria-hidden="true">1×</span></figure>
           <h3 class="item-name display"><span class="mask"><span>Simples</span></span></h3>
           <p class="price">R$ 19</p>
           <p class="desc">1 carne, queijo e pão selado na chapa.</p>
           <div class="order" data-item="Simples" data-price="19"><a class="add" href="https://wa.me/5586994552629?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Simples.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
         </li>
         <li class="item">
-          <span class="x display" aria-hidden="true">2×</span>
+          <figure class="ph"><img src="img/duplo.webp" alt="Burger Duplo, 2 carnes com cheddar (imagem ilustrativa)" width="717" height="646" loading="lazy"><span class="x display" aria-hidden="true">2×</span></figure>
           <h3 class="item-name display"><span class="mask"><span>Duplo</span></span></h3>
           <p class="price">R$ 26</p>
           <p class="desc">2 carnes e queijo em dobro.</p>
           <div class="order" data-item="Duplo" data-price="26"><a class="add" href="https://wa.me/5586994552629?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Duplo.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
         </li>
         <li class="item">
-          <span class="x display" aria-hidden="true">3×</span>
+          <figure class="ph"><img src="img/triplo.webp" alt="Burger Triplo, 3 carnes com cheddar (imagem ilustrativa)" width="653" height="661" loading="lazy"><span class="x display" aria-hidden="true">3×</span></figure>
           <h3 class="item-name display"><span class="mask"><span>Triplo</span></span></h3>
           <p class="price">R$ 33</p>
           <p class="desc">3 carnes. Respeito.</p>
           <div class="order" data-item="Triplo" data-price="33"><a class="add" href="https://wa.me/5586994552629?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Triplo.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
         </li>
         <li class="item">
-          <span class="x display" aria-hidden="true">4×</span>
+          <figure class="ph"><img src="img/bruto.webp" alt="Burger Bruto, 4 carnes com cheddar (imagem ilustrativa)" width="593" height="665" loading="lazy"><span class="x display" aria-hidden="true">4×</span></figure>
           <h3 class="item-name display"><span class="mask"><span>Bruto</span></span></h3>
           <p class="price">R$ 39</p>
           <p class="desc">4 carnes. Pra quem aguenta.</p>
@@ -499,314 +450,10 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.159.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script>
-// Hambúrguer 3D procedural (three.js r159, build UMD): pão com gergelim, alface,
-// até 4 carnes com cheddar e pão de cima. Retorna as peças para a animação.
-function buildBurger3D(T, renderer) {
-  // gerador pseudoaleatório com semente (o burger sai igual toda vez)
-  let seed = 7;
-  const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
-  const wobble = (n => {
-    const k = Array.from({ length: n }, (_, i) => ({ f: i + 2, a: 1 / (i + 2), p: rnd() * Math.PI * 2 }));
-    return th => k.reduce((s, w) => s + w.a * Math.sin(w.f * th + w.p), 0);
-  });
-
-  // ---------- texturas pintadas em canvas ----------
-  const tex = (size, paint, color = true) => {
-    const c = document.createElement('canvas');
-    c.width = c.height = size;
-    paint(c.getContext('2d'), size);
-    const t = new T.CanvasTexture(c);
-    if (color) t.colorSpace = T.SRGBColorSpace;
-    t.wrapS = T.RepeatWrapping;
-    t.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    return t;
-  };
-  const speckle = (g, s, n, colors, r0, r1, alpha) => {
-    for (let i = 0; i < n; i++) {
-      g.globalAlpha = alpha * (0.4 + rnd() * 0.6);
-      g.fillStyle = colors[(rnd() * colors.length) | 0];
-      const r = r0 + rnd() * (r1 - r0);
-      g.beginPath();
-      g.ellipse(rnd() * s, rnd() * s, r, r * (0.4 + rnd() * 0.6), rnd() * Math.PI, 0, Math.PI * 2);
-      g.fill();
-    }
-    g.globalAlpha = 1;
-  };
-  const gradient = (g, s, stops) => {
-    const lg = g.createLinearGradient(0, 0, 0, s);
-    stops.forEach(([o, c]) => lg.addColorStop(o, c));
-    g.fillStyle = lg;
-    g.fillRect(0, 0, s, s);
-  };
-  const noiseMap = (n, r0, r1) => tex(512, (g, s) => {
-    g.fillStyle = '#808080'; g.fillRect(0, 0, s, s);
-    speckle(g, s, n, ['#000', '#fff'], r0, r1, 0.35);
-  }, false);
-
-  // topo do canvas = topo da peça (o v do torno vai de baixo para cima)
-  const bunTopMap = tex(1024, (g, s) => {
-    gradient(g, s, [[0, '#6E300C'], [0.22, '#94481A'], [0.45, '#B9672A'], [0.62, '#D08A42'], [0.72, '#E6B271'], [0.8, '#F1D29C'], [0.9, '#E8BD82'], [1, '#D7A066']]);
-    speckle(g, s, 900, ['#5C2808', '#7A3A12'], 3, 14, 0.18);
-    speckle(g, s, 500, ['#F6DDB0', '#FFE9C4'], 1, 4, 0.25);
-  });
-  const heelMap = tex(1024, (g, s) => {
-    gradient(g, s, [[0, '#F0D7A6'], [0.13, '#EBCB92'], [0.16, '#E2B06E'], [0.3, '#C98236'], [0.6, '#A85A22'], [1, '#8E4A1A']]);
-    g.save(); g.beginPath(); g.rect(0, 0, s, s * 0.14); g.clip();
-    speckle(g, s, 1400, ['#D9B07A', '#CFA06A', '#F6E2BC'], 1, 3, 0.35);
-    g.restore();
-    speckle(g, s, 500, ['#7A3A12', '#5C2808'], 2, 10, 0.15);
-  });
-  const pattyMap = tex(1024, (g, s) => {
-    g.fillStyle = '#4A2210'; g.fillRect(0, 0, s, s);
-    speckle(g, s, 1600, ['#6B3416', '#5A2A12', '#7C3F1D'], 3, 16, 0.35);
-    speckle(g, s, 2200, ['#1C0B04', '#2A1208'], 1, 6, 0.55);
-    speckle(g, s, 500, ['#9A5530', '#B0683C'], 1, 3, 0.35);
-  });
-  const lettuceMap = tex(1024, (g, s) => {
-    const rg = g.createRadialGradient(s / 2, s / 2, s * 0.05, s / 2, s / 2, s / 2);
-    rg.addColorStop(0, '#B9D877'); rg.addColorStop(0.45, '#7DB443'); rg.addColorStop(0.8, '#4C9130'); rg.addColorStop(1, '#2E6E20');
-    g.fillStyle = rg; g.fillRect(0, 0, s, s);
-    speckle(g, s, 700, ['#4C9A2E', '#9CCF55', '#C8E68A'], 4, 22, 0.18);
-    for (let i = 0; i < 34; i++) {
-      const a = (i / 34) * Math.PI * 2 + rnd() * 0.12;
-      g.strokeStyle = `rgba(236,248,190,${0.12 + rnd() * 0.22})`;
-      g.lineWidth = 0.8 + rnd() * 1.6;
-      g.beginPath(); g.moveTo(s / 2, s / 2);
-      g.quadraticCurveTo(s / 2 + Math.cos(a + 0.1) * s * 0.25, s / 2 + Math.sin(a + 0.1) * s * 0.25, s / 2 + Math.cos(a) * s * 0.5, s / 2 + Math.sin(a) * s * 0.5);
-      g.stroke();
-    }
-  });
-  const fineBump = noiseMap(9000, 0.6, 2.2);
-  const crustBump = noiseMap(7000, 1, 5);
-  pattyMap.repeat.set(3, 1);
-  crustBump.repeat.set(3, 1);
-
-  // ---------- materiais ----------
-  const M = {
-    bunTop: new T.MeshPhysicalMaterial({ map: bunTopMap, bumpMap: fineBump, bumpScale: 1.2, roughness: 0.55, clearcoat: 0.4, clearcoatRoughness: 0.38, sheen: 0.4, sheenColor: new T.Color('#ffcf8a'), sheenRoughness: 0.6 }),
-    heel: new T.MeshStandardMaterial({ map: heelMap, bumpMap: fineBump, bumpScale: 0.8, roughness: 0.72 }),
-    patty: new T.MeshStandardMaterial({ map: pattyMap, bumpMap: crustBump, bumpScale: 5, roughness: 0.8 }),
-    cheese: new T.MeshPhysicalMaterial({ color: '#F2A01E', roughness: 0.3, clearcoat: 0.55, clearcoatRoughness: 0.2, side: T.DoubleSide, emissive: '#4a2200', emissiveIntensity: 0.25 }),
-    lettuce: new T.MeshStandardMaterial({ map: lettuceMap, roughness: 0.55, side: T.DoubleSide, envMapIntensity: 0.6 }),
-    seed: new T.MeshStandardMaterial({ color: '#F0DCAE', roughness: 0.35 }),
-  };
-
-  const mesh = (geo, mat) => {
-    const m = new T.Mesh(geo, mat);
-    m.castShadow = m.receiveShadow = true;
-    return m;
-  };
-  // perfil em torno do eixo Y + deformação orgânica na borda
-  const lathe = (pts, wob, amp, segs = 160) => {
-    const geo = new T.LatheGeometry(pts.map(([x, y]) => new T.Vector2(x, y)), segs);
-    const p = geo.attributes.position, v = new T.Vector3();
-    for (let i = 0; i < p.count; i++) {
-      v.fromBufferAttribute(p, i);
-      const r = Math.hypot(v.x, v.z);
-      if (r < 1e-4) continue;
-      const k = 1 + amp * wob(Math.atan2(v.z, v.x)) * Math.min(1, r / 3);
-      p.setXYZ(i, v.x * k, v.y, v.z * k);
-    }
-    geo.computeVertexNormals();
-    return geo;
-  };
-
-  // ---------- peças ----------
-  // pão de baixo: face cortada em y = 0
-  const heel = mesh(lathe([[0, -2.2], [3.5, -2.2], [4.3, -2.05], [4.8, -1.6], [4.97, -0.8], [4.88, -0.22], [4.62, 0], [3.2, 0.02], [0, 0.03]], wobble(5), 0.02), M.heel);
-
-  // alface ondulada sobre o pão de baixo
-  const lettuceGeo = new T.RingGeometry(0.25, 5.9, 220, 10);
-  lettuceGeo.rotateX(-Math.PI / 2);
-  {
-    const p = lettuceGeo.attributes.position, w = wobble(6);
-    for (let i = 0; i < p.count; i++) {
-      const x = p.getX(i), z = p.getZ(i), r = Math.hypot(x, z), th = Math.atan2(z, x), q = r / 5.9;
-      const rr = r * (1 + 0.07 * w(th) * q);
-      const y = 0.24 * Math.sin(th * 15 + w(th) * 2) * q * q + 0.12 * Math.sin(th * 7) * q - 0.45 * q * q * q;
-      p.setXYZ(i, Math.cos(th) * rr, y, Math.sin(th) * rr);
-    }
-    lettuceGeo.computeVertexNormals();
-  }
-  const lettuce = mesh(lettuceGeo, M.lettuce);
-  lettuce.position.y = 0.12;
-
-  // carne (torno de retângulo arredondado) + fatia de cheddar caindo pelas bordas
-  const PATTY_H = 1.8, U = 1.9;
-  const pattyGeo = () => lathe([[0, -0.85], [2.5, -0.87], [4.6, -0.82], [5.1, -0.6], [5.36, -0.18], [5.38, 0.18], [5.16, 0.66], [4.6, 0.9], [2.5, 0.95], [0, 0.97]], wobble(8), 0.022);
-  const cheeseGeo = rot => {
-    const g = new T.PlaneGeometry(8.8, 8.8, 70, 70);
-    g.rotateX(-Math.PI / 2);
-    g.rotateY(rot);
-    const p = g.attributes.position;
-    for (let i = 0; i < p.count; i++) {
-      const x = p.getX(i), z = p.getZ(i), r = Math.hypot(x, z), th = Math.atan2(z, x);
-      let rr = r, y = 0.02 * Math.sin(x * 1.7) * Math.cos(z * 1.3);
-      if (r > 4.5) y -= 0.5 * Math.pow(Math.min(r, 5.4) - 4.5, 2);          // começa a dobrar na borda
-      if (r > 5.4) { const t = r - 5.4; rr = 5.62 + t * 0.22; y -= t * 1.5; } // e escorre pela lateral
-      p.setXYZ(i, Math.cos(th) * rr, y, Math.sin(th) * rr);
-    }
-    g.computeVertexNormals();
-    return g;
-  };
-  const unit = k => {
-    const g = new T.Group();
-    const patty = mesh(pattyGeo(), M.patty);
-    const cheese = mesh(cheeseGeo(0.35 + k * 0.9), M.cheese);
-    patty.rotation.y = k * 1.3;
-    patty.position.y = 0.86;
-    cheese.position.y = 0.86 + 0.99;
-    g.add(patty, cheese);
-    return g;
-  };
-
-  // pão de cima com gergelim espalhado sobre a cúpula
-  const bunTop = mesh(lathe([[0, -0.1], [4.4, -0.1], [4.82, 0.05], [5.04, 0.32], [5.1, 0.85], [4.95, 1.55], [4.55, 2.35], [3.85, 3.05], [2.85, 3.6], [1.55, 3.98], [0, 4.12]], wobble(6), 0.025), M.bunTop);
-  const seeds = new T.InstancedMesh(new T.SphereGeometry(1, 14, 10), M.seed, 70);
-  {
-    const ray = new T.Raycaster(), o = new T.Object3D(), up = new T.Vector3(0, 1, 0);
-    bunTop.updateMatrixWorld();
-    let placed = 0;
-    for (let tries = 0; placed < 70 && tries < 2000; tries++) {
-      const a = rnd() * Math.PI * 2, r = Math.sqrt(rnd()) * 4.5;
-      ray.set(new T.Vector3(Math.cos(a) * r, 10, Math.sin(a) * r), new T.Vector3(0, -1, 0));
-      const hit = ray.intersectObject(bunTop)[0];
-      if (!hit || hit.point.y < 1.2) continue;
-      const n = hit.face.normal.clone();
-      o.position.copy(hit.point).addScaledVector(n, 0.03);
-      o.quaternion.setFromUnitVectors(up, n);
-      o.rotateY(rnd() * Math.PI);
-      o.scale.set(0.2, 0.07, 0.11);
-      o.updateMatrix();
-      seeds.setMatrixAt(placed++, o.matrix);
-    }
-    seeds.count = placed;
-  }
-
-  // ---------- montagem: grupos externos (scroll) e internos (entrada) ----------
-  const part = obj => { const outer = new T.Group(), inner = new T.Group(); inner.add(obj); outer.add(inner); return { outer, inner }; };
-  const heelPart = part(new T.Group().add(heel, lettuce));
-  const units = [0, 1, 2, 3].map(k => part(unit(k)));
-  const topPart = part(new T.Group().add(bunTop, seeds));
-
-  const BASE = 0.36;                                   // carne 1 apoiada na alface
-  const unitY = k => BASE + k * U;                     // altura de repouso de cada carne
-  const topY = n => BASE + n * U + 0.12;               // pão de cima sobre n carnes
-  units.forEach((u, k) => { u.outer.position.y = k === 0 ? unitY(0) : unitY(k) + 60; });
-  topPart.outer.position.y = topY(1);
-
-  const burger = new T.Group();
-  burger.add(heelPart.outer, ...units.map(u => u.outer), topPart.outer);
-  return { burger, heel: heelPart, units, top: topPart, unitY, topY, DIAMETER: 10.2, BOTTOM: -2.2, PATTY_H };
-}
-
-// Estúdio de luz para os reflexos (mesma ideia do RoomEnvironment do three.js)
-function studioEnvironment(T) {
-  const s = new T.Scene();
-  s.add(new T.Mesh(new T.BoxGeometry(40, 24, 40), new T.MeshBasicMaterial({ color: 0x120d0a, side: T.BackSide })));
-  const panel = (w, h, color, power, x, y, z) => {
-    const m = new T.Mesh(new T.PlaneGeometry(w, h), new T.MeshBasicMaterial({ color: new T.Color(color).multiplyScalar(power), side: T.DoubleSide }));
-    m.position.set(x, y, z);
-    m.lookAt(0, 0, 0);
-    s.add(m);
-  };
-  panel(14, 9, 0xffffff, 5, -9, 10, 12);    // softbox principal
-  panel(9, 7, 0xffe0bf, 1.8, 12, 4, 9);     // preenchimento quente
-  panel(12, 4, 0xff2a1a, 3, 8, 3, -14);     // contraluz vermelho
-  panel(24, 4, 0xffffff, 1.4, 0, 11.5, 0);  // teto
-  return s;
-}
-
-// Coloca o burger 3D no hero, no lugar da ilustração (a "âncora" define posição e tamanho na tela)
-function createBurger3D(hero, anchor) {
-  const T = window.THREE;
-  if (!T) return null;
-  let renderer;
-  try {
-    renderer = new T.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-  } catch (e) {
-    return null; // sem WebGL: fica a ilustração
-  }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.outputColorSpace = T.SRGBColorSpace;
-  renderer.toneMapping = T.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = T.PCFSoftShadowMap;
-  const canvas = renderer.domElement;
-  canvas.className = 'gl';
-  canvas.setAttribute('aria-hidden', 'true');
-  hero.appendChild(canvas);
-
-  const scene = new T.Scene();
-  scene.environment = new T.PMREMGenerator(renderer).fromScene(studioEnvironment(T), 0.04).texture;
-  const camera = new T.PerspectiveCamera(28, 1, 1, 400);
-  camera.position.set(0, 9, 40);
-  camera.lookAt(0, 0, 0);
-
-  const b = buildBurger3D(T, renderer);
-  b.burger.rotation.y = -0.45;
-  scene.add(b.burger);
-  const key = new T.DirectionalLight(0xfff0dd, 2.6);
-  key.castShadow = true;
-  key.shadow.mapSize.setScalar(hero.clientWidth < 700 ? 1024 : 2048);
-  key.shadow.bias = -0.0004;
-  key.shadow.normalBias = 0.03;
-  const rim = new T.DirectionalLight(0xff3a24, 3.2);
-  scene.add(key, key.target, rim, rim.target, new T.HemisphereLight(0xffffff, 0x2a160c, 0.45));
-
-  const ray = new T.Raycaster(), ndc = new T.Vector2(), hit = new T.Vector3();
-  const plane = new T.Plane(new T.Vector3(0, 0, 1), 0);
-  let W = 1, H = 1, visible = true;
-
-  // mesma caixa da ilustração: base do pão a 90% da altura, pão com 68% da largura
-  const place = () => {
-    const h = hero.getBoundingClientRect(), r = anchor.getBoundingClientRect();
-    if (!r.width) return;
-    ndc.set(((r.left - h.left + r.width / 2) / W) * 2 - 1, -((r.top - h.top + r.height * 0.9) / H) * 2 + 1);
-    ray.setFromCamera(ndc, camera);
-    if (!ray.ray.intersectPlane(plane, hit)) return;
-    const pxPerUnit = H / (2 * camera.position.distanceTo(hit) * Math.tan(T.MathUtils.degToRad(camera.fov / 2)));
-    const s = (r.width * 0.68) / (b.DIAMETER * pxPerUnit);
-    b.burger.scale.setScalar(s);
-    b.burger.position.set(hit.x, hit.y - b.BOTTOM * s, 0);
-    // as luzes e a sombra acompanham o burger
-    key.position.set(hit.x - 12 * s, hit.y + 22 * s, 16 * s);
-    key.target.position.copy(b.burger.position);
-    rim.position.set(hit.x + 14 * s, hit.y + 6 * s, -14 * s);
-    rim.target.position.copy(b.burger.position);
-    const sc = key.shadow.camera, e = 14 * s;
-    if (Math.abs(sc.right - e) > 1e-3) {
-      Object.assign(sc, { left: -e, right: e, top: e, bottom: -e, near: s, far: 90 * s });
-      sc.updateProjectionMatrix();
-    }
-  };
-  const render = () => {
-    if (!visible) return;
-    place();
-    renderer.render(scene, camera);
-  };
-  const resize = () => {
-    W = hero.clientWidth;
-    H = hero.clientHeight;
-    renderer.setSize(W, H, false);
-    camera.aspect = W / H;
-    camera.updateProjectionMatrix();
-    render();
-  };
-  new ResizeObserver(resize).observe(hero);
-  new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(hero);
-  resize();
-  if (document.fonts) document.fonts.ready.then(render);
-  hero.classList.add('has-3d');
-  return { ...b, render };
-}
-
 (() => {
   const root = document.documentElement;
   const hero = document.getElementById('hero');
@@ -937,15 +584,12 @@ function createBurger3D(hero, anchor) {
   });
   paint();
 
-  // ============ HERO ============
-  const b3 = createBurger3D(hero, hero.querySelector('.burger-wrap'));
+  // ============ HERO: o Duplo se abre camada por camada ============
   const motionOK = root.classList.contains('js-motion') && window.gsap && window.ScrollTrigger;
-  if (!motionOK) return; // movimento reduzido ou sem bibliotecas: hero parado (com o 3D, se houver)
+  if (!motionOK) return; // movimento reduzido ou sem bibliotecas: o burger fica montado, parado
 
   gsap.registerPlugin(ScrollTrigger);
   ScrollTrigger.config({ ignoreMobileResize: true });
-  if (b3) gsap.ticker.add(b3.render);
-
   if (window.Lenis) {
     lenis = new Lenis({ duration: 1.1, smoothWheel: true });
     lenis.on('scroll', ScrollTrigger.update);
@@ -958,29 +602,23 @@ function createBurger3D(hero, anchor) {
     });
   }
 
-  // entrada: as peças do burger 3D caem no lugar
-  if (b3 && window.scrollY < 10) {
-    gsap.from([b3.heel.inner.position, b3.units[0].inner.position, b3.top.inner.position], { y: 16, duration: 0.9, ease: 'bounce.out', stagger: 0.14, delay: 0.25 });
-  }
-
-  // ---------- a cada passo do scroll cai mais uma carne ----------
-  const U = 44; // altura de um andar na ilustração
   const wrap = hero.querySelector('.burger-wrap');
-  const top = hero.querySelector('.topbun');
-  const extras = gsap.utils.toArray(hero.querySelectorAll('.unit.extra'));
-  const nums = gsap.utils.toArray(hero.querySelectorAll('.numeral span'));
-  const caps = gsap.utils.toArray(hero.querySelectorAll('.cap:not(.cap-final)'));
-  const capFinal = hero.querySelector('.cap-final');
+  const layers = gsap.utils.toArray(hero.querySelectorAll('.stack .layer')); // 0 = pão de baixo … 5 = pão de cima
+  const labels = gsap.utils.toArray(hero.querySelectorAll('.lbl'));        // mesma ordem das camadas
+  const capA = hero.querySelector('.cap-a'), capB = hero.querySelector('.cap-b');
+  const SPREAD = 0.13;                          // distância entre camadas, em fração da largura do burger
+  const TILT = [1.5, -2, 2.5, -1.5, 2, -2.5];   // leve inclinação de cada camada no ar
 
-  // o mesmo roteiro serve para o 3D e para a ilustração
-  const rig = b3 ? {
-    lift: i => [b3.top.outer.position, { y: b3.topY(i + 2) + 2.6 }],
-    land: i => [b3.top.outer.position, { y: b3.topY(i + 2) }],
-    drop: i => [b3.units[i + 1].outer.position, { y: b3.unitY(i + 1) + 60 }, { y: b3.unitY(i + 1) }],
-  } : {
-    lift: i => [top, { y: -(i + 1) * U - 70 }],
-    land: i => [top, { y: -(i + 1) * U }],
-    drop: i => [extras[i], { autoAlpha: 0, y: -560 }, { autoAlpha: 1, y: 0 }],
+  // nomes à direita do burger, na altura de cada camada
+  const placeLabels = () => {
+    const h = hero.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+    const left = w.right - h.left + 10, room = hero.clientWidth - left - 16;
+    labels.forEach((l, i) => {
+      const r = layers[i].getBoundingClientRect();
+      l.style.left = `${left}px`;
+      l.style.maxWidth = `${room}px`;
+      l.style.top = `${r.top - h.top + r.height / 2}px`;
+    });
   };
 
   gsap.matchMedia().add({
@@ -989,44 +627,32 @@ function createBurger3D(hero, anchor) {
   }, ctx => {
     const { wide } = ctx.conditions;
 
-    // onde a torre cresce: à direita no desktop (legenda à esquerda), no alto no celular
+    // onde o burger se abre: no centro no desktop, à esquerda no celular (nomes à direita)
     const geo = () => {
       const h = hero.getBoundingClientRect(), r = wrap.getBoundingClientRect();
       const cx = r.left + r.width / 2 - gsap.getProperty(wrap, 'x') - h.left;
       const cy = r.top + r.height / 2 - gsap.getProperty(wrap, 'y') - h.top;
-      const W = hero.clientWidth, H = hero.clientHeight;
-      const s = Math.min(wide ? 1.3 : 1.1, (wide ? .86 : .58) * H / (.98 * wrap.offsetWidth));
-      return { x: (wide ? .64 * W : W / 2) - cx, y: (wide ? .52 : .44) * H - cy, s };
+      const W = hero.clientWidth, H = hero.clientHeight, bw = wrap.offsetWidth;
+      const s = wide ? Math.min(1.25, .84 * H / (1.52 * bw)) : Math.min(.62 * W / bw, .6 * H / (1.52 * bw));
+      return { x: (wide ? .5 * W : .05 * W + s * bw / 2) - cx, y: (wide ? .52 : .6) * H - cy, s };
     };
 
     const tl = gsap.timeline({
       defaults: { ease: 'power2.inOut' },
-      scrollTrigger: { trigger: hero, start: 'top top', end: '+=240%', pin: true, scrub: 1, anticipatePin: 1, invalidateOnRefresh: true }
+      onUpdate: placeLabels,
+      scrollTrigger: { trigger: hero, start: 'top top', end: '+=220%', pin: true, scrub: 1, anticipatePin: 1, invalidateOnRefresh: true, onRefresh: placeLabels }
     });
     tl.to(hero.querySelector('.word'), { opacity: .1, scale: .92, duration: 1 }, 0)
       .to(hero.querySelectorAll('.hero-kicker, .hero-cta'), { opacity: 0, y: -20, duration: .5 }, 0)
       .to(wrap, { x: () => geo().x, y: () => geo().y, scale: () => geo().s, duration: 1.4 }, .2)
-      .fromTo(nums[0], { opacity: 0, scale: .85 }, { opacity: 1, scale: 1, duration: .6, ease: 'power3.out' }, .6)
-      .fromTo(caps[0], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .45, ease: 'power3.out' }, .8);
-
-    extras.forEach((_, i) => {
-      const t = 1.8 + i * 1.8;
-      const [liftT, liftV] = rig.lift(i), [landT, landV] = rig.land(i), [dropT, dropFrom, dropTo] = rig.drop(i);
-      tl.to(caps[i], { opacity: 0, y: -40, duration: .35, ease: 'power2.in' }, t - .1)
-        .to(liftT, { ...liftV, duration: .5, ease: 'power2.out' }, t)
-        .fromTo(dropT, dropFrom, { ...dropTo, duration: .5, ease: 'power2.in' }, t + .35)
-        .to(landT, { ...landV, duration: .45, ease: 'bounce.out' }, t + .85)
-        .to(nums[i], { opacity: 0, scale: 1.15, duration: .4 }, t + .7)
-        .fromTo(nums[i + 1], { opacity: 0, scale: .85 }, { opacity: 1, scale: 1, duration: .5, ease: 'power3.out' }, t + .8)
-        .fromTo(caps[i + 1], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .45, ease: 'power3.out' }, t + .85);
-    });
-
-    tl.to(caps[3], { opacity: 0, y: -40, duration: .35, ease: 'power2.in' }, 7)
-      .to(nums[3], { color: getComputedStyle(root).getPropertyValue('--red').trim(), duration: .6 }, 7.1)
-      .fromTo(capFinal, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .5, ease: 'power3.out' }, 7.3)
+      .fromTo(capA, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .5, ease: 'power3.out' }, .8)
+      .to(layers, { y: i => (2.5 - i) * SPREAD * wrap.offsetWidth, rotation: i => TILT[i], duration: 1.4, ease: 'power3.inOut', stagger: { each: .05, from: 'end' } }, .9)
+      .fromTo([...labels].reverse(), { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: .4, ease: 'power3.out', stagger: .18 }, 1.9)
+      .to(labels, { opacity: 0, duration: .4 }, 4.2)
+      .to(capA, { opacity: 0, y: -30, duration: .4, ease: 'power2.in' }, 4.2)
+      .to(layers, { y: 0, rotation: 0, duration: 1.2, ease: 'power3.inOut', stagger: { each: .05 } }, 4.4)
+      .fromTo(capB, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .5, ease: 'power3.out' }, 5.4)
       .to({}, { duration: .6 });
-    // o burger 3D dá três quartos de volta enquanto cresce
-    if (b3) tl.to(b3.burger.rotation, { y: `+=${Math.PI * 1.5}`, ease: 'none', duration: tl.duration() }, 0);
   });
 
   // ---------- títulos: a linha sobe de dentro da máscara ----------
@@ -1042,7 +668,7 @@ function createBurger3D(hero, anchor) {
     gsap.timeline({ scrollTrigger: { trigger: item, start: 'top 88%' } })
       .from(item, { '--rule': '0%', duration: .9, ease: 'power3.out' })
       .from(item.querySelectorAll('.item-name .mask > span'), { yPercent: 180, duration: .9, ease: 'power3.out' }, 0)
-      .from(item.querySelectorAll('.x, .price, .desc, .order'), { opacity: 0, y: 16, duration: .6, ease: 'power3.out', stagger: .07 }, .15);
+      .from(item.querySelectorAll('.ph, .price, .desc, .order'), { opacity: 0, y: 16, duration: .6, ease: 'power3.out', stagger: .07 }, .15);
   });
 
   // ---------- faixa: as palavras correm com o scroll ----------
