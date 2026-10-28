@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardápio Rústica</title>
+<meta name="description" content="Cardápio digital da Pizzaria Rústica em estilo pixel art, com pedido pelo WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1b1036;
+    --panel: #2b1d55;
+    --panel-2: #3a2a6e;
+    --ink: #fff4d6;
+    --muted: #b9a9e0;
+    --red: #e43b44;
+    --yellow: #feae34;
+    --green: #3ec54b;
+    --cyan: #2ce8f5;
+    --dark: #0d0820;
+    --px: 4px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    background-image:
+      linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size: 16px 16px;
+    color: var(--ink);
+    font-family: "VT323", monospace;
+    font-size: 22px;
+    line-height: 1.2;
+    min-height: 100vh;
+    image-rendering: pixelated;
+  }
+  /* Efeito de tela CRT */
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 100;
+    background: repeating-linear-gradient(rgba(0,0,0,.18) 0 2px, transparent 2px 4px);
+  }
+  .pixel { font-family: "Press Start 2P", monospace; }
+  .wrap { width: min(760px, 100% - 32px); margin-inline: auto; padding-bottom: 120px; }
+
+  /* Borda pixelada (cantos “mordidos”) */
+  .box {
+    background: var(--panel);
+    box-shadow:
+      0 calc(-1 * var(--px)) 0 0 var(--dark),
+      0 var(--px) 0 0 var(--dark),
+      calc(-1 * var(--px)) 0 0 0 var(--dark),
+      var(--px) 0 0 0 var(--dark),
+      inset calc(-1 * var(--px)) calc(-1 * var(--px)) 0 0 rgba(0,0,0,.35),
+      inset var(--px) var(--px) 0 0 rgba(255,255,255,.12);
+    margin: var(--px);
+  }
+
+  .demo-bar { background: var(--yellow); color: var(--dark); text-align: center; padding: 6px 12px; font-size: 18px; }
+
+  header { text-align: center; padding: 36px 0 20px; }
+  .logo-row { display: flex; align-items: center; justify-content: center; gap: 16px; }
+  header h1 { font-size: clamp(22px, 6vw, 40px); color: var(--yellow); text-shadow: 4px 4px 0 var(--red), 8px 8px 0 var(--dark); letter-spacing: 2px; }
+  header .sub { font-size: clamp(8px, 2.4vw, 11px); color: var(--cyan); margin-top: 18px; }
+  .blink { animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .bob { animation: bob 1.2s steps(2) infinite; }
+  @keyframes bob { 50% { transform: translateY(-6px); } }
+
+  .info { display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px; margin: 8px 4px 24px; font-size: 20px; flex-wrap: wrap; }
+  .info a { color: var(--cyan); text-decoration: none; }
+
+  /* Abas */
+  .stage-title { font-size: 10px; color: var(--muted); margin: 0 4px 12px; }
+  .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .tab {
+    font-family: "Press Start 2P", monospace; font-size: 9px; line-height: 1.6;
+    color: var(--ink); background: var(--panel); border: 0; cursor: pointer;
+    padding: 12px 6px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .tab.active { background: var(--red); }
+  .tab:focus-visible, .add:focus-visible, .btn:focus-visible { outline: 4px solid var(--cyan); outline-offset: 4px; }
+
+  /* Itens */
+  .list { display: grid; gap: 16px; }
+  .item { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: center; padding: 14px; }
+  .item h3 { font-family: "Press Start 2P", monospace; font-size: 11px; line-height: 1.5; color: var(--yellow); margin-bottom: 6px; }
+  .item p { color: var(--muted); font-size: 19px; }
+  .item .price { font-family: "Press Start 2P", monospace; font-size: 10px; color: var(--green); margin-top: 8px; display: block; }
+  .add {
+    font-family: "Press Start 2P", monospace; font-size: 12px; color: var(--dark);
+    background: var(--green); border: 0; padding: 12px 10px; cursor: pointer;
+    box-shadow: inset -4px -4px 0 rgba(0,0,0,.3), 4px 4px 0 var(--dark);
+  }
+  .add:active { transform: translate(4px, 4px); box-shadow: inset -4px -4px 0 rgba(0,0,0,.3); }
+  .note { text-align: center; color: var(--muted); font-size: 18px; margin-top: 24px; }
+
+  svg.sprite { display: block; shape-rendering: crispEdges; }
+
+  /* Barra inferior (HUD) */
+  .hud {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    background: var(--dark); border-top: 4px solid var(--yellow);
+    padding: 12px 16px;
+  }
+  .hud .row { width: min(760px, 100%); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .hud .score { font-family: "Press Start 2P", monospace; font-size: 10px; line-height: 1.8; }
+  .hud .score b { color: var(--green); }
+  .btn {
+    font-family: "Press Start 2P", monospace; font-size: 10px; line-height: 1.4;
+    border: 0; cursor: pointer; padding: 14px 16px; color: var(--dark); background: var(--yellow);
+    box-shadow: inset -4px -4px 0 rgba(0,0,0,.3), 4px 4px 0 #000;
+  }
+  .btn:active { transform: translate(4px, 4px); box-shadow: inset -4px -4px 0 rgba(0,0,0,.3); }
+  .btn.green { background: var(--green); }
+  .icon-btn { background: none; border: 0; color: var(--muted); font-family: "Press Start 2P", monospace; font-size: 9px; cursor: pointer; }
+
+  /* Inventário (carrinho) */
+  .modal-bg { position: fixed; inset: 0; background: rgba(13,8,32,.8); z-index: 60; display: none; place-items: center; padding: 16px; }
+  .modal-bg.open { display: grid; }
+  .modal { width: min(520px, 100%); max-height: 90vh; overflow: auto; padding: 20px; }
+  .modal h2 { font-size: 14px; color: var(--yellow); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+  .inv-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 4px dotted var(--panel-2); }
+  .qty { display: flex; align-items: center; gap: 10px; }
+  .qty button { font-family: "Press Start 2P", monospace; font-size: 10px; width: 32px; height: 32px; border: 0; background: var(--panel-2); color: var(--ink); cursor: pointer; }
+  .total { display: flex; justify-content: space-between; font-family: "Press Start 2P", monospace; font-size: 12px; margin: 18px 0; color: var(--green); }
+  .field { width: 100%; font-family: "VT323", monospace; font-size: 22px; background: var(--dark); color: var(--ink); border: 4px solid var(--panel-2); padding: 8px 10px; margin-bottom: 10px; }
+  .field:focus { outline: none; border-color: var(--cyan); }
+  .modal .btn { width: 100%; }
+  .empty { text-align: center; color: var(--muted); padding: 24px 0; }
+
+  /* Texto flutuante +1 */
+  .float { position: fixed; pointer-events: none; z-index: 90; font-family: "Press Start 2P", monospace; font-size: 12px; color: var(--yellow); text-shadow: 2px 2px 0 var(--dark); animation: up .8s steps(6) forwards; }
+  @keyframes up { to { transform: translateY(-48px); opacity: 0; } }
+
+  @media (max-width: 560px) {
+    body { font-size: 20px; }
+    .tabs { grid-template-columns: repeat(2, 1fr); }
+    .item { grid-template-columns: 44px 1fr; }
+    .item .add { grid-column: 1 / -1; width: 100%; }
+    .hud .score { font-size: 8px; }
+    .btn { font-size: 9px; padding: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .blink, .bob, .float { animation: none; } }
+</style>
+</head>
+<body>
+
+<div class="demo-bar">PROPOSTA DE CARDÁPIO DIGITAL · preços ilustrativos</div>
+
+<div class="wrap">
+  <header>
+    <div class="logo-row">
+      <span class="bob" id="logoSprite"></span>
+      <h1 class="pixel">RÚSTICA</h1>
+      <span class="bob" id="logoSprite2" style="animation-delay:.6s"></span>
+    </div>
+    <p class="sub pixel">PIZZARIA · PARNAIBA-PI</p>
+    <p class="sub pixel blink" style="color:var(--yellow)">▶ ESCOLHA SEU SABOR</p>
+  </header>
+
+  <div class="box info">
+    <span>🕹️ Ter–Dom · 18h às 23h30</span>
+    <a id="igLink" href="#" target="_blank" rel="noopener">@rusticaphb</a>
+  </div>
+
+  <p class="stage-title pixel">SELECT STAGE</p>
+  <div class="tabs" id="tabs"></div>
+  <div class="list" id="list"></div>
+  <p class="note">* Preços ilustrativos (pizza grande). Valores reais definidos pela pizzaria.</p>
+</div>
+
+<div class="hud">
+  <div class="row">
+    <div class="score">
+      ITENS <b id="hudCount">00</b><br>
+      TOTAL <b id="hudTotal">R$ 0,00</b>
+    </div>
+    <button class="icon-btn" id="soundBtn" aria-label="Ligar ou desligar som">SOM:ON</button>
+    <button class="btn" id="openInv">🎒 PEDIDO</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="inv" role="dialog" aria-modal="true" aria-labelledby="invTitle">
+  <div class="box modal">
+    <h2 class="pixel" id="invTitle">INVENTÁRIO <button class="icon-btn" id="closeInv" aria-label="Fechar">[X]</button></h2>
+    <div id="invList"></div>
+    <div class="total"><span>TOTAL</span><span id="invTotal">R$ 0,00</span></div>
+    <input class="field" id="custName" placeholder="Seu nome">
+    <input class="field" id="custAddr" placeholder="Endereço (ou 'retirada')">
+    <select class="field" id="custPay">
+      <option>Pix</option><option>Cartão na entrega</option><option>Dinheiro</option>
+    </select>
+    <button class="btn green" id="sendOrder">▶ ENVIAR NO WHATSAPP</button>
+  </div>
+</div>
+
+<script>
+  // ===== CONFIGURAÇÃO — edite com os dados confirmados da pizzaria =====
+  const CONFIG = {
+    whatsapp: "5586000000000",            // TROCAR: número do WhatsApp com DDI+DDD, só dígitos
+    instagram: "https://instagram.com/rusticaphb"
+  };
+
+  const MENU = {
+    "Tradicionais": { sprite: "slice", items: [
+      ["Mussarela", "Molho de tomate, mussarela e orégano", 45],
+      ["Calabresa", "Calabresa fatiada, cebola e azeitonas", 49],
+      ["Portuguesa", "Presunto, ovo, cebola, ervilha e mussarela", 54],
+      ["Frango c/ Catupiry", "Frango desfiado e catupiry original", 55],
+      ["Marguerita", "Mussarela, tomate e manjericão", 52],
+      ["Quatro Queijos", "Mussarela, provolone, parmesão e catupiry", 58]
+    ]},
+    "Especiais": { sprite: "special", items: [
+      ["Rústica", "Carne de sol, queijo coalho, cebola roxa e manteiga da terra", 68],
+      ["Camarão", "Camarão ao alho, catupiry e cheiro-verde", 79],
+      ["Nordestina", "Charque, macaxeira, queijo coalho e pimenta biquinho", 66],
+      ["Pepperoni", "Pepperoni artesanal e mussarela", 62]
+    ]},
+    "Doces": { sprite: "sweet", items: [
+      ["Chocolate c/ Morango", "Chocolate ao leite e morangos frescos", 52],
+      ["Romeu e Julieta", "Goiabada cascão e queijo", 48],
+      ["Banana c/ Canela", "Banana, açúcar e canela", 45]
+    ]},
+    "Bebidas": { sprite: "drink", items: [
+      ["Refrigerante 2L", "Coca-Cola, Guaraná ou Fanta", 14],
+      ["Suco Natural 1L", "Caju, acerola ou maracujá", 15],
+      ["Água Mineral", "500 ml", 4]
+    ]}
+  };
+  // =====================================================================
+
+  // Sprites desenhados pixel a pixel (cada letra é uma cor)
+  const SLICE = [
+    "kkkkkkkkkkkk",
+    "kccccccccccK",
+    "kccccccccccK",
+    "kyyyyyyyyyyk",
+    ".kyrryyyyyk.",
+    ".kyrryyrryk.",
+    "..kyyyyrrk..",
+    "..kyrryyyk..",
+    "...kyrryk...",
+    "...kyyyyk...",
+    "....kyyk....",
+    ".....kk....."
+  ];
+  const DRINK = [
+    "......ww....",
+    ".....w......",
+    "..kkkwkkkk..",
+    "..kiiwiiik..",
+    "..kddwdddk..",
+    "..kddddddk..",
+    "..kdllddlk..",
+    "..kddddddk..",
+    "..kddlldk...",
+    "...kddddk...",
+    "...kddddk...",
+    "...kkkkkk..."
+  ];
+  const PALETTES = {
+    slice:   { k: "#0d0820", K: "#0d0820", c: "#b86f50", y: "#feae34", r: "#e43b44" },
+    special: { k: "#0d0820", K: "#0d0820", c: "#b86f50", y: "#feae34", r: "#3ec54b" },
+    sweet:   { k: "#0d0820", K: "#0d0820", c: "#b86f50", y: "#743f39", r: "#ff7799" },
+    drink:   { k: "#0d0820", w: "#fff4d6", i: "#2ce8f5", d: "#e43b44", l: "#ff9aa2" }
+  };
+  function sprite(kind, size) {
+    const grid = kind === "drink" ? DRINK : SLICE;
+    const pal = PALETTES[kind];
+    let rects = "";
+    grid.forEach((row, y) => [...row].forEach((ch, x) => {
+      if (pal[ch]) rects += `<rect x="${x}" y="${y}" width="1" height="1" fill="${pal[ch]}"/>`;
+    }));
+    return `<svg class="sprite" width="${size}" height="${size}" viewBox="0 0 12 12" aria-hidden="true">${rects}</svg>`;
+  }
+
+  const brl = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const $ = id => document.getElementById(id);
+
+  $("logoSprite").innerHTML = sprite("slice", 44);
+  $("logoSprite2").innerHTML = sprite("drink", 44);
+  $("igLink").href = CONFIG.instagram;
+
+  // Som 8-bit (Web Audio, sem arquivos)
+  let soundOn = true, ctx;
+  function beep(freqs) {
+    if (!soundOn) return;
+    try {
+      ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+      freqs.forEach((f, i) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = "square"; o.frequency.value = f;
+        g.gain.value = 0.05;
+        o.connect(g).connect(ctx.destination);
+        const t = ctx.currentTime + i * 0.07;
+        o.start(t); o.stop(t + 0.07);
+      });
+    } catch (e) { /* sem som, sem problema */ }
+  }
+  $("soundBtn").onclick = () => { soundOn = !soundOn; $("soundBtn").textContent = soundOn ? "SOM:ON" : "SOM:OFF"; };
+
+  // Abas e itens
+  const cats = Object.keys(MENU);
+  $("tabs").innerHTML = cats.map(c =>
+    `<button class="tab box" data-cat="${esc(c)}">${sprite(MENU[c].sprite, 32)}${esc(c.toUpperCase())}</button>`).join("");
+  function showCat(cat) {
+    document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.cat === cat));
+    const { sprite: sp, items } = MENU[cat];
+    $("list").innerHTML = items.map(([nome, desc, preco]) => `
+      <div class="item box">
+        ${sprite(sp, 48)}
+        <div>
+          <h3>${esc(nome.toUpperCase())}</h3>
+          <p>${esc(desc)}</p>
+          <span class="price">${brl(preco)}</span>
+        </div>
+        <button class="add" data-nome="${esc(nome)}" data-preco="${preco}" aria-label="Adicionar ${esc(nome)}">+1</button>
+      </div>`).join("");
+  }
+  $("tabs").addEventListener("click", e => {
+    const t = e.target.closest(".tab"); if (!t) return;
+    beep([440]); showCat(t.dataset.cat);
+  });
+  showCat(cats[0]);
+
+  // Pedido
+  const cart = new Map();
+  $("list").addEventListener("click", e => {
+    const b = e.target.closest(".add"); if (!b) return;
+    const cur = cart.get(b.dataset.nome) || { preco: Number(b.dataset.preco), qtd: 0 };
+    cur.qtd++; cart.set(b.dataset.nome, cur);
+    beep([660, 880]); render();
+    const r = b.getBoundingClientRect();
+    const f = document.createElement("span");
+    f.className = "float"; f.textContent = "+1";
+    f.style.left = r.left + r.width / 2 - 12 + "px"; f.style.top = r.top - 8 + "px";
+    document.body.appendChild(f); setTimeout(() => f.remove(), 800);
+  });
+
+  function render() {
+    let total = 0, count = 0;
+    const rows = [...cart].map(([nome, { preco, qtd }]) => {
+      total += preco * qtd; count += qtd;
+      return `<div class="inv-row">
+        <div>${esc(nome)}<br><span style="color:var(--green)">${brl(preco * qtd)}</span></div>
+        <div class="qty"><button data-k="${esc(nome)}" data-d="-1" aria-label="Remover um">-</button>${qtd}<button data-k="${esc(nome)}" data-d="1" aria-label="Adicionar um">+</button></div>
+      </div>`;
+    });
+    $("invList").innerHTML = rows.join("") || '<p class="empty">Inventário vazio.<br>Pegue umas pizzas! 🍕</p>';
+    $("invTotal").textContent = brl(total);
+    $("hudTotal").textContent = brl(total);
+    $("hudCount").textContent = String(count).padStart(2, "0");
+  }
+  $("invList").addEventListener("click", e => {
+    const k = e.target.dataset.k; if (!k) return;
+    const it = cart.get(k); it.qtd += Number(e.target.dataset.d);
+    if (it.qtd <= 0) cart.delete(k);
+    beep([520]); render();
+  });
+
+  const inv = $("inv");
+  $("openInv").onclick = () => { beep([523, 659, 784]); inv.classList.add("open"); };
+  $("closeInv").onclick = () => inv.classList.remove("open");
+  inv.addEventListener("click", e => { if (e.target === inv) inv.classList.remove("open"); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") inv.classList.remove("open"); });
+
+  $("sendOrder").onclick = () => {
+    if (!cart.size) { beep([200, 150]); alert("Adicione pelo menos um item ao pedido."); return; }
+    let total = 0;
+    const linhas = [...cart].map(([nome, { preco, qtd }]) => { total += preco * qtd; return `• ${qtd}x ${nome} — ${brl(preco * qtd)}`; });
+    const msg = [
+      "*Novo pedido – Pizzaria Rústica* 🍕", "", ...linhas, "",
+      `*Total:* ${brl(total)}`,
+      `*Nome:* ${$("custName").value || "-"}`,
+      `*Endereço:* ${$("custAddr").value || "-"}`,
+      `*Pagamento:* ${$("custPay").value}`
+    ].join("\n");
+    beep([523, 659, 784, 1046]);
+    window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
+  };
+  render();
+</script>
+</body>
+</html>

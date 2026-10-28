@@ -14,3 +14,8 @@ Edite o bloco `CONFIG` e `MENU` no fim do `index.html`:
 
 ## Publicar grátis
 GitHub Pages, Netlify ou Vercel: basta enviar a pasta.
+
+## Cardápio digital pixel art
+`cardapio.html`: cardápio estilo videogame retrô (8-bit), com sons, carrinho
+("inventário") e envio do pedido pelo WhatsApp. Edite o `CONFIG` e o `MENU`
+no fim do arquivo, do mesmo jeito que no site. Ideal para QR Code na mesa.
