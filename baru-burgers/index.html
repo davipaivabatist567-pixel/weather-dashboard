@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardápio Baru Burgers</title>
+<meta name="description" content="Cardápio digital da Baru Burgers, hamburgueria no Ideal Open Mall em Parnaíba-PI: smash burgers, Smash Eggs e Double Smash.">
+<meta name="theme-color" content="#F3EEE5">
+<script>try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-motion'); } catch (e) {}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ TOKENS ============ */
+  :root {
+    /* cor */
+    --paper: #F3EEE5;
+    --ink: #17120D;
+    --night: #100D0A;
+    --cream: #F6EFE3;
+    --accent: #A8461B;
+    --muted: color-mix(in oklab, var(--ink) 72%, var(--paper));
+    --line: color-mix(in oklab, var(--ink) 20%, transparent);
+    --grid: color-mix(in oklab, var(--cream) 7%, transparent);
+    /* cor — ilustração (Smash Eggs) */
+    --bun: #C9772E;
+    --bun-shade: #A85F22;
+    --bun-hi: #E9A55B;
+    --patty: #4A2717;
+    --patty-hi: #6E3A20;
+    --mozza: #F4E6C4;
+    --mozza-edge: #D8C291;
+    --egg: #FFFCF4;
+    --egg-edge: #E2D5B8;
+    --yolk: #F2A116;
+    --yolk-hi: #FFD27A;
+    --sauce: #E38A43;
+    --shadow: rgba(23, 18, 13, .14);
+
+    /* tipo */
+    --font-serif: "Fraunces", Georgia, serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --t-h2: clamp(3rem, 14vw, 8.5rem);
+    --t-item: clamp(2.1rem, 9vw, 5.5rem);
+    --t-quote: clamp(2.5rem, 14.5vw, 10rem);
+    --t-legend: clamp(1.4rem, 5.4vw, 3.2rem);
+    --t-body: clamp(1rem, 1.05vw, 1.125rem);
+    --t-mono: .75rem;
+    --t-micro: .6875rem;
+
+    /* espaço */
+    --s-1: .5rem; --s-2: 1rem; --s-3: 2rem;
+    --s-4: 4rem; --s-5: 8rem; --s-6: 12rem;
+    --gutter: clamp(1.25rem, 5vw, 6rem);
+    --demo-h: 2rem;
+    --hair: 1px;
+    --pill: 999px;
+
+    /* movimento */
+    --e-out: cubic-bezier(.16, 1, .3, 1);
+    --e-pop: cubic-bezier(.34, 1.56, .64, 1);
+    --d-fast: .25s; --d-base: .6s; --d-slow: 1.2s;
+
+    --vh: 1vh;
+  }
+  @supports (height: 1svh) { :root { --vh: 1svh; } }
+
+  /* ============ BASE ============ */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: var(--font-serif); font-size: var(--t-body); line-height: 1.6;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+  .mono { font-family: var(--font-mono); font-size: var(--t-mono); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; line-height: 1.4; }
+  .kicker { color: var(--muted); }
+  .serif-x { font-family: var(--font-serif); font-weight: 900; font-variation-settings: "opsz" 144; letter-spacing: -.02em; line-height: .9; }
+  /* máscara de revelação, com folga para acentos e descendentes do Fraunces */
+  .mask { display: block; overflow: hidden; padding: .28em .03em .34em; margin: -.28em -.03em -.34em; }
+  .mask > span { display: block; }
+
+  .demo {
+    position: absolute; inset: 0 0 auto; z-index: 6; height: var(--demo-h);
+    display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden;
+    background: var(--ink); color: var(--paper); font-size: var(--t-micro);
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: .6em; padding: 1.1em 1.6em;
+    border-radius: var(--pill); background: var(--ink); color: var(--paper); text-decoration: none;
+    transition: transform var(--d-fast) var(--e-out), background var(--d-fast);
+  }
+  .btn:hover { transform: translateY(-2px); background: var(--accent); }
+
+  /* ============ HERO: ficha técnica do Smash Eggs ============ */
+  .hero {
+    position: relative; overflow: hidden; height: calc(var(--vh) * 100); min-height: 36rem;
+    --f: min(calc(92vw / 2.85), calc((var(--vh) * 100 - 13rem) / 1.95));
+    --bw: calc(var(--f) * 1.5);
+  }
+  @media (max-aspect-ratio: 1/1), (max-width: 599px) {
+    .hero { --bw: min(84vw, calc(var(--vh) * 44)); }
+  }
+  .top {
+    position: absolute; inset: var(--demo-h) 0 auto; z-index: 5;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+    padding: var(--s-2) var(--gutter); border-bottom: var(--hair) solid var(--line);
+  }
+  .top a { text-decoration: none; }
+  .top .end { justify-self: end; }
+  .top .where { color: var(--muted); }
+  @media (max-width: 599px) { .top .where { display: none; } }
+  .hero-stage {
+    height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: var(--s-2); padding: calc(4.5rem + var(--demo-h)) var(--gutter) var(--s-3); text-align: center;
+  }
+  .lockup { display: flex; flex-direction: column; align-items: center; }
+  .lockup .word { font-size: var(--f); text-transform: uppercase; }
+  .burger-wrap { position: relative; z-index: 2; display: block; width: var(--bw); margin-top: calc(var(--f) * -.5); }
+  .burger { display: block; width: 100%; height: auto; overflow: visible; }
+  .specs { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-1) var(--s-3); }
+  .specs div { display: flex; gap: .6em; }
+  .specs dt { color: var(--muted); font-weight: 400; }
+
+  .burger .bun { fill: var(--bun); }
+  .burger .bun-shade { fill: var(--bun-shade); }
+  .burger .bun-hi { fill: none; stroke: var(--bun-hi); stroke-width: 9; stroke-linecap: round; }
+  .burger .patty { fill: var(--patty); }
+  .burger .patty-sear { fill: none; stroke: var(--patty-hi); stroke-width: 4; stroke-linecap: round; }
+  .burger .mozza { fill: var(--mozza); stroke: var(--mozza-edge); stroke-width: 2.5; stroke-linejoin: round; }
+  .burger .egg { fill: var(--egg); stroke: var(--egg-edge); stroke-width: 2.5; }
+  .burger .yolk { fill: var(--yolk); }
+  .burger .yolk-hi { fill: none; stroke: var(--yolk-hi); stroke-width: 4; stroke-linecap: round; }
+  .burger .sauce { fill: var(--sauce); }
+  .burger .shadow { fill: var(--shadow); }
+  .callout { opacity: 0; }
+  .callout .lead { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .callout circle { fill: var(--ink); }
+  .callout text { font: 700 12px var(--font-mono); fill: var(--paper); text-anchor: middle; }
+
+  /* legenda da ficha (só existe com animação) */
+  .legend { display: none; }
+  .js-motion .legend {
+    display: block; position: absolute; z-index: 3; pointer-events: none; opacity: 0;
+    left: var(--gutter); right: var(--gutter); bottom: var(--s-3); text-align: left;
+  }
+  .legend ol { list-style: none; margin-top: var(--s-1); font-size: var(--t-legend); }
+  .legend li { display: flex; align-items: baseline; gap: .55em; opacity: .18; line-height: 1.08; }
+  .legend li .mono { color: var(--accent); }
+  .legend-total { display: flex; align-items: baseline; gap: var(--s-2); margin-top: var(--s-2); opacity: 0; }
+  .legend-total .serif-x { font-size: var(--t-legend); color: var(--accent); }
+  @media (min-aspect-ratio: 1/1) and (min-width: 600px) {
+    .js-motion .legend { left: 58%; right: var(--gutter); bottom: auto; top: 50%; translate: 0 -50%; }
+  }
+
+  /* entrada da página (CSS puro) */
+  @keyframes rise { from { transform: translateY(180%); } }
+  @keyframes drop { from { transform: translateY(-140px); opacity: 0; } }
+  @keyframes fade-up { from { transform: translateY(14px); opacity: 0; } }
+  .js-motion .hero .mask > span { animation: rise var(--d-slow) var(--e-out) both; }
+  .js-motion .hero .drop { animation: drop .75s var(--e-pop) both; animation-delay: calc(.3s + var(--k) * .09s); }
+  .js-motion .hero .intro { animation: fade-up var(--d-base) var(--e-out) .95s both; }
+
+  /* ============ CARDÁPIO ============ */
+  .menu { padding: var(--s-5) var(--gutter); border-top: var(--hair) solid var(--line); }
+  .menu-head { display: grid; gap: var(--s-2); max-width: 62rem; margin-bottom: var(--s-4); }
+  .h2 { font-size: var(--t-h2); margin-bottom: .2em; }
+  .note { max-width: 46ch; color: var(--muted); }
+  .rows { list-style: none; border-bottom: var(--hair) solid var(--line); }
+  .row {
+    --rule: 100%;
+    display: grid; grid-template-columns: 3.5ch 1fr auto; column-gap: var(--s-2); align-items: end;
+    padding-block: var(--s-3);
+    background: linear-gradient(var(--line), var(--line)) 0 0 / var(--rule) var(--hair) no-repeat;
+  }
+  .row .n { color: var(--accent); align-self: start; padding-top: .4em; }
+  .row .name { font-size: var(--t-item); transition: transform var(--d-base) var(--e-out); }
+  .row .price { font-size: clamp(.95rem, 1.8vw, 1.4rem); white-space: nowrap; }
+  .row .desc { grid-column: 2 / -1; margin-top: calc(var(--t-item) * .24); max-width: 46ch; color: var(--muted); }
+  .row.is-star .name { color: var(--accent); }
+  @media (hover: hover) { .row:hover .name { transform: translateX(.05em); } }
+  .also { display: grid; gap: var(--s-2); margin-top: var(--s-4); }
+  .chips { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-1); }
+  .chips li { padding: .7em 1.1em; border: var(--hair) solid var(--ink); border-radius: var(--pill); }
+
+  /* ============ SEÇÃO INVERTIDA ============ */
+  .manifesto {
+    position: relative; overflow: hidden; padding: var(--s-6) var(--gutter);
+    background-color: var(--night); color: var(--cream);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .manifesto .kicker { color: color-mix(in oklab, var(--cream) 70%, var(--night)); }
+  .quote { position: relative; z-index: 1; margin-top: var(--s-2); font-size: var(--t-quote); }
+  .wire { position: absolute; right: -18%; top: 58%; width: min(78vw, 820px); translate: 0 -50%; overflow: visible; opacity: .35; }
+  .wire .w { fill: none; stroke: var(--cream); stroke-width: 1.2; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .wire text { font: 400 9px var(--font-mono); fill: var(--cream); letter-spacing: .08em; }
+
+  /* ============ RODAPÉ ============ */
+  .footer { container-type: inline-size; overflow: hidden; padding: var(--s-5) var(--gutter) calc(var(--s-4) + 3rem); }
+  .footer-top { display: grid; gap: var(--s-4); }
+  @media (min-width: 900px) { .footer-top { grid-template-columns: 1fr 1fr; align-items: end; } }
+  .footer-cta { display: grid; gap: var(--s-3); justify-items: start; }
+  .info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3) var(--s-2); }
+  .info dt { margin-bottom: var(--s-1); }
+  .info dd { font-size: .95rem; line-height: 1.5; }
+  .info a { text-decoration-thickness: 1px; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .wordmark { margin-top: var(--s-5); font-size: calc((100vw - 2 * var(--gutter)) / 2.86); text-transform: uppercase; line-height: .8; white-space: nowrap; }
+  @supports (font-size: 1cqw) { .wordmark { font-size: calc(100cqw / 2.86); } }
+  .fine { margin-top: var(--s-3); max-width: 80ch; color: var(--muted); font-weight: 400; }
+
+  .fab {
+    position: fixed; z-index: 20; right: var(--s-2); bottom: calc(var(--s-2) + env(safe-area-inset-bottom, 0px));
+    border: var(--hair) solid color-mix(in oklab, var(--paper) 40%, transparent);
+    box-shadow: 0 .75rem 2rem rgba(23, 18, 13, .25);
+    transition: transform var(--d-base) var(--e-out), opacity var(--d-base) var(--e-out), background var(--d-fast);
+  }
+  .fab.is-hidden { transform: translateY(calc(100% + 2rem)); opacity: 0; pointer-events: none; }
+
+  @media (max-width: 599px) {
+    .menu, .footer { padding-block: var(--s-4); }
+    .manifesto { padding-block: var(--s-5); }
+    .wordmark { margin-top: var(--s-4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn, .row .name { transition: none; }
+    .fab { transition: opacity var(--d-fast); }
+    .fab.is-hidden { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <!-- ============ HERO: o Smash Eggs se abre em ficha técnica com o scroll ============ -->
+  <section class="hero" id="hero">
+    <p class="demo mono">Proposta · cardápio digital demo</p>
+    <header class="top mono">
+      <a href="#hero">Baru Burgers</a>
+      <span class="where">Parnaíba — PI</span>
+      <a class="end" href="https://baruburgers.com/" target="_blank" rel="noopener">Pedir ↗</a>
+    </header>
+
+    <div class="hero-stage">
+      <h1 class="lockup" aria-label="Baru Burgers">
+        <span class="mask word serif-x"><span>Baru</span></span>
+        <span class="burger-wrap" aria-hidden="true">
+          <svg class="burger" viewBox="0 40 400 316" focusable="false">
+            <g class="layer"><g class="drop" style="--k:0">
+              <ellipse class="shadow" cx="200" cy="344" rx="152" ry="9"/>
+              <path class="bun" d="M58 276H342C342 310 322 330 292 330H108C78 330 58 310 58 276Z"/>
+              <path class="bun-shade" d="M64 300C72 318 88 330 108 330H292C312 330 328 318 336 300C312 310 260 314 200 314C140 314 88 310 64 300Z"/>
+            </g></g>
+            <g class="layer"><g class="drop" style="--k:1">
+              <path class="patty" d="M44 254C38 246 54 240 70 242H330C346 240 362 245 358 254C366 260 362 270 352 270C356 280 340 285 326 281H76C60 285 42 281 46 271C36 267 36 258 44 254Z"/>
+              <path class="patty-sear" d="M84 256H150M176 262H262M286 256H330M100 270H190M228 274H300"/>
+              <g class="callout"><path class="lead" pathLength="1" d="M366 262H380"/><g class="pin"><circle cx="396" cy="262" r="15"/><text x="396" y="266.5">02</text></g></g>
+            </g></g>
+            <g class="layer"><g class="drop" style="--k:2">
+              <path class="mozza" d="M64 234H336C342 240 340 246 334 248C330 260 316 262 312 250C292 252 276 252 262 250C256 266 238 268 234 252C214 254 194 254 174 252C168 262 152 264 148 252C126 254 104 252 86 250C80 260 66 260 64 248C58 246 58 240 64 234Z"/>
+              <g class="callout"><path class="lead" pathLength="1" d="M342 242H380"/><g class="pin"><circle cx="396" cy="242" r="15"/><text x="396" y="246.5">03</text></g></g>
+            </g></g>
+            <g class="layer"><g class="drop" style="--k:3">
+              <path class="egg" d="M72 214C94 204 130 208 156 209C190 205 236 204 270 209C300 207 330 211 336 221C342 232 318 238 290 236C252 241 210 238 172 240C130 242 86 240 72 232C62 226 63 219 72 214Z"/>
+              <ellipse class="yolk" cx="176" cy="223" rx="34" ry="12"/>
+              <path class="yolk-hi" d="M160 218C166 214 176 213 184 214"/>
+              <g class="callout"><path class="lead" pathLength="1" d="M342 222H380"/><g class="pin"><circle cx="396" cy="222" r="15"/><text x="396" y="226.5">04</text></g></g>
+            </g></g>
+            <g class="layer"><g class="drop" style="--k:4">
+              <path class="sauce" d="M56 200H344C350 206 346 212 338 212H306C306 219 302 223 298 223C294 223 290 219 290 212H238C238 220 234 224 230 224C226 224 222 220 222 212H128C128 220 124 224 120 224C116 224 112 220 112 212H62C54 212 50 206 56 200Z"/>
+              <g class="callout"><path class="lead" pathLength="1" d="M350 204H380"/><g class="pin"><circle cx="396" cy="204" r="15"/><text x="396" y="208.5">05</text></g></g>
+            </g></g>
+            <g class="layer"><g class="drop" style="--k:5">
+              <path class="bun" d="M48 190C48 112 116 58 200 58C284 58 352 112 352 190C352 200 344 206 334 206H66C56 206 48 200 48 190Z"/>
+              <path class="bun-shade" d="M50 184C80 194 140 198 200 198C260 198 320 194 350 184C352 196 346 206 334 206H66C54 206 48 196 50 184Z"/>
+              <path class="bun-hi" d="M96 126C110 100 140 82 174 78"/>
+              <g class="callout"><path class="lead" pathLength="1" d="M338 120H380"/><g class="pin"><circle cx="396" cy="120" r="15"/><text x="396" y="124.5">01</text></g></g>
+            </g></g>
+          </svg>
+        </span>
+      </h1>
+
+      <div class="hero-meta">
+        <dl class="specs mono intro">
+          <div><dt>Nº 03</dt><dd>Smash Eggs</dd></div>
+          <div><dt>Preço</dt><dd>R$ 21,90</dd></div>
+          <div><dt>Abre</dt><dd>18h—23h</dd></div>
+        </dl>
+      </div>
+      <div class="hero-cta"><a class="btn mono intro" href="#cardapio">Ver cardápio ↓</a></div>
+    </div>
+
+    <div class="legend" aria-hidden="true">
+      <p class="mono kicker legend-k">Ficha técnica — Smash Eggs</p>
+      <ol>
+        <li><span class="mono">01</span><span class="serif-x">Pão Baru</span></li>
+        <li><span class="mono">02</span><span class="serif-x">Burger prensado</span></li>
+        <li><span class="mono">03</span><span class="serif-x">Muçarela</span></li>
+        <li><span class="mono">04</span><span class="serif-x">Ovo</span></li>
+        <li><span class="mono">05</span><span class="serif-x">Barunese</span></li>
+      </ol>
+      <p class="legend-total"><span class="serif-x">Smash Eggs</span><span class="mono">R$ 21,90</span></p>
+    </div>
+  </section>
+
+  <!--
+    ============ CARDÁPIO ============
+    Para editar: cada <li class="row"> é um produto (número, nome, preço e descrição).
+    Preços de referência (listagem da Baru no Aquipede, out/2026). Confirme com a casa.
+  -->
+  <section class="menu" id="cardapio" aria-labelledby="t-smash">
+    <div class="menu-head">
+      <p class="mono kicker">Cardápio — Smash</p>
+      <h2 class="h2 serif-x reveal" id="t-smash"><span class="mask"><span>Prensado</span></span><span class="mask"><span>na chapa.</span></span></h2>
+      <p class="note">Preços de referência. Valores atualizados, adicionais e bebidas no cardápio digital da casa.</p>
+    </div>
+    <ol class="rows">
+      <li class="row">
+        <span class="n mono">01</span>
+        <h3 class="name serif-x"><span class="mask"><span>Single Smash</span></span></h3>
+        <p class="price mono">R$ 16,90</p>
+      </li>
+      <li class="row">
+        <span class="n mono">02</span>
+        <h3 class="name serif-x"><span class="mask"><span>Smash</span></span></h3>
+        <p class="price mono">R$ 18,90</p>
+      </li>
+      <li class="row is-star">
+        <span class="n mono">03</span>
+        <h3 class="name serif-x"><span class="mask"><span>Smash Eggs</span></span></h3>
+        <p class="price mono">R$ 21,90</p>
+        <p class="desc">Pão Baru, burger prensado e muçarela, ovo e Barunese.</p>
+      </li>
+      <li class="row">
+        <span class="n mono">04</span>
+        <h3 class="name serif-x"><span class="mask"><span>Double Smash</span></span></h3>
+        <p class="price mono">R$ 34,00</p>
+        <p class="desc">Dois burgers prensados, acompanha fritas.</p>
+      </li>
+    </ol>
+    <div class="also">
+      <p class="mono kicker">Também no cardápio</p>
+      <ul class="chips mono">
+        <li>Burger da casa</li>
+        <li>Sanduíche de frango</li>
+        <li>Sanduíche suíno</li>
+        <li>Fritas</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ SEÇÃO INVERTIDA ============ -->
+  <section class="manifesto" aria-labelledby="t-melhor">
+    <svg class="wire" viewBox="0 40 400 316" aria-hidden="true" focusable="false">
+      <path class="w" pathLength="1" d="M48 190C48 112 116 58 200 58C284 58 352 112 352 190C352 200 344 206 334 206H66C56 206 48 200 48 190Z"/>
+      <path class="w" pathLength="1" d="M56 200H344C350 206 346 212 338 212H62C54 212 50 206 56 200Z"/>
+      <path class="w" pathLength="1" d="M72 214C94 204 130 208 156 209C190 205 236 204 270 209C300 207 330 211 336 221C342 232 318 238 290 236C252 241 210 238 172 240C130 242 86 240 72 232C62 226 63 219 72 214Z"/>
+      <ellipse class="w" pathLength="1" cx="176" cy="223" rx="34" ry="12"/>
+      <path class="w" pathLength="1" d="M64 234H336C342 240 340 246 334 248C330 260 316 262 312 250C292 252 276 252 262 250C256 266 238 268 234 252C214 254 194 254 174 252C168 262 152 264 148 252C126 254 104 252 86 250C80 260 66 260 64 248C58 246 58 240 64 234Z"/>
+      <path class="w" pathLength="1" d="M44 254C38 246 54 240 70 242H330C346 240 362 245 358 254C366 260 362 270 352 270C356 280 340 285 326 281H76C60 285 42 281 46 271C36 267 36 258 44 254Z"/>
+      <path class="w" pathLength="1" d="M58 276H342C342 310 322 330 292 330H108C78 330 58 310 58 276Z"/>
+      <path class="w" pathLength="1" d="M48 350H352M48 344V356M352 344V356"/>
+      <text x="200" y="368" text-anchor="middle">BARU BURGERS · PARNAÍBA</text>
+    </svg>
+    <p class="mono kicker">Palavra da casa · @baruburgers</p>
+    <h2 class="quote serif-x reveal" id="t-melhor"><span class="mask"><span>“O melhor</span></span><span class="mask"><span>hambúrguer</span></span><span class="mask"><span>do Piauí!”</span></span></h2>
+  </section>
+</main>
+
+<!-- ============ RODAPÉ ============ -->
+<footer class="footer" id="pedir">
+  <div class="footer-top">
+    <div class="footer-cta">
+      <p class="mono kicker">Delivery e salão · Ideal Open Mall</p>
+      <h2 class="h2 serif-x reveal"><span class="mask"><span>Pede</span></span><span class="mask"><span>um Baru.</span></span></h2>
+      <a class="btn mono" href="https://baruburgers.com/" target="_blank" rel="noopener">Fazer pedido ↗</a>
+    </div>
+    <dl class="info">
+      <div><dt class="mono kicker">Horário</dt><dd>18h às 23h</dd></div>
+      <div><dt class="mono kicker">Endereço</dt><dd>Av. São Sebastião, 4480<br>Ideal Open Mall · Frei Higino<br>Parnaíba–PI</dd></div>
+      <div><dt class="mono kicker">Instagram</dt><dd><a href="https://www.instagram.com/baruburgers/" target="_blank" rel="noopener">@baruburgers</a></dd></div>
+      <div><dt class="mono kicker">Cardápio digital</dt><dd><a href="https://baruburgers.com/" target="_blank" rel="noopener">baruburgers.com</a></dd></div>
+    </dl>
+  </div>
+  <p class="wordmark serif-x" aria-hidden="true">Baru</p>
+  <p class="fine mono">Proposta de cardápio digital para apresentação. Itens e preços de referência coletados na web (out/2026); confirme valores, horário e endereço com a Baru Burgers.</p>
+</footer>
+
+<a class="btn mono fab" href="https://baruburgers.com/" target="_blank" rel="noopener">Pedir ↗</a>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+  const root = document.documentElement;
+  const hero = document.getElementById('hero');
+  const fab = document.querySelector('.fab');
+
+  // Botão flutuante: escondido no topo e quando o botão do rodapé já está na tela
+  if (fab && 'IntersectionObserver' in window) {
+    const visible = new Map();
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => visible.set(e.target, e.isIntersecting));
+      fab.classList.toggle('is-hidden', [...visible.values()].some(Boolean));
+    });
+    [hero, document.querySelector('.footer-cta')].forEach(el => el && io.observe(el));
+  }
+
+  // Sem animação (movimento reduzido ou bibliotecas indisponíveis): a página fica estática
+  if (!root.classList.contains('js-motion') || !window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  if (window.Lenis) {
+    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      const target = a && a.hash.length > 1 && document.querySelector(a.hash);
+      if (target) { e.preventDefault(); lenis.scrollTo(target); }
+    });
+  }
+
+  // ---------- Hero: o burger se abre e cada camada ganha um número ----------
+  const wrap = hero.querySelector('.burger-wrap');
+  const layers = gsap.utils.toArray(hero.querySelectorAll('.layer')); // 0 = pão de baixo … 5 = pão de cima
+  const items = gsap.utils.toArray(hero.querySelectorAll('.legend li'));
+  const OFF_Y = [44, 22, 6, -10, -26, -48];
+  const ORDER = [5, 1, 2, 3, 4]; // pão, burger, muçarela, ovo, barunese (ordem da descrição da casa)
+
+  gsap.matchMedia().add({
+    wide: '(min-aspect-ratio: 1/1) and (min-width: 600px)',
+    narrow: 'not all and (min-aspect-ratio: 1/1) and (min-width: 600px)'
+  }, ctx => {
+    const { wide } = ctx.conditions;
+
+    // Onde o burger fica aberto: à esquerda no desktop (legenda à direita), no alto no celular
+    const geo = () => {
+      const h = hero.getBoundingClientRect(), r = wrap.getBoundingClientRect();
+      const cx = r.left + r.width / 2 - gsap.getProperty(wrap, 'x') - h.left;
+      const cy = r.top + r.height / 2 - gsap.getProperty(wrap, 'y') - h.top;
+      const W = hero.clientWidth, H = hero.clientHeight;
+      const s = Math.min(wide ? 1.3 : 1.05, (wide ? .72 : .46) * H / (1.02 * wrap.offsetWidth));
+      return { x: (wide ? .3 * W : W / 2) - cx, y: (wide ? .5 : .33) * H - cy, s };
+    };
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut' },
+      scrollTrigger: { trigger: hero, start: 'top top', end: '+=220%', pin: true, scrub: 1, anticipatePin: 1, invalidateOnRefresh: true }
+    });
+    tl.to(hero.querySelector('.word'), { opacity: .07, scale: .86, yPercent: -10, duration: 1.2 }, 0)
+      .to(hero.querySelectorAll('.hero-meta, .hero-cta'), { opacity: 0, y: -20, duration: .5 }, 0)
+      .to(wrap, { x: () => geo().x, y: () => geo().y, scale: () => geo().s, duration: 1.4 }, .2)
+      .to(layers, { y: i => OFF_Y[i], duration: 1.2, ease: 'power3.inOut', stagger: .03 }, .5)
+      .to(hero.querySelector('.legend'), { opacity: 1, duration: .5 }, 1.1);
+
+    ORDER.forEach((k, i) => {
+      const t = 1.8 + i * 1.1;
+      const callout = layers[k].querySelector('.callout');
+      tl.to(callout, { opacity: 1, duration: .15 }, t)
+        .fromTo(callout.querySelector('.lead'), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: .5, ease: 'power2.out' }, t)
+        .fromTo(callout.querySelector('.pin'), { scale: 0 }, { scale: 1, transformOrigin: '50% 50%', duration: .45, ease: 'back.out(2)' }, t + .3)
+        .fromTo(items[i], { opacity: .18, x: -12 }, { opacity: 1, x: 0, duration: .5, ease: 'power3.out' }, t + .2);
+    });
+
+    tl.fromTo(hero.querySelector('.legend-total'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .5, ease: 'power3.out' }, 7.4)
+      .to(hero.querySelectorAll('.callout'), { opacity: 0, duration: .4 }, 7.6)
+      .to(layers, { y: 0, duration: 1, ease: 'power3.inOut', stagger: { each: .03, from: 'end' } }, 7.6)
+      .to({}, { duration: .6 });
+  });
+
+  // ---------- Títulos: a linha sobe de dentro da máscara ----------
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.from(el.querySelectorAll('.mask > span'), {
+      yPercent: 180, duration: .9, ease: 'power3.out', stagger: .08,
+      scrollTrigger: { trigger: el, start: 'top 85%' }
+    });
+  });
+
+  // ---------- Linhas do cardápio ----------
+  gsap.utils.toArray('.row').forEach(row => {
+    gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 88%' } })
+      .from(row, { '--rule': '0%', duration: 1, ease: 'power3.out' })
+      .from(row.querySelectorAll('.name .mask > span'), { yPercent: 180, duration: .9, ease: 'power3.out' }, 0)
+      .from(row.querySelectorAll('.n, .price, .desc'), { opacity: 0, y: 12, duration: .6, ease: 'power3.out', stagger: .06 }, .15);
+  });
+
+  // ---------- Seção invertida: o burger em arame se desenha com o scroll ----------
+  const manifesto = document.querySelector('.manifesto');
+  gsap.fromTo(manifesto.querySelectorAll('.wire .w'), { strokeDashoffset: 1 }, {
+    strokeDashoffset: 0, ease: 'none', stagger: .08,
+    scrollTrigger: { trigger: manifesto, start: 'top 75%', end: 'center center', scrub: true }
+  });
+
+  // ---------- Marca gigante do rodapé ----------
+  gsap.from('.wordmark', {
+    yPercent: 30, opacity: 0, ease: 'none',
+    scrollTrigger: { trigger: '.wordmark', start: 'top bottom', end: 'bottom bottom', scrub: true }
+  });
+
+  if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>

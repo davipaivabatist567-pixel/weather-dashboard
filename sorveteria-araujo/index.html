@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardápio Sorveteria Araújo</title>
+<meta name="description" content="Cardápio digital da Sorveteria Araújo, em Parnaíba-PI: sorvetes de frutas da terra como tapioca, caju, cajá, bacuri e sapoti.">
+<meta name="theme-color" content="#FF7AA8">
+<script>try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-motion'); } catch (e) {}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;800&display=swap" rel="stylesheet">
+<style>
+  /* ============ TOKENS ============ */
+  :root {
+    /* cor — marca */
+    --pink: #FF7AA8;
+    --mint: #8EE0C3;
+    --caja: #FFD54A;
+    --acai: #5B2A6E;
+    --choc: #3A1D12;
+    --cream: #FFF4E4;
+    /* cor — sabores */
+    --f-tapioca: #FBF1DA;
+    --f-tapioca-dot: #E3CFA2;
+    --f-caju: #FF9E3D;
+    --f-caju-dot: #E5832A;
+    --f-abacate: #A9D66C;
+    --f-abacate-dot: #87BB4C;
+    --f-brownie: #6B3B26;
+    --f-brownie-dot: #4A2617;
+    --f-caja: #FFD54A;
+    --f-sapoti: #C08A5C;
+    --f-murici: #F6C33A;
+    --f-bacuri: #F2DB8E;
+    --cone: #E7A955;
+    --cone-dark: #C98634;
+    --scoop-hi: rgba(255, 255, 255, .55);
+    /* cor — fundos do hero por sabor */
+    --tint-tapioca: #FFF1D6;
+    --tint-caju: #FFC489;
+    --tint-abacate: #D5EDB0;
+    --tint-brownie: #E8CDB9;
+    /* granulado tom sobre tom */
+    --sprinkles-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cg fill='rgba(58,29,18,.08)'%3E%3Crect x='16' y='20' width='14' height='5' rx='2.5' transform='rotate(-30 23 22)'/%3E%3Crect x='90' y='14' width='14' height='5' rx='2.5' transform='rotate(40 97 16)'/%3E%3Crect x='124' y='70' width='14' height='5' rx='2.5' transform='rotate(-70 131 72)'/%3E%3Crect x='52' y='84' width='14' height='5' rx='2.5' transform='rotate(15 59 86)'/%3E%3Crect x='104' y='120' width='14' height='5' rx='2.5' transform='rotate(-15 111 122)'/%3E%3Crect x='18' y='128' width='14' height='5' rx='2.5' transform='rotate(75 25 130)'/%3E%3C/g%3E%3C/svg%3E");
+    --sprinkles-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cg fill='rgba(255,244,228,.07)'%3E%3Crect x='16' y='20' width='14' height='5' rx='2.5' transform='rotate(-30 23 22)'/%3E%3Crect x='90' y='14' width='14' height='5' rx='2.5' transform='rotate(40 97 16)'/%3E%3Crect x='124' y='70' width='14' height='5' rx='2.5' transform='rotate(-70 131 72)'/%3E%3Crect x='52' y='84' width='14' height='5' rx='2.5' transform='rotate(15 59 86)'/%3E%3Crect x='104' y='120' width='14' height='5' rx='2.5' transform='rotate(-15 111 122)'/%3E%3Crect x='18' y='128' width='14' height='5' rx='2.5' transform='rotate(75 25 130)'/%3E%3C/g%3E%3C/svg%3E");
+
+    /* tipo */
+    --font-display: "Lilita One", "Arial Rounded MT Bold", system-ui, sans-serif;
+    --font-body: "Nunito", system-ui, sans-serif;
+    --t-h2: clamp(3.25rem, 17vw, 8rem);
+    --t-item: clamp(2.75rem, 13vw, 6rem);
+    --t-price: clamp(1.6rem, 3.4vw, 2.75rem);
+    --t-cap: clamp(2.75rem, 12vw, 6rem);
+    --t-chip: clamp(1.05rem, 4.4vw, 2rem);
+    --t-quote: clamp(2.75rem, 12vw, 8.5rem);
+    --t-footer: clamp(4rem, 21vw, 12rem);
+    --t-body: clamp(1rem, 1.05vw, 1.125rem);
+    --t-small: .9rem;
+    --t-micro: .72rem;
+
+    /* espaço */
+    --s-1: .5rem; --s-2: 1rem; --s-3: 2rem;
+    --s-4: 4rem; --s-5: 8rem; --s-6: 12rem;
+    --gutter: clamp(1.25rem, 5vw, 6rem);
+    --demo-h: 2rem;
+    --stroke: 4px;
+    --pill: 999px;
+
+    /* movimento */
+    --e-out: cubic-bezier(.16, 1, .3, 1);
+    --e-pop: cubic-bezier(.34, 1.56, .64, 1);
+    --d-fast: .25s; --d-base: .6s; --d-slow: 1.2s;
+
+    --vh: 1vh;
+  }
+  @supports (height: 1svh) { :root { --vh: 1svh; } }
+
+  /* temas de bloco */
+  .t-pink  { --bg: var(--pink);  --fg: var(--choc);  --seeds: var(--sprinkles-dark); }
+  .t-mint  { --bg: var(--mint);  --fg: var(--choc);  --seeds: var(--sprinkles-dark); }
+  .t-caja  { --bg: var(--caja);  --fg: var(--choc);  --seeds: var(--sprinkles-dark); }
+  .t-acai  { --bg: var(--acai);  --fg: var(--cream); --seeds: var(--sprinkles-light); }
+  .t-choc  { --bg: var(--choc);  --fg: var(--cream); --seeds: var(--sprinkles-light); }
+  .t-pink, .t-mint, .t-caja, .t-acai, .t-choc {
+    background-color: var(--bg); background-image: var(--seeds); color: var(--fg);
+    --line: color-mix(in oklab, var(--fg) 30%, transparent);
+  }
+
+  /* ============ BASE ============ */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
+  body {
+    --fg: var(--choc);
+    background: var(--choc); color: var(--choc);
+    font-family: var(--font-body); font-size: var(--t-body); line-height: 1.6;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--fg); outline-offset: 4px; }
+  .display { font-family: var(--font-display); font-weight: 400; line-height: .95; }
+  .kicker { font: 800 var(--t-micro)/1.4 var(--font-body); letter-spacing: .16em; text-transform: uppercase; }
+  /* máscara de revelação, com folga para o Ú e o Ç */
+  .mask { display: block; overflow: hidden; padding: .28em .03em .34em; margin: -.28em -.03em -.34em; }
+  .mask > span { display: block; }
+
+  .demo {
+    position: absolute; inset: 0 0 auto; z-index: 6; height: var(--demo-h);
+    display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden;
+    background: var(--choc); color: var(--cream);
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: .5em; padding: .8em 1.15em;
+    border-radius: var(--pill); border: 3px solid var(--choc);
+    font: 800 var(--t-micro)/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase; text-decoration: none;
+    transition: transform var(--d-fast) var(--e-out);
+  }
+  .pill:hover { transform: translateY(-2px) rotate(-2deg); }
+  .pill-cream { background: var(--cream); color: var(--choc); }
+  .pill-choc { background: var(--choc); color: var(--cream); }
+  .btn {
+    display: inline-flex; align-items: center; gap: .6em; padding: 1.1em 1.7em;
+    border-radius: var(--pill); border: 3px solid var(--choc);
+    font: 800 var(--t-small)/1 var(--font-body); letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
+    box-shadow: 4px 4px 0 var(--choc);
+    transition: transform var(--d-fast) var(--e-out), box-shadow var(--d-fast) var(--e-out);
+  }
+  .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--choc); }
+  .btn-choc { background: var(--choc); color: var(--cream); box-shadow: 4px 4px 0 var(--cream); }
+  .btn-choc:hover { box-shadow: 6px 6px 0 var(--cream); }
+  .btn-pink { background: var(--pink); color: var(--choc); border-color: var(--cream); box-shadow: 4px 4px 0 var(--cream); }
+  .btn-pink:hover { box-shadow: 6px 6px 0 var(--cream); }
+
+  /* ============ HERO: a casquinha troca de sabor com o scroll ============ */
+  .hero {
+    position: relative; overflow: hidden; height: calc(var(--vh) * 100); min-height: 36rem;
+    --fa: min(calc(92vw / 2.95), calc(var(--vh) * 15));
+    --cw: min(46vw, calc(var(--vh) * 21));
+  }
+  .top {
+    position: absolute; inset: var(--demo-h) 0 auto; z-index: 5;
+    display: flex; justify-content: space-between; align-items: center; padding: var(--s-2) var(--gutter);
+  }
+  .hero-stage {
+    height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: var(--s-2); padding: calc(4.5rem + var(--demo-h)) var(--gutter) var(--s-3); text-align: center;
+  }
+  .lockup { display: flex; flex-direction: column; align-items: center; }
+  .lockup .w1 { font-size: calc(var(--fa) * .648); }
+  .lockup .w2 { font-size: var(--fa); }
+  .cone-wrap { position: relative; z-index: 2; width: var(--cw); margin-top: calc(var(--cw) * -.16); }
+  .cone { display: block; width: 100%; height: auto; overflow: visible; }
+  @media (min-aspect-ratio: 1/1) and (min-width: 600px) {
+    .hero { --fa: min(14vw, calc(var(--vh) * 24)); --cw: calc(var(--vh) * 36); }
+    .hero-stage {
+      display: grid; grid-template-columns: auto auto; grid-template-areas: "kicker cone" "title cone" "cta cone";
+      justify-content: center; align-content: center; justify-items: start; column-gap: var(--s-4); text-align: left;
+    }
+    .hero-kicker { grid-area: kicker; }
+    .lockup { grid-area: title; align-items: flex-start; }
+    .hero-cta { grid-area: cta; margin-top: var(--s-2); }
+    .cone-wrap { grid-area: cone; margin: 0; }
+  }
+  .hero-kicker .intro, .hero-cta .intro { display: inline-flex; }
+
+  .cone .o { stroke: var(--choc); stroke-width: 6; stroke-linejoin: round; }
+  .cone .cone-body { fill: var(--cone); }
+  .cone .waffle { fill: url(#waffle); }
+  .cone .rim { fill: var(--cone-dark); }
+  .cone .tapioca { fill: var(--f-tapioca); }
+  .cone .caju { fill: var(--f-caju); }
+  .cone .abacate { fill: var(--f-abacate); }
+  .cone .brownie { fill: var(--f-brownie); }
+  .cone .dots-tapioca { fill: var(--f-tapioca-dot); }
+  .cone .dots-caju { fill: var(--f-caju-dot); }
+  .cone .dots-abacate { fill: var(--f-abacate-dot); }
+  .cone .dots-brownie { fill: var(--f-brownie-dot); }
+  .cone .hi { fill: none; stroke: var(--scoop-hi); stroke-width: 9; stroke-linecap: round; }
+  .cone .bonus { visibility: hidden; }
+
+  /* legendas da casquinha (só existem com animação) */
+  .captions { display: none; }
+  .js-motion .captions {
+    display: block; position: absolute; z-index: 3; height: 0;
+    left: var(--gutter); right: var(--gutter); bottom: var(--s-3); color: var(--choc); pointer-events: none;
+  }
+  .cap { position: absolute; left: 0; bottom: 0; max-width: 30rem; opacity: 0; }
+  .cap-t { display: block; font-size: var(--t-cap); margin-block: .1em .06em; }
+  @media (min-aspect-ratio: 1/1) and (min-width: 600px) {
+    .js-motion .captions { right: auto; bottom: auto; top: 50%; width: min(36vw, 30rem); }
+    .cap { bottom: auto; top: 0; translate: 0 -50%; }
+  }
+
+  /* entrada da página (CSS puro) */
+  @keyframes rise { from { transform: translateY(180%); } }
+  @keyframes drop { from { transform: translateY(-220px); opacity: 0; } }
+  @keyframes fade-up { from { transform: translateY(16px); opacity: 0; } }
+  .js-motion .hero .mask > span { animation: rise var(--d-slow) var(--e-out) both; }
+  .js-motion .hero .w2 > span { animation-delay: .12s; }
+  .js-motion .hero .drop { animation: drop .8s var(--e-pop) both; animation-delay: calc(.35s + var(--k) * .14s); }
+  .js-motion .hero .intro { animation: fade-up var(--d-base) var(--e-out) 1s both; }
+
+  /* ============ SABORES ============ */
+  .flavors-sec { padding: var(--s-5) var(--gutter); }
+  .sec-head { display: grid; gap: var(--s-2); max-width: 46rem; margin-bottom: var(--s-4); }
+  .sec-title { font-size: var(--t-h2); margin-bottom: .2em; }
+  .flavors { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; max-width: 72rem; }
+  .flavor {
+    --size: clamp(6.25rem, 26vw, 12rem);
+    width: var(--size); aspect-ratio: 1; border-radius: 50%;
+    display: grid; place-items: center; padding: .4em; text-align: center;
+    background: var(--c); border: var(--stroke) solid var(--choc); color: var(--choc);
+    font: 400 var(--t-chip)/1 var(--font-display);
+    box-shadow: inset -8px -10px 0 rgba(0, 0, 0, .08);
+    rotate: -4deg; transition: rotate var(--d-base) var(--e-pop);
+  }
+  .flavor:nth-child(3n + 1) { --size: clamp(7rem, 30vw, 13.5rem); rotate: 3deg; }
+  .flavor:nth-child(3n + 2) { --size: clamp(5.75rem, 23vw, 10.5rem); rotate: -2deg; }
+  .flavor.dark { color: var(--cream); }
+  @media (hover: hover) { .flavor:hover { rotate: 8deg; } }
+  .flavors-note { margin-top: var(--s-3); max-width: 52ch; }
+
+  /* ============ FORMATOS E PREÇOS ============ */
+  .menu { display: grid; gap: var(--s-4); padding: var(--s-5) var(--gutter); }
+  @media (min-width: 900px) {
+    .menu { grid-template-columns: 5fr 7fr; }
+    .menu .sec-head { position: sticky; top: 14vh; align-self: start; }
+    .menu .sec-title { font-size: clamp(3.5rem, 7.5vw, 7rem); }
+  }
+  .items { list-style: none; }
+  .item {
+    --rule: 100%;
+    padding-block: var(--s-3);
+    background: linear-gradient(var(--line), var(--line)) 0 0 / var(--rule) var(--stroke) no-repeat;
+  }
+  .item:last-child { border-bottom: var(--stroke) solid var(--line); }
+  .item-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; column-gap: var(--s-2); }
+  .item-name { font-size: var(--t-item); transition: transform var(--d-base) var(--e-out); }
+  .price { font: 400 var(--t-price)/1 var(--font-display); white-space: nowrap; }
+  .desc { margin-top: max(var(--s-1), calc(var(--t-item) * .28)); max-width: 46ch; }
+  @media (hover: hover) { .item:hover .item-name { transform: translateX(.06em) rotate(-1deg); } }
+
+  /* ============ CITAÇÃO ============ */
+  .quote-sec { position: relative; overflow: hidden; padding: var(--s-6) var(--gutter); }
+  .quote { position: relative; z-index: 1; margin-top: var(--s-2); font-size: var(--t-quote); max-width: 14ch; }
+  .floaty { position: absolute; z-index: 0; width: clamp(4rem, 14vw, 9rem); aspect-ratio: 1; border-radius: 50%; border: var(--stroke) solid var(--choc); }
+  .floaty.a { background: var(--f-caju); right: 8%; top: 12%; }
+  .floaty.b { background: var(--f-tapioca); right: 22%; bottom: 10%; width: clamp(3rem, 10vw, 6.5rem); }
+  .floaty.c { background: var(--pink); right: -2%; bottom: 34%; width: clamp(3.5rem, 12vw, 7.5rem); }
+
+  /* ============ RODAPÉ ============ */
+  .footer { container-type: inline-size; overflow: hidden; padding: var(--s-5) var(--gutter) calc(var(--s-4) + 3rem); }
+  .footer-cta { display: grid; gap: var(--s-3); justify-items: start; }
+  .footer-title { font-size: var(--t-footer); }
+  .info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3) var(--s-2); margin-top: var(--s-5); }
+  @media (min-width: 900px) { .info { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .info dt { margin-bottom: var(--s-1); color: var(--pink); }
+  .info dd { font-size: var(--t-small); line-height: 1.5; }
+  .info a { text-decoration-thickness: 2px; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .wordmark { margin-top: var(--s-5); font-size: calc((100vw - 2 * var(--gutter)) / 2.95); line-height: .85; white-space: nowrap; }
+  @supports (font-size: 1cqw) { .wordmark { font-size: calc(100cqw / 2.95); } }
+  .fine { margin-top: var(--s-3); font-size: var(--t-micro); max-width: 75ch; opacity: .85; }
+
+  .fab {
+    position: fixed; z-index: 20; right: var(--s-2); bottom: calc(var(--s-2) + env(safe-area-inset-bottom, 0px));
+    border-color: var(--cream); box-shadow: 0 .75rem 2rem rgba(0, 0, 0, .3); padding: 1em 1.4em;
+    transition: transform var(--d-base) var(--e-out), opacity var(--d-base) var(--e-out);
+  }
+  .fab.is-hidden { transform: translateY(calc(100% + 2rem)); opacity: 0; pointer-events: none; }
+
+  @media (max-width: 599px) {
+    .flavors-sec, .menu, .footer { padding-block: var(--s-4); }
+    .quote-sec { padding-block: var(--s-5); }
+    .flavors { gap: .75rem; }
+    .info, .wordmark { margin-top: var(--s-4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pill, .btn, .item-name, .flavor { transition: none; }
+    .fab { transition: opacity var(--d-fast); }
+    .fab.is-hidden { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section class="hero t-pink" id="hero">
+    <p class="demo kicker">Proposta · cardápio digital demo</p>
+    <header class="top">
+      <a class="pill pill-cream" href="#hero">Sorveteria Araújo</a>
+      <a class="pill pill-choc" href="https://aiqfome.com/PI/parnaiba/sorveteria-araujo" target="_blank" rel="noopener">Pedir ↗</a>
+    </header>
+
+    <div class="hero-stage">
+      <p class="kicker hero-kicker"><span class="intro">Parnaíba · Piauí</span></p>
+      <h1 class="lockup display" aria-label="Sorveteria Araújo">
+        <span class="mask w1"><span>Sorveteria</span></span>
+        <span class="mask w2"><span>Araújo</span></span>
+      </h1>
+      <div class="cone-wrap" aria-hidden="true">
+        <svg class="cone" viewBox="72 20 256 512" focusable="false">
+          <defs>
+            <pattern id="waffle" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <path d="M0 0H22M0 0V22" fill="none" stroke="#C98634" stroke-width="3"/>
+            </pattern>
+          </defs>
+          <g class="drop" style="--k:0">
+            <path class="o cone-body" d="M118 312H282L208 512Q200 528 192 512Z"/>
+            <path class="waffle" d="M118 312H282L208 512Q200 528 192 512Z"/>
+            <path class="o rim" d="M110 300H290C296 300 298 306 296 312L292 320H108L104 312C102 306 104 300 110 300Z"/>
+          </g>
+          <g class="scoop" data-flavor="tapioca"><g class="drop" style="--k:1">
+            <path class="o tapioca" d="M96 318C88 248 140 200 200 200C260 200 312 248 304 318Q292 334 278 322Q266 342 250 324Q234 334 218 322Q202 346 186 324Q170 334 154 322Q138 342 122 324Q108 334 96 318Z"/>
+            <g class="dots-tapioca"><circle cx="128" cy="300" r="4"/><circle cx="160" cy="284" r="3.5"/><circle cx="196" cy="304" r="4"/><circle cx="234" cy="288" r="3.5"/><circle cx="268" cy="304" r="4"/><circle cx="150" cy="316" r="3"/><circle cx="252" cy="314" r="3"/></g>
+          </g></g>
+          <g class="scoop" data-flavor="caju"><g class="drop" style="--k:2">
+            <path class="o caju" d="M96 232C88 162 140 114 200 114C260 114 312 162 304 232Q292 248 278 236Q266 256 250 238Q234 248 218 236Q202 260 186 238Q170 248 154 236Q138 256 122 238Q108 248 96 232Z"/>
+            <g class="dots-caju"><circle cx="128" cy="206" r="4"/><circle cx="170" cy="192" r="3.5"/><circle cx="214" cy="214" r="4"/><circle cx="250" cy="196" r="3.5"/><circle cx="282" cy="220" r="3"/></g>
+          </g></g>
+          <g class="scoop" data-flavor="abacate"><g class="drop" style="--k:3">
+            <path class="o abacate" d="M96 146C88 76 140 28 200 28C260 28 312 76 304 146Q292 162 278 150Q266 170 250 152Q234 162 218 150Q202 174 186 152Q170 162 154 150Q138 170 122 152Q108 162 96 146Z"/>
+            <g class="dots-abacate"><circle cx="146" cy="92" r="4"/><circle cx="190" cy="70" r="3.5"/><circle cx="232" cy="98" r="4"/><circle cx="266" cy="124" r="3.5"/><circle cx="162" cy="128" r="3"/></g>
+            <path class="hi" d="M136 70C146 50 168 38 190 36"/>
+          </g></g>
+          <g class="scoop bonus" data-flavor="brownie">
+            <path class="o brownie" d="M96 60C88 -10 140 -58 200 -58C260 -58 312 -10 304 60Q292 76 278 64Q266 84 250 66Q234 76 218 64Q202 88 186 66Q170 76 154 64Q138 84 122 66Q108 76 96 60Z"/>
+            <g class="dots-brownie"><rect x="134" y="-6" width="14" height="10" rx="3"/><rect x="184" y="-30" width="14" height="10" rx="3"/><rect x="230" y="4" width="14" height="10" rx="3"/><rect x="264" y="24" width="12" height="9" rx="3"/><rect x="164" y="30" width="12" height="9" rx="3"/></g>
+            <path class="hi" d="M136 -16C146 -36 168 -48 190 -50"/>
+          </g>
+        </svg>
+      </div>
+      <div class="hero-cta"><a class="btn btn-choc intro" href="#sabores">Ver sabores ↓</a></div>
+    </div>
+
+    <div class="captions" aria-hidden="true">
+      <p class="cap"><span class="kicker">01 / 03</span><span class="cap-t display">Tapioca</span><span>Clássico do Nordeste.</span></p>
+      <p class="cap"><span class="kicker">02 / 03</span><span class="cap-t display">Caju</span><span>A fruta da nossa terra.</span></p>
+      <p class="cap"><span class="kicker">03 / 03</span><span class="cap-t display">Abacate</span><span>Cremoso de verdade.</span></p>
+      <p class="cap"><span class="kicker">Bônus</span><span class="cap-t display">Brownie</span><span>Cabe mais uma? Sempre cabe.</span></p>
+      <p class="cap cap-final"><span class="cap-t display">Qual vai ser o seu?</span><span>Os sabores estão logo abaixo ↓</span></p>
+    </div>
+  </section>
+
+  <!-- ============ SABORES ============ -->
+  <section class="flavors-sec t-mint" id="sabores" aria-labelledby="t-sabores">
+    <div class="sec-head">
+      <p class="kicker">01 — Sabores</p>
+      <h2 class="sec-title display reveal" id="t-sabores"><span class="mask"><span>Sabores</span></span><span class="mask"><span>da terra</span></span></h2>
+      <p>Frutas nativas do Piauí e clássicos que fazem fila no balcão.</p>
+    </div>
+    <ul class="flavors">
+      <li class="flavor" style="--c: var(--f-tapioca)">Tapioca</li>
+      <li class="flavor" style="--c: var(--f-caju)">Caju</li>
+      <li class="flavor" style="--c: var(--f-bacuri)">Bacuri</li>
+      <li class="flavor" style="--c: var(--f-abacate)">Abacate</li>
+      <li class="flavor" style="--c: var(--f-caja)">Cajá</li>
+      <li class="flavor" style="--c: var(--f-sapoti)">Sapoti</li>
+      <li class="flavor" style="--c: var(--f-murici)">Murici</li>
+      <li class="flavor dark" style="--c: var(--f-brownie)">Brownie</li>
+    </ul>
+    <p class="flavors-note">Sabores citados por clientes e guias de Parnaíba. O que tem no dia pode variar: pergunte no balcão.</p>
+  </section>
+
+  <!--
+    ============ FORMATOS E PREÇOS ============
+    Para editar: cada <li class="item"> é uma opção (nome, preço e descrição).
+    Preços de referência do aiqfome (out/2026). Confirme com a casa.
+  -->
+  <section class="menu t-caja" id="precos" aria-labelledby="t-precos">
+    <div class="sec-head">
+      <p class="kicker">02 — Como você quer?</p>
+      <h2 class="sec-title display reveal" id="t-precos"><span class="mask"><span>Escolhe</span></span><span class="mask"><span>o tamanho</span></span></h2>
+      <p>Preços de referência do delivery. No balcão também tem sorvete por quilo.</p>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="item-row"><h3 class="item-name display"><span class="mask"><span>Picolé</span></span></h3><p class="price">R$ 6</p></div>
+        <p class="desc">Pra refrescar no caminho.</p>
+      </li>
+      <li class="item">
+        <div class="item-row"><h3 class="item-name display"><span class="mask"><span>Simples</span></span></h3><p class="price">R$ 18</p></div>
+        <p class="desc">Uma bola, do sabor que você escolher.</p>
+      </li>
+      <li class="item">
+        <div class="item-row"><h3 class="item-name display"><span class="mask"><span>Diet</span></span></h3><p class="price">R$ 20</p></div>
+        <p class="desc">Opção diet, com o mesmo cuidado.</p>
+      </li>
+      <li class="item">
+        <div class="item-row"><h3 class="item-name display"><span class="mask"><span>Dupla</span></span></h3><p class="price">R$ 27</p></div>
+        <p class="desc">Duas bolas: dá pra misturar caju com tapioca.</p>
+      </li>
+      <li class="item">
+        <div class="item-row"><h3 class="item-name display"><span class="mask"><span>Por quilo</span></span></h3><p class="price">Consulte</p></div>
+        <p class="desc">Monte do seu jeito e pese no balcão.</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ CITAÇÃO ============ -->
+  <section class="quote-sec t-acai" aria-labelledby="t-quote">
+    <span class="floaty a" aria-hidden="true"></span>
+    <span class="floaty b" aria-hidden="true"></span>
+    <span class="floaty c" aria-hidden="true"></span>
+    <p class="kicker">Avaliação de cliente · Tripadvisor</p>
+    <h2 class="quote display reveal" id="t-quote"><span class="mask"><span>“O sorvete</span></span><span class="mask"><span>mais gostoso</span></span><span class="mask"><span>da cidade.”</span></span></h2>
+  </section>
+</main>
+
+<!-- ============ RODAPÉ ============ -->
+<footer class="footer t-choc" id="pedir">
+  <div class="footer-cta">
+    <p class="kicker">Delivery pelo aiqfome</p>
+    <h2 class="footer-title display reveal"><span class="mask"><span>Bateu</span></span><span class="mask"><span>o calor?</span></span></h2>
+    <a class="btn btn-pink" href="https://aiqfome.com/PI/parnaiba/sorveteria-araujo" target="_blank" rel="noopener">Pedir no aiqfome ↗</a>
+  </div>
+  <dl class="info">
+    <div><dt class="kicker">Endereço</dt><dd>Av. Gov. Chagas Rodrigues, 901<br>Centro · Parnaíba–PI</dd></div>
+    <div><dt class="kicker">Horário</dt><dd>10h às 22h</dd></div>
+    <div><dt class="kicker">Telefone</dt><dd><a href="tel:+558633223336">(86) 3322-3336</a></dd></div>
+    <div><dt class="kicker">Instagram</dt><dd><a href="https://www.instagram.com/sorveteria_araujo/" target="_blank" rel="noopener">@sorveteria_araujo</a></dd></div>
+  </dl>
+  <p class="wordmark display" aria-hidden="true">Araújo</p>
+  <p class="fine">Proposta de cardápio digital para apresentação. Sabores citados em avaliações e guias; preços de referência do aiqfome (out/2026). Confirme sabores do dia, valores, horário e unidades com a Sorveteria Araújo.</p>
+</footer>
+
+<a class="pill pill-choc fab" href="https://aiqfome.com/PI/parnaiba/sorveteria-araujo" target="_blank" rel="noopener">Pedir ↗</a>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+  const root = document.documentElement;
+  const hero = document.getElementById('hero');
+  const fab = document.querySelector('.fab');
+
+  // Botão flutuante: escondido no topo e quando o botão do rodapé já está na tela
+  if (fab && 'IntersectionObserver' in window) {
+    const visible = new Map();
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => visible.set(e.target, e.isIntersecting));
+      fab.classList.toggle('is-hidden', [...visible.values()].some(Boolean));
+    });
+    [hero, document.querySelector('.footer-cta')].forEach(el => el && io.observe(el));
+  }
+
+  // Sem animação (movimento reduzido ou bibliotecas indisponíveis): a página fica estática
+  if (!root.classList.contains('js-motion') || !window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  if (window.Lenis) {
+    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      const target = a && a.hash.length > 1 && document.querySelector(a.hash);
+      if (target) { e.preventDefault(); lenis.scrollTo(target); }
+    });
+  }
+
+  const css = getComputedStyle(root);
+  const color = name => css.getPropertyValue(name).trim();
+  const TINTS = [color('--tint-tapioca'), color('--tint-caju'), color('--tint-abacate')];
+
+  // ---------- Hero: cada bola ganha a vez, o fundo vira a cor do sabor e cai uma bola bônus ----------
+  const wrap = hero.querySelector('.cone-wrap');
+  const scoops = gsap.utils.toArray(hero.querySelectorAll('.scoop:not(.bonus)')); // tapioca, caju, abacate
+  const bonus = hero.querySelector('.bonus');
+  const caps = gsap.utils.toArray(hero.querySelectorAll('.cap:not(.cap-final)'));
+  const capFinal = hero.querySelector('.cap-final');
+
+  gsap.matchMedia().add({
+    wide: '(min-aspect-ratio: 1/1) and (min-width: 600px)',
+    narrow: 'not all and (min-aspect-ratio: 1/1) and (min-width: 600px)'
+  }, ctx => {
+    const { wide } = ctx.conditions;
+    gsap.set([...scoops, bonus], { transformOrigin: '50% 100%' });
+
+    // Onde a casquinha fica: à direita no desktop (legenda à esquerda), no alto no celular
+    const geo = () => {
+      const h = hero.getBoundingClientRect(), r = wrap.getBoundingClientRect();
+      const cx = r.left + r.width / 2 - gsap.getProperty(wrap, 'x') - h.left;
+      const cy = r.top + r.height / 2 - gsap.getProperty(wrap, 'y') - h.top;
+      const W = hero.clientWidth, H = hero.clientHeight, svgH = wrap.offsetHeight;
+      const s = Math.min(1.1, (wide ? .84 : .56) * H / (1.16 * svgH));
+      return { x: (wide ? .64 * W : W / 2) - cx, y: (wide ? .54 : .44) * H - cy, s };
+    };
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut' },
+      scrollTrigger: { trigger: hero, start: 'top top', end: '+=240%', pin: true, scrub: 1, anticipatePin: 1, invalidateOnRefresh: true }
+    });
+    tl.to(hero.querySelector('.lockup'), wide ? { xPercent: -40, opacity: 0, duration: 1 } : { yPercent: -60, opacity: 0, duration: 1 }, 0)
+      .to(hero.querySelectorAll('.hero-kicker, .hero-cta'), { opacity: 0, y: -20, duration: .5 }, 0)
+      .to(wrap, { x: () => geo().x, y: () => geo().y, scale: () => geo().s, duration: 1.4 }, .2);
+
+    scoops.forEach((scoop, i) => {
+      const t = 1.2 + i * 1.6;
+      tl.to(hero, { backgroundColor: TINTS[i], duration: .6 }, t)
+        .fromTo(caps[i], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .45, ease: 'power3.out' }, t)
+        .to(scoop, { scale: 1.1, rotation: -5, duration: .35 }, t)
+        .to(scoop, { rotation: 4, duration: .35 }, t + .35)
+        .to(scoop, { scale: 1, rotation: 0, duration: .4 }, t + 1.05)
+        .to(caps[i], { opacity: 0, y: -40, duration: .4, ease: 'power2.in' }, t + 1.15);
+    });
+
+    tl.to(hero, { backgroundColor: color('--tint-brownie'), duration: .6 }, 6)
+      .fromTo(bonus, { autoAlpha: 0, y: -620 }, { autoAlpha: 1, y: 0, duration: 1, ease: 'bounce.out' }, 6)
+      .fromTo(caps[3], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .45, ease: 'power3.out' }, 6.4)
+      .to(caps[3], { opacity: 0, y: -40, duration: .4, ease: 'power2.in' }, 7.6)
+      .to(hero, { backgroundColor: color('--mint'), duration: .8 }, 7.8)
+      .fromTo(capFinal, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .5, ease: 'power3.out' }, 8.2)
+      .to({}, { duration: .6 });
+  });
+
+  // ---------- Títulos: a linha sobe de dentro da máscara ----------
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.from(el.querySelectorAll('.mask > span'), {
+      yPercent: 180, duration: .9, ease: 'power3.out', stagger: .08,
+      scrollTrigger: { trigger: el, start: 'top 85%' }
+    });
+  });
+
+  // ---------- Bolas de sabor pulam na tela ----------
+  gsap.from('.flavor', {
+    scale: .4, opacity: 0, duration: .7, ease: 'back.out(1.8)', stagger: .06,
+    scrollTrigger: { trigger: '.flavors', start: 'top 82%' }
+  });
+
+  // ---------- Itens de preço ----------
+  gsap.utils.toArray('.item').forEach(item => {
+    gsap.timeline({ scrollTrigger: { trigger: item, start: 'top 88%' } })
+      .from(item, { '--rule': '0%', duration: .9, ease: 'power3.out' })
+      .from(item.querySelectorAll('.item-name .mask > span'), { yPercent: 180, duration: .9, ease: 'power3.out' }, 0)
+      .from(item.querySelectorAll('.price, .desc'), { opacity: 0, y: 16, duration: .6, ease: 'power3.out', stagger: .07 }, .15);
+  });
+
+  // ---------- Bolinhas da citação flutuam em velocidades diferentes ----------
+  gsap.utils.toArray('.floaty').forEach((dot, i) => {
+    gsap.to(dot, {
+      yPercent: -70 - i * 50, rotation: 25 * (i % 2 ? -1 : 1), ease: 'none',
+      scrollTrigger: { trigger: '.quote-sec', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+  });
+
+  // ---------- Marca gigante do rodapé ----------
+  gsap.from('.wordmark', {
+    yPercent: 30, opacity: 0, ease: 'none',
+    scrollTrigger: { trigger: '.wordmark', start: 'top bottom', end: 'bottom bottom', scrub: true }
+  });
+
+  if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>

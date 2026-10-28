@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardápio Bruthus Burger</title>
+<meta name="description" content="Cardápio digital da Bruthus Burger, hamburgueria genuinamente piauiense em Parnaíba-PI. Pedidos pelo WhatsApp.">
+<meta name="theme-color" content="#0F0E0D">
+<script>try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-motion'); } catch (e) {}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Barlow:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ TOKENS ============ */
+  :root {
+    /* cor — marca */
+    --black: #0F0E0D;
+    --red: #E3261B;
+    --bone: #F2EADB;
+    --mustard: #F6B91A;
+    --glow: rgba(227, 38, 27, .42);
+    /* cor — ilustração */
+    --bun: #D98A3A;
+    --bun-shade: #B86C24;
+    --bun-hi: #F2B062;
+    --patty: #6A3219;
+    --patty-hi: #8F4725;
+    --cheese: #F6B91A;
+    --seed: #F2EADB;
+    /* textura de aço */
+    --hatch-dark: repeating-linear-gradient(45deg, rgba(242, 234, 219, .035) 0 2px, transparent 2px 12px);
+    --hatch-light: repeating-linear-gradient(45deg, rgba(15, 14, 13, .04) 0 2px, transparent 2px 12px);
+
+    /* tipo */
+    --font-display: "Big Shoulders Display", "Impact", "Arial Narrow", sans-serif;
+    --font-body: "Barlow", system-ui, sans-serif;
+    --t-h2: clamp(3.5rem, 19vw, 9rem);
+    --t-item: clamp(3rem, 15vw, 7rem);
+    --t-price: clamp(1.75rem, 3.6vw, 3rem);
+    --t-cap: clamp(3rem, 14vw, 7rem);
+    --t-track: clamp(4.5rem, 18vw, 13rem);
+    --t-footer: clamp(4.5rem, 26vw, 14rem);
+    --t-body: clamp(1rem, 1.05vw, 1.125rem);
+    --t-small: .9rem;
+    --t-micro: .72rem;
+
+    /* espaço */
+    --s-1: .5rem; --s-2: 1rem; --s-3: 2rem;
+    --s-4: 4rem; --s-5: 8rem; --s-6: 12rem;
+    --gutter: clamp(1.25rem, 5vw, 6rem);
+    --demo-h: 2rem;
+    --stroke: 4px;
+
+    /* movimento */
+    --e-out: cubic-bezier(.16, 1, .3, 1);
+    --e-pop: cubic-bezier(.34, 1.56, .64, 1);
+    --d-fast: .25s; --d-base: .6s; --d-slow: 1.2s;
+
+    --vh: 1vh;
+  }
+  @supports (height: 1svh) { :root { --vh: 1svh; } }
+
+  .t-black { --bg: var(--black); --fg: var(--bone);  --hi: var(--mustard); --tex: var(--hatch-dark); }
+  .t-bone  { --bg: var(--bone);  --fg: var(--black); --hi: var(--red);     --tex: var(--hatch-light); }
+  .t-red   { --bg: var(--red);   --fg: var(--black); --hi: var(--bone);    --tex: var(--hatch-light); }
+  .t-black, .t-bone, .t-red {
+    background-color: var(--bg); background-image: var(--tex); color: var(--fg);
+    --line: color-mix(in oklab, var(--fg) 25%, transparent);
+  }
+
+  /* ============ BASE ============ */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
+  body {
+    --fg: var(--bone);
+    background: var(--black); color: var(--bone);
+    font-family: var(--font-body); font-size: var(--t-body); line-height: 1.6;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--fg); outline-offset: 4px; }
+  .display { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; line-height: .85; }
+  .kicker { font: 700 var(--t-micro)/1.4 var(--font-body); letter-spacing: .2em; text-transform: uppercase; }
+  /* máscara de revelação, com folga para acentos e o Ç */
+  .mask { display: block; overflow: hidden; padding: .28em .03em .34em; margin: -.28em -.03em -.34em; }
+  .mask > span { display: block; }
+
+  .demo {
+    position: absolute; inset: 0 0 auto; z-index: 6; height: var(--demo-h);
+    display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden;
+    background: var(--red); color: var(--black);
+  }
+  .tag-btn {
+    display: inline-flex; align-items: center; gap: .5em; padding: .85em 1.2em;
+    border: 2px solid currentColor; text-decoration: none;
+    font: 700 var(--t-micro)/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase;
+    transition: transform var(--d-fast) var(--e-out);
+  }
+  .tag-btn:hover { transform: translateY(-2px); }
+  .tag-bone { background: var(--bone); color: var(--black); border-color: var(--bone); }
+  .tag-mustard { background: var(--mustard); color: var(--black); border-color: var(--mustard); }
+  .btn {
+    display: inline-flex; align-items: center; gap: .6em; padding: 1.15em 1.8em;
+    font: 700 var(--t-small)/1 var(--font-body); letter-spacing: .16em; text-transform: uppercase; text-decoration: none;
+    box-shadow: 6px 6px 0 var(--red);
+    transition: transform var(--d-fast) var(--e-out), box-shadow var(--d-fast) var(--e-out);
+  }
+  .btn:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--red); }
+  .btn-bone { background: var(--bone); color: var(--black); }
+  .btn-mustard { background: var(--mustard); color: var(--black); }
+
+  /* ============ HERO: quanto mais rola, mais carne ============ */
+  .hero {
+    position: relative; overflow: hidden; height: calc(var(--vh) * 100); min-height: 36rem;
+    --f: min(calc(92vw / 3.36), calc((var(--vh) * 100 - 13rem) / 1.33));
+    --bw: calc(var(--f) * 1.25);
+  }
+  @media (max-aspect-ratio: 1/1), (max-width: 599px) {
+    .hero { --bw: min(94vw, calc(var(--vh) * 50)); }
+  }
+  .top {
+    position: absolute; inset: var(--demo-h) 0 auto; z-index: 5;
+    display: flex; justify-content: space-between; align-items: center; padding: var(--s-2) var(--gutter);
+  }
+  .hero-stage {
+    height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: var(--s-2); padding: calc(4.5rem + var(--demo-h)) var(--gutter) var(--s-3); text-align: center;
+  }
+  .hero-kicker { color: var(--mustard); }
+  .hero-kicker .intro, .hero-cta .intro { display: inline-flex; }
+  .lockup { display: flex; flex-direction: column; align-items: center; }
+  .lockup .word { font-size: var(--f); }
+  .burger-wrap {
+    position: relative; z-index: 2; display: block; width: var(--bw);
+    margin-top: calc(var(--bw) * -.36 - var(--f) * .3);
+  }
+  .burger-wrap::before {
+    content: ""; position: absolute; z-index: -1; inset: 30% -10% -5%;
+    background: radial-gradient(closest-side, var(--glow), transparent);
+  }
+  .burger { display: block; width: 100%; height: auto; overflow: visible; }
+  .burger .o { stroke: var(--black); stroke-width: 6; stroke-linejoin: round; }
+  .burger .bun { fill: var(--bun); }
+  .burger .bun-line { fill: none; stroke: var(--bun-shade); stroke-width: 6; stroke-linecap: round; }
+  .burger .bun-hi { fill: none; stroke: var(--bun-hi); stroke-width: 9; stroke-linecap: round; }
+  .burger .seeds ellipse { fill: var(--seed); stroke: var(--black); stroke-width: 2.5; }
+  .burger .patty { fill: var(--patty); }
+  .burger .grill { fill: none; stroke: var(--patty-hi); stroke-width: 4; stroke-linecap: round; }
+  .burger .cheese { fill: var(--cheese); }
+  .burger .extra { visibility: hidden; }
+
+  /* número gigante e legendas (só existem com animação) */
+  .numeral, .captions { display: none; }
+  .js-motion .numeral {
+    display: block; position: absolute; z-index: 1; left: 50%; top: 44%; translate: -50% -50%;
+    font-size: min(62vh, 96vw); pointer-events: none;
+  }
+  .numeral span {
+    position: absolute; left: 50%; top: 50%; translate: -50% -50%; opacity: 0;
+    color: transparent; -webkit-text-stroke: max(2px, .006em) var(--red); white-space: nowrap;
+  }
+  .js-motion .captions {
+    display: block; position: absolute; z-index: 3; height: 0;
+    left: var(--gutter); right: var(--gutter); bottom: var(--s-3); pointer-events: none;
+  }
+  .cap { position: absolute; left: 0; bottom: 0; max-width: 30rem; opacity: 0; }
+  .cap .kicker { color: var(--mustard); }
+  .cap-t { display: block; font-size: var(--t-cap); margin-block: .12em .08em; }
+  @media (min-aspect-ratio: 1/1) and (min-width: 600px) {
+    .js-motion .numeral { left: 64%; top: 52%; font-size: min(78vh, 52vw); }
+    .js-motion .captions { right: auto; bottom: auto; top: 50%; width: min(34vw, 28rem); }
+    .cap { bottom: auto; top: 0; translate: 0 -50%; }
+  }
+
+  /* entrada da página (CSS puro) */
+  @keyframes rise { from { transform: translateY(180%); } }
+  @keyframes drop { from { transform: translateY(-200px); opacity: 0; } }
+  @keyframes fade-up { from { transform: translateY(16px); opacity: 0; } }
+  .js-motion .hero .mask > span { animation: rise var(--d-slow) var(--e-out) both; }
+  .js-motion .hero .drop { animation: drop .7s var(--e-pop) both; animation-delay: calc(.3s + var(--k) * .12s); }
+  .js-motion .hero .intro { animation: fade-up var(--d-base) var(--e-out) .95s both; }
+
+  /* ============ CARDÁPIO ============ */
+  .menu { display: grid; gap: var(--s-4); padding: var(--s-5) var(--gutter); }
+  .menu-head { display: grid; gap: var(--s-2); align-content: start; }
+  .menu-title { font-size: var(--t-h2); margin-bottom: .2em; }
+  .menu-note { max-width: 40ch; }
+  .menu-note strong { color: var(--red); }
+  @media (min-width: 900px) {
+    .menu { grid-template-columns: 5fr 7fr; }
+    .menu-head { position: sticky; top: 14vh; align-self: start; }
+    .menu-title { font-size: clamp(4.5rem, 9vw, 9rem); }
+  }
+  .items { list-style: none; }
+  .item {
+    --rule: 100%;
+    display: grid; grid-template-columns: auto 1fr auto; column-gap: var(--s-2); align-items: end;
+    padding-block: var(--s-3);
+    background: linear-gradient(var(--line), var(--line)) 0 0 / var(--rule) var(--stroke) no-repeat;
+  }
+  .item:last-of-type { border-bottom: var(--stroke) solid var(--line); }
+  .item .x { font-size: calc(var(--t-item) * .62); color: transparent; -webkit-text-stroke: max(2px, .02em) var(--red); }
+  .item-name { font-size: var(--t-item); transition: transform var(--d-base) var(--e-out); }
+  .price { font: 900 var(--t-price)/1 var(--font-display); white-space: nowrap; }
+  .desc { grid-column: 2 / -1; margin-top: max(var(--s-1), calc(var(--t-item) * .22)); max-width: 44ch; }
+  @media (hover: hover) { .item:hover .item-name { transform: translateX(.05em) skewX(-4deg); } }
+  .sides { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1) var(--s-2); margin-top: var(--s-3); }
+  .sides ul { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-1); }
+  .sides li { padding: .6em 1em; border: 2px solid var(--black); font-weight: 700; }
+
+  /* ============ FAIXA ============ */
+  .band { overflow: hidden; padding-block: var(--s-4); }
+  .tracks { display: grid; gap: .04em; font-size: var(--t-track); }
+  .track { display: flex; align-items: center; gap: .3em; width: max-content; white-space: nowrap; }
+  .track-outline { color: transparent; -webkit-text-stroke: max(2px, .012em) var(--black); }
+  .star { width: .45em; height: .45em; fill: var(--bone); flex: none; }
+
+  /* ============ RODAPÉ ============ */
+  .footer { container-type: inline-size; overflow: hidden; padding: var(--s-5) var(--gutter) calc(var(--s-4) + 3rem); }
+  .footer-cta { display: grid; gap: var(--s-3); justify-items: start; }
+  .footer-title { font-size: var(--t-footer); }
+  .alt { font-weight: 700; text-underline-offset: 4px; }
+  .info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3) var(--s-2); margin-top: var(--s-5); }
+  @media (min-width: 900px) { .info { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .info dt { margin-bottom: var(--s-1); color: var(--mustard); }
+  .info dd { font-size: var(--t-small); line-height: 1.5; }
+  .info a { text-decoration-thickness: 2px; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .wordmark { margin-top: var(--s-5); font-size: calc((100vw - 2 * var(--gutter)) / 3.36); line-height: .8; white-space: nowrap; color: var(--red); }
+  @supports (font-size: 1cqw) { .wordmark { font-size: calc(100cqw / 3.36); } }
+  .fine { margin-top: var(--s-3); font-size: var(--t-micro); max-width: 75ch; opacity: .8; }
+
+  .fab {
+    position: fixed; z-index: 20; right: var(--s-2); bottom: calc(var(--s-2) + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 .75rem 2rem rgba(0, 0, 0, .45); padding: 1em 1.3em;
+    transition: transform var(--d-base) var(--e-out), opacity var(--d-base) var(--e-out);
+  }
+  .fab.is-hidden { transform: translateY(calc(100% + 2rem)); opacity: 0; pointer-events: none; }
+
+  @media (max-width: 599px) {
+    .menu, .footer { padding-block: var(--s-4); }
+    .info, .wordmark { margin-top: var(--s-4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tag-btn, .btn, .item-name { transition: none; }
+    .fab { transition: opacity var(--d-fast); }
+    .fab.is-hidden { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section class="hero t-black" id="hero">
+    <p class="demo kicker">Proposta · cardápio digital demo</p>
+    <header class="top">
+      <a class="tag-btn tag-bone" href="#hero">Bruthus Burger</a>
+      <a class="tag-btn tag-mustard" href="https://wa.me/5586994552629?text=Ol%C3%A1!%20Vim%20pelo%20card%C3%A1pio%20digital%20e%20quero%20fazer%20um%20pedido." target="_blank" rel="noopener">Pedir ↗</a>
+    </header>
+
+    <div class="numeral display" aria-hidden="true"><span>1×</span><span>2×</span><span>3×</span><span>4×</span></div>
+
+    <div class="hero-stage">
+      <p class="kicker hero-kicker"><span class="intro">Hamburgueria genuinamente piauiense</span></p>
+      <h1 class="lockup display" aria-label="Bruthus Burger">
+        <span class="mask word"><span>Bruthus</span></span>
+        <span class="burger-wrap" aria-hidden="true">
+          <svg class="burger" viewBox="0 120 400 392" focusable="false">
+            <g class="drop" style="--k:0">
+              <path class="o bun" d="M56 440H344C344 472 326 492 296 492H104C74 492 56 472 56 440Z"/>
+              <path class="bun-line" d="M82 474C94 484 106 487 120 487H280C294 487 306 484 318 474"/>
+            </g>
+            <g class="unit"><g class="drop" style="--k:1">
+              <path class="o patty" d="M72 402H328C346 402 358 413 358 423C358 434 346 444 328 444H72C54 444 42 434 42 423C42 413 54 402 72 402Z"/>
+              <path class="grill" d="M86 428H140M170 432H250M276 426H330"/>
+              <path class="o cheese" d="M44 396H356L350 410H318V422A9 9 0 0 1 300 422V410H230V428A10 10 0 0 1 210 428V410H126V420A8 8 0 0 1 110 420V410H50Z"/>
+            </g></g>
+            <g class="unit extra">
+              <path class="o patty" d="M72 358H328C346 358 358 369 358 379C358 390 346 400 328 400H72C54 400 42 390 42 379C42 369 54 358 72 358Z"/>
+              <path class="grill" d="M86 384H140M170 388H250M276 382H330"/>
+              <path class="o cheese" d="M44 352H356L350 366H290V382A10 10 0 0 1 270 382V366H190V376A8 8 0 0 1 174 376V366H100V380A9 9 0 0 1 82 380V366H50Z"/>
+            </g>
+            <g class="unit extra">
+              <path class="o patty" d="M72 314H328C346 314 358 325 358 335C358 346 346 356 328 356H72C54 356 42 346 42 335C42 325 54 314 72 314Z"/>
+              <path class="grill" d="M86 340H140M170 344H250M276 338H330"/>
+              <path class="o cheese" d="M44 308H356L350 322H318V334A9 9 0 0 1 300 334V322H230V340A10 10 0 0 1 210 340V322H126V332A8 8 0 0 1 110 332V322H50Z"/>
+            </g>
+            <g class="unit extra">
+              <path class="o patty" d="M72 270H328C346 270 358 281 358 291C358 302 346 312 328 312H72C54 312 42 302 42 291C42 281 54 270 72 270Z"/>
+              <path class="grill" d="M86 296H140M170 300H250M276 294H330"/>
+              <path class="o cheese" d="M44 264H356L350 278H290V294A10 10 0 0 1 270 294V278H190V288A8 8 0 0 1 174 288V278H100V292A9 9 0 0 1 82 292V278H50Z"/>
+            </g>
+            <!-- pão de cima: desenhado no topo da torre de 4 carnes e descido 3 andares (132) para o Simples -->
+            <g transform="translate(0 132)"><g class="topbun"><g class="drop" style="--k:2">
+              <path class="o bun" d="M50 266C50 190 116 132 200 132C284 132 350 190 350 266C350 274 344 278 336 278H64C56 278 50 274 50 266Z"/>
+              <path class="bun-hi" d="M94 206C106 180 132 160 164 154"/>
+              <g class="seeds">
+                <ellipse cx="150" cy="174" rx="8" ry="3.6" transform="rotate(-24 150 174)"/>
+                <ellipse cx="204" cy="162" rx="8" ry="3.6" transform="rotate(8 204 162)"/>
+                <ellipse cx="256" cy="176" rx="8" ry="3.6" transform="rotate(26 256 176)"/>
+                <ellipse cx="116" cy="216" rx="8" ry="3.6" transform="rotate(-38 116 216)"/>
+                <ellipse cx="178" cy="204" rx="8" ry="3.6" transform="rotate(-6 178 204)"/>
+                <ellipse cx="234" cy="206" rx="8" ry="3.6" transform="rotate(14 234 206)"/>
+                <ellipse cx="292" cy="216" rx="8" ry="3.6" transform="rotate(36 292 216)"/>
+                <ellipse cx="148" cy="244" rx="8" ry="3.6" transform="rotate(-18 148 244)"/>
+                <ellipse cx="208" cy="238" rx="8" ry="3.6" transform="rotate(4 208 238)"/>
+                <ellipse cx="264" cy="246" rx="8" ry="3.6" transform="rotate(22 264 246)"/>
+              </g>
+            </g></g></g>
+          </svg>
+        </span>
+      </h1>
+      <div class="hero-cta"><a class="btn btn-bone intro" href="#burgers">Ver cardápio ↓</a></div>
+    </div>
+
+    <div class="captions" aria-hidden="true">
+      <p class="cap"><span class="kicker">1 carne</span><span class="cap-t display">Simples</span><span>O começo de tudo.</span></p>
+      <p class="cap"><span class="kicker">2 carnes</span><span class="cap-t display">Duplo</span><span>Agora sim.</span></p>
+      <p class="cap"><span class="kicker">3 carnes</span><span class="cap-t display">Triplo</span><span>Respeito.</span></p>
+      <p class="cap"><span class="kicker">4 carnes</span><span class="cap-t display">Bruto.</span><span>Pra quem aguenta.</span></p>
+      <p class="cap cap-final"><span class="kicker">Bruthus Burger</span><span class="cap-t display">Quanto mais,<br>mais bruto.</span><span>Escolha o seu peso ↓</span></p>
+    </div>
+  </section>
+
+  <!--
+    ============ CARDÁPIO ============
+    ATENÇÃO: itens e preços de EXEMPLO (o cardápio real da Bruthus não estava disponível na web).
+    Para editar: cada <li class="item"> é um produto (número, nome, preço e descrição).
+  -->
+  <section class="menu t-bone" id="burgers" aria-labelledby="t-peso">
+    <div class="menu-head">
+      <p class="kicker">01 — Burgers</p>
+      <h2 class="menu-title display reveal" id="t-peso"><span class="mask"><span>Escolha</span></span><span class="mask"><span>o peso.</span></span></h2>
+      <p class="menu-note"><strong>Itens e preços de exemplo.</strong> Na versão final, entra aqui o cardápio real da casa.</p>
+    </div>
+    <div>
+      <ul class="items">
+        <li class="item">
+          <span class="x display" aria-hidden="true">1×</span>
+          <h3 class="item-name display"><span class="mask"><span>Simples</span></span></h3>
+          <p class="price">R$ 19</p>
+          <p class="desc">1 carne, queijo e pão selado na chapa.</p>
+        </li>
+        <li class="item">
+          <span class="x display" aria-hidden="true">2×</span>
+          <h3 class="item-name display"><span class="mask"><span>Duplo</span></span></h3>
+          <p class="price">R$ 26</p>
+          <p class="desc">2 carnes e queijo em dobro.</p>
+        </li>
+        <li class="item">
+          <span class="x display" aria-hidden="true">3×</span>
+          <h3 class="item-name display"><span class="mask"><span>Triplo</span></span></h3>
+          <p class="price">R$ 33</p>
+          <p class="desc">3 carnes. Respeito.</p>
+        </li>
+        <li class="item">
+          <span class="x display" aria-hidden="true">4×</span>
+          <h3 class="item-name display"><span class="mask"><span>Bruto</span></span></h3>
+          <p class="price">R$ 39</p>
+          <p class="desc">4 carnes. Pra quem aguenta.</p>
+        </li>
+      </ul>
+      <div class="sides">
+        <p class="kicker">Pra acompanhar</p>
+        <ul><li>Batata palito P</li><li>Bebidas</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAIXA DE CONTRASTE ============ -->
+  <section class="band t-red" aria-label="Genuinamente piauiense">
+    <div class="tracks display" aria-hidden="true">
+      <div class="track">
+        <span>Genuinamente piauiense</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Parnaíba</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Genuinamente piauiense</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Parnaíba</span>
+      </div>
+      <div class="track track-outline">
+        <span>Simples</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Duplo</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Triplo</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Bruto</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Simples</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Duplo</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Triplo</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Bruto</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ RODAPÉ ============ -->
+<footer class="footer t-black" id="pedir">
+  <div class="footer-cta">
+    <p class="kicker" style="color: var(--mustard)">Quarta a segunda · 18h às 23h</p>
+    <h2 class="footer-title display reveal"><span class="mask"><span>Fome</span></span><span class="mask"><span>de bruto?</span></span></h2>
+    <a class="btn btn-mustard" href="https://wa.me/5586994552629?text=Ol%C3%A1!%20Vim%20pelo%20card%C3%A1pio%20digital%20e%20quero%20fazer%20um%20pedido." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a>
+    <a class="alt" href="https://www.ifood.com.br/delivery/parnaiba-pi/bruthus-hamburgueria-frei-higino/7e63746e-1ebb-4706-ba43-200d150e5453" target="_blank" rel="noopener">ou peça pelo iFood ↗</a>
+  </div>
+  <dl class="info">
+    <div><dt class="kicker">Endereço</dt><dd>Av. São Sebastião, 3500<br>Parnaíba–PI</dd></div>
+    <div><dt class="kicker">Horário</dt><dd>Quarta a segunda<br>18h às 23h · fecha às terças</dd></div>
+    <div><dt class="kicker">WhatsApp</dt><dd><a href="https://wa.me/5586994552629" target="_blank" rel="noopener">(86) 99455-2629</a></dd></div>
+    <div><dt class="kicker">Instagram</dt><dd><a href="https://www.instagram.com/bruthusphb/" target="_blank" rel="noopener">@bruthusphb</a></dd></div>
+  </dl>
+  <p class="wordmark display" aria-hidden="true">Bruthus</p>
+  <p class="fine">Proposta de cardápio digital para apresentação. Itens e preços do cardápio são exemplos; endereço, horário e contatos vêm do perfil público da casa (out/2026). Confirme tudo com a Bruthus Burger.</p>
+</footer>
+
+<a class="tag-btn tag-mustard fab" href="https://wa.me/5586994552629?text=Ol%C3%A1!%20Vim%20pelo%20card%C3%A1pio%20digital%20e%20quero%20fazer%20um%20pedido." target="_blank" rel="noopener">WhatsApp ↗</a>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+  const root = document.documentElement;
+  const hero = document.getElementById('hero');
+  const fab = document.querySelector('.fab');
+
+  // Botão flutuante: escondido no topo e quando o botão do rodapé já está na tela
+  if (fab && 'IntersectionObserver' in window) {
+    const visible = new Map();
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => visible.set(e.target, e.isIntersecting));
+      fab.classList.toggle('is-hidden', [...visible.values()].some(Boolean));
+    });
+    [hero, document.querySelector('.footer-cta')].forEach(el => el && io.observe(el));
+  }
+
+  // Sem animação (movimento reduzido ou bibliotecas indisponíveis): a página fica estática
+  if (!root.classList.contains('js-motion') || !window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  if (window.Lenis) {
+    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      const target = a && a.hash.length > 1 && document.querySelector(a.hash);
+      if (target) { e.preventDefault(); lenis.scrollTo(target); }
+    });
+  }
+
+  // ---------- Hero: a cada passo do scroll cai mais uma carne ----------
+  const U = 44; // altura de um andar (carne + queijo) no desenho
+  const wrap = hero.querySelector('.burger-wrap');
+  const top = hero.querySelector('.topbun');
+  const extras = gsap.utils.toArray(hero.querySelectorAll('.unit.extra')); // 2ª, 3ª e 4ª carne
+  const nums = gsap.utils.toArray(hero.querySelectorAll('.numeral span'));
+  const caps = gsap.utils.toArray(hero.querySelectorAll('.cap:not(.cap-final)'));
+  const capFinal = hero.querySelector('.cap-final');
+
+  gsap.matchMedia().add({
+    wide: '(min-aspect-ratio: 1/1) and (min-width: 600px)',
+    narrow: 'not all and (min-aspect-ratio: 1/1) and (min-width: 600px)'
+  }, ctx => {
+    const { wide } = ctx.conditions;
+
+    // Onde a torre cresce: à direita no desktop (legenda à esquerda), no alto no celular
+    const geo = () => {
+      const h = hero.getBoundingClientRect(), r = wrap.getBoundingClientRect();
+      const cx = r.left + r.width / 2 - gsap.getProperty(wrap, 'x') - h.left;
+      const cy = r.top + r.height / 2 - gsap.getProperty(wrap, 'y') - h.top;
+      const W = hero.clientWidth, H = hero.clientHeight;
+      const s = Math.min(wide ? 1.3 : 1.1, (wide ? .86 : .58) * H / (.98 * wrap.offsetWidth));
+      return { x: (wide ? .64 * W : W / 2) - cx, y: (wide ? .52 : .44) * H - cy, s };
+    };
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut' },
+      scrollTrigger: { trigger: hero, start: 'top top', end: '+=240%', pin: true, scrub: 1, anticipatePin: 1, invalidateOnRefresh: true }
+    });
+    tl.to(hero.querySelector('.word'), { opacity: .1, scale: .92, duration: 1 }, 0)
+      .to(hero.querySelectorAll('.hero-kicker, .hero-cta'), { opacity: 0, y: -20, duration: .5 }, 0)
+      .to(wrap, { x: () => geo().x, y: () => geo().y, scale: () => geo().s, duration: 1.4 }, .2)
+      .fromTo(nums[0], { opacity: 0, scale: .85 }, { opacity: 1, scale: 1, duration: .6, ease: 'power3.out' }, .6)
+      .fromTo(caps[0], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .45, ease: 'power3.out' }, .8);
+
+    extras.forEach((unit, i) => {
+      const t = 1.8 + i * 1.8, floors = i + 1; // andares acima da 1ª carne
+      tl.to(caps[i], { opacity: 0, y: -40, duration: .35, ease: 'power2.in' }, t - .1)
+        .to(top, { y: -floors * U - 70, duration: .5, ease: 'power2.out' }, t)
+        .fromTo(unit, { autoAlpha: 0, y: -560 }, { autoAlpha: 1, y: 0, duration: .5, ease: 'power2.in' }, t + .35)
+        .to(top, { y: -floors * U, duration: .45, ease: 'bounce.out' }, t + .85)
+        .to(nums[i], { opacity: 0, scale: 1.15, duration: .4 }, t + .7)
+        .fromTo(nums[i + 1], { opacity: 0, scale: .85 }, { opacity: 1, scale: 1, duration: .5, ease: 'power3.out' }, t + .8)
+        .fromTo(caps[i + 1], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .45, ease: 'power3.out' }, t + .85);
+    });
+
+    tl.to(caps[3], { opacity: 0, y: -40, duration: .35, ease: 'power2.in' }, 7)
+      .to(nums[3], { color: getComputedStyle(root).getPropertyValue('--red').trim(), duration: .6 }, 7.1)
+      .fromTo(capFinal, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .5, ease: 'power3.out' }, 7.3)
+      .to({}, { duration: .6 });
+  });
+
+  // ---------- Títulos: a linha sobe de dentro da máscara ----------
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.from(el.querySelectorAll('.mask > span'), {
+      yPercent: 180, duration: .9, ease: 'power3.out', stagger: .08,
+      scrollTrigger: { trigger: el, start: 'top 85%' }
+    });
+  });
+
+  // ---------- Itens do cardápio ----------
+  gsap.utils.toArray('.item').forEach(item => {
+    gsap.timeline({ scrollTrigger: { trigger: item, start: 'top 88%' } })
+      .from(item, { '--rule': '0%', duration: .9, ease: 'power3.out' })
+      .from(item.querySelectorAll('.item-name .mask > span'), { yPercent: 180, duration: .9, ease: 'power3.out' }, 0)
+      .from(item.querySelectorAll('.x, .price, .desc'), { opacity: 0, y: 16, duration: .6, ease: 'power3.out', stagger: .07 }, .15);
+  });
+
+  // ---------- Faixa: as palavras correm com o scroll ----------
+  gsap.utils.toArray('.track').forEach((track, i) => {
+    gsap.fromTo(track, { xPercent: i % 2 ? -30 : 0 }, {
+      xPercent: i % 2 ? 0 : -30, ease: 'none',
+      scrollTrigger: { trigger: track.closest('section'), start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+  });
+
+  // ---------- Marca gigante do rodapé ----------
+  gsap.from('.wordmark', {
+    yPercent: 30, opacity: 0, ease: 'none',
+    scrollTrigger: { trigger: '.wordmark', start: 'top bottom', end: 'bottom bottom', scrub: true }
+  });
+
+  if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>
