@@ -1,8 +1,17 @@
 # Cardápio digital – Bruthus Burger (Parnaíba-PI)
 
 Estilo bruto: preto, vermelho e mostarda, fonte Big Shoulders Display. Com o
-scroll, o burger ganha mais carnes (1× → 4×) com o número gigante atrás.
+scroll, um hambúrguer 3D realista (three.js, feito em código: pão com gergelim,
+carne, cheddar e alface) gira e ganha mais carnes (1× → 4×), com o número
+gigante atrás. Sem WebGL, aparece a ilustração com a mesma animação.
 Um único arquivo: `index.html`.
+
+## Pedido pelo WhatsApp
+- Cada burger e acompanhamento tem "+ Adicionar", que vira contador (− 1 +)
+- O botão flutuante mostra "Ver pedido (n) · total" e abre a tela do pedido:
+  nome, entrega ou retirada, endereço, pagamento e observações
+- "Enviar pedido no WhatsApp" abre a conversa com (86) 99455-2629 e a mensagem pronta
+- Sem JavaScript, cada item vira um link direto para o WhatsApp
 
 ## ATENÇÃO: cardápio de exemplo
 O cardápio real da Bruthus não estava disponível na web. Os burgers

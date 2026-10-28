@@ -9,7 +9,7 @@ anexo do WhatsApp e até sem internet (os botões de pedido precisam de internet
 | `cardapio-vila-burguer.html` | Vila Burguer |
 | `cardapio-baru-burgers.html` | Baru Burgers |
 | `cardapio-sorveteria-araujo.html` | Sorveteria Araújo |
-| `cardapio-bruthus-burger.html` | Bruthus Burger (itens de exemplo) |
+| `cardapio-bruthus-burger.html` | Bruthus Burger: burger 3D e pedido pelo WhatsApp (itens de exemplo) |
 
 As versões para editar ficam nas pastas de cada estabelecimento (`index.html`).
 Depois de editar, gere de novo:
