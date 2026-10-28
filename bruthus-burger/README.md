@@ -1,14 +1,14 @@
 # Cardápio digital – Bruthus Burger (Parnaíba-PI)
 
 Estilo bruto: preto, vermelho e mostarda, fonte Big Shoulders Display.
-No topo, um Duplo realista; com o scroll ele se abre camada por camada no ar
-(pão com gergelim, carne + cheddar, carne + cheddar, tomate, alface, pão), com
-o nome de cada camada ao lado, e depois fecha de novo.
+No topo, a foto de um burger (pão com gergelim, alface e molho, tomate e cebola
+roxa, bacon, cheddar e carne); com o scroll ele se abre camada por camada no ar,
+com o nome de cada camada ao lado, e depois fecha de novo.
 
-As imagens ficam em `img/`: `camada-0` a `camada-5` (de baixo para cima) e as
-fotos do cardápio (`simples`, `duplo`, `triplo`, `bruto`). São renderizações 3D
-ilustrativas. Para usar fotos reais da casa, troque os arquivos mantendo os
-nomes (cada camada recortada com fundo transparente, no mesmo enquadramento).
+As imagens ficam em `img/`: `camada-0` a `camada-5` (de baixo para cima) são
+recortes da foto enviada, com fundo transparente e no mesmo enquadramento. As
+fotos do cardápio (`simples`, `duplo`, `triplo`, `bruto`) ainda são renderizações
+3D ilustrativas. Para trocar por fotos reais, substitua os arquivos mantendo os nomes.
 
 ## Pedido pelo WhatsApp
 - Cada burger e acompanhamento tem "+ Adicionar", que vira contador (− 1 +)

@@ -149,7 +149,7 @@
   .cap-t { display: block; font-size: var(--t-cap); margin-block: .12em .08em; }
   .js-motion .lbl {
     display: flex; position: absolute; z-index: 3; align-items: center; gap: .5em; translate: 0 -50%; opacity: 0;
-    font: 900 clamp(1rem, 4.6vw, 1.75rem)/1 var(--font-display); text-transform: uppercase; color: var(--bone); pointer-events: none;
+    font: 900 clamp(.9rem, 3.9vw, 1.75rem)/1 var(--font-display); text-transform: uppercase; color: var(--bone); pointer-events: none;
   }
   .lbl::before { content: ""; flex: none; width: 1.1em; height: 3px; background: var(--mustard); }
   @media (min-aspect-ratio: 1/1) and (min-width: 600px) {
@@ -305,12 +305,12 @@
         <span class="mask word"><span>Bruthus</span></span>
         <span class="burger-wrap" aria-hidden="true">
           <span class="stack">
-            <span class="layer" style="left:11.3%;top:60.4%;width:77.4%"><img class="drop" style="--k:0" src="img/camada-0.webp" alt="" width="774" height="341"></span>
-            <span class="layer" style="left:5.8%;top:58.6%;width:86.8%"><img class="drop" style="--k:1" src="img/camada-1.webp" alt="" width="868" height="263"></span>
-            <span class="layer" style="left:15.1%;top:56.8%;width:70.2%"><img class="drop" style="--k:2" src="img/camada-2.webp" alt="" width="702" height="157"></span>
-            <span class="layer" style="left:1.1%;top:44.1%;width:97.7%"><img class="drop" style="--k:3" src="img/camada-3.webp" alt="" width="977" height="340"></span>
-            <span class="layer" style="left:0.6%;top:34.4%;width:97.0%"><img class="drop" style="--k:4" src="img/camada-4.webp" alt="" width="970" height="306"></span>
-            <span class="layer" style="left:9.0%;top:7.4%;width:82.0%"><img class="drop" style="--k:5" src="img/camada-5.webp" alt="" width="820" height="426"></span>
+            <span class="layer" style="left:9.4%;top:70.2%;width:80.5%"><img class="drop" style="--k:0" src="img/camada-0.webp" alt="" width="805" height="248"></span>
+            <span class="layer" style="left:8.5%;top:56.5%;width:80.3%"><img class="drop" style="--k:1" src="img/camada-1.webp" alt="" width="803" height="200"></span>
+            <span class="layer" style="left:1.8%;top:49.6%;width:93.7%"><img class="drop" style="--k:2" src="img/camada-2.webp" alt="" width="937" height="154"></span>
+            <span class="layer" style="left:6.5%;top:43.3%;width:84.7%"><img class="drop" style="--k:3" src="img/camada-3.webp" alt="" width="847" height="91"></span>
+            <span class="layer" style="left:1.8%;top:33.3%;width:98.2%"><img class="drop" style="--k:4" src="img/camada-4.webp" alt="" width="982" height="183"></span>
+            <span class="layer" style="left:3.2%;top:3.3%;width:93.1%"><img class="drop" style="--k:5" src="img/camada-5.webp" alt="" width="931" height="344"></span>
           </span>
         </span>
       </h1>
@@ -318,14 +318,14 @@
     </div>
 
     <div class="captions" aria-hidden="true">
-      <p class="cap cap-a"><span class="kicker">O Duplo, aberto</span><span class="cap-t display">Camada<br>por camada.</span></p>
+      <p class="cap cap-a"><span class="kicker">O burger da casa, aberto</span><span class="cap-t display">Camada<br>por camada.</span></p>
       <p class="cap cap-b"><span class="kicker">Fechou.</span><span class="cap-t display">Agora é<br>com você.</span><span>Escolha o seu ↓</span></p>
     </div>
     <p class="lbl" aria-hidden="true">Pão selado</p>
-    <p class="lbl" aria-hidden="true">Alface</p>
-    <p class="lbl" aria-hidden="true">Tomate</p>
     <p class="lbl" aria-hidden="true">Carne + cheddar</p>
-    <p class="lbl" aria-hidden="true">Carne + cheddar</p>
+    <p class="lbl" aria-hidden="true">Bacon</p>
+    <p class="lbl" aria-hidden="true">Tomate e cebola roxa</p>
+    <p class="lbl" aria-hidden="true">Alface + molho</p>
     <p class="lbl" aria-hidden="true">Pão com gergelim</p>
   </section>
 
@@ -584,7 +584,7 @@
   });
   paint();
 
-  // ============ HERO: o Duplo se abre camada por camada ============
+  // ============ HERO: o burger da casa se abre camada por camada ============
   const motionOK = root.classList.contains('js-motion') && window.gsap && window.ScrollTrigger;
   if (!motionOK) return; // movimento reduzido ou sem bibliotecas: o burger fica montado, parado
 
@@ -609,15 +609,19 @@
   const SPREAD = 0.13;                          // distância entre camadas, em fração da largura do burger
   const TILT = [1.5, -2, 2.5, -1.5, 2, -2.5];   // leve inclinação de cada camada no ar
 
-  // nomes à direita do burger, na altura de cada camada
+  // nomes à direita do burger, na altura de cada camada (e sem encavalar um no outro)
   const placeLabels = () => {
     const h = hero.getBoundingClientRect(), w = wrap.getBoundingClientRect();
     const left = w.right - h.left + 10, room = hero.clientWidth - left - 16;
-    labels.forEach((l, i) => {
-      const r = layers[i].getBoundingClientRect();
+    const items = labels.map((l, i) => {
       l.style.left = `${left}px`;
       l.style.maxWidth = `${room}px`;
-      l.style.top = `${r.top - h.top + r.height / 2}px`;
+      const r = layers[i].getBoundingClientRect();
+      return { l, y: r.top - h.top + r.height / 2, half: l.offsetHeight / 2 };
+    }).sort((a, b) => a.y - b.y);
+    items.forEach((it, k) => {
+      if (k) it.y = Math.max(it.y, items[k - 1].y + items[k - 1].half + it.half + 6);
+      it.l.style.top = `${it.y}px`;
     });
   };
 
@@ -633,7 +637,7 @@
       const cx = r.left + r.width / 2 - gsap.getProperty(wrap, 'x') - h.left;
       const cy = r.top + r.height / 2 - gsap.getProperty(wrap, 'y') - h.top;
       const W = hero.clientWidth, H = hero.clientHeight, bw = wrap.offsetWidth;
-      const s = wide ? Math.min(1.25, .84 * H / (1.52 * bw)) : Math.min(.62 * W / bw, .6 * H / (1.52 * bw));
+      const s = wide ? Math.min(1.25, .84 * H / (1.52 * bw)) : Math.min(.56 * W / bw, .6 * H / (1.52 * bw));
       return { x: (wide ? .5 * W : .05 * W + s * bw / 2) - cx, y: (wide ? .52 : .6) * H - cy, s };
     };
 
