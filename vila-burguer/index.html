@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardápio Vila Burguer</title>
+<meta name="description" content="Cardápio digital da Vila Burguer, hamburgueria em Parnaíba-PI: smash, clássicos, burgers da casa e combos.">
+<meta name="theme-color" content="#FF5A1F">
+<script>try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-motion'); } catch (e) {}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;800&display=swap" rel="stylesheet">
+<style>
+  /* ============ TOKENS ============ */
+  :root {
+    /* cor — marca */
+    --orange: #FF5A1F;
+    --magenta: #E5197E;
+    --yellow: #FFC414;
+    --ink: #2B0D04;
+    --cream: #FFF1DE;
+    /* cor — ilustração do burger */
+    --bun: #E3923A;
+    --bun-dark: #C47426;
+    --bun-hi: #FFD27A;
+    --lettuce: #4CBB4F;
+    --tomato: #E8402C;
+    --patty: #5A2A14;
+    --patty-dark: #3A1708;
+    --cheese: #FFC414;
+    --shadow: rgba(0, 0, 0, .2);
+    /* padrão de gergelim, tom sobre tom */
+    --seeds-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='rgba(43,13,4,.08)'%3E%3Cellipse cx='22' cy='26' rx='9' ry='4' transform='rotate(-25 22 26)'/%3E%3Cellipse cx='94' cy='16' rx='9' ry='4' transform='rotate(20 94 16)'/%3E%3Cellipse cx='138' cy='72' rx='9' ry='4' transform='rotate(-50 138 72)'/%3E%3Cellipse cx='60' cy='90' rx='9' ry='4' transform='rotate(35 60 90)'/%3E%3Cellipse cx='112' cy='130' rx='9' ry='4' transform='rotate(-10 112 130)'/%3E%3Cellipse cx='26' cy='142' rx='9' ry='4' transform='rotate(60 26 142)'/%3E%3C/g%3E%3C/svg%3E");
+    --seeds-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='rgba(255,241,222,.05)'%3E%3Cellipse cx='22' cy='26' rx='9' ry='4' transform='rotate(-25 22 26)'/%3E%3Cellipse cx='94' cy='16' rx='9' ry='4' transform='rotate(20 94 16)'/%3E%3Cellipse cx='138' cy='72' rx='9' ry='4' transform='rotate(-50 138 72)'/%3E%3Cellipse cx='60' cy='90' rx='9' ry='4' transform='rotate(35 60 90)'/%3E%3Cellipse cx='112' cy='130' rx='9' ry='4' transform='rotate(-10 112 130)'/%3E%3Cellipse cx='26' cy='142' rx='9' ry='4' transform='rotate(60 26 142)'/%3E%3C/g%3E%3C/svg%3E");
+
+    /* tipo */
+    --font-display: "Anton", "Impact", "Arial Narrow", sans-serif;
+    --font-body: "Archivo", system-ui, sans-serif;
+    --t-h2: clamp(3.5rem, 20vw, 7.5rem);
+    --t-item: clamp(3rem, 14vw, 6.5rem);
+    --t-price: clamp(1.6rem, 3.4vw, 2.75rem);
+    --t-cap: clamp(2.75rem, 11vw, 6rem);
+    --t-band: clamp(2.75rem, 11vw, 7.5rem);
+    --t-track: clamp(4.5rem, 16vw, 12rem);
+    --t-footer: clamp(4.5rem, 24vw, 13rem);
+    --t-body: clamp(1rem, 1.05vw, 1.125rem);
+    --t-small: .875rem;
+    --t-micro: .6875rem;
+
+    /* espaço */
+    --s-1: .5rem; --s-2: 1rem; --s-3: 2rem;
+    --s-4: 4rem; --s-5: 8rem; --s-6: 12rem;
+    --gutter: clamp(1.25rem, 5vw, 6rem);
+    --demo-h: 2rem;
+    --stroke: 3px;
+    --pill: 999px;
+
+    /* movimento */
+    --e-out: cubic-bezier(.16, 1, .3, 1);
+    --e-pop: cubic-bezier(.34, 1.56, .64, 1);
+    --d-fast: .25s; --d-base: .6s; --d-slow: 1.2s;
+
+    --vh: 1vh;
+  }
+  @supports (height: 1svh) { :root { --vh: 1svh; } }
+
+  /* temas de bloco */
+  .t-orange  { --bg: var(--orange);  --fg: var(--ink);   --hi: var(--cream);   --seeds: var(--seeds-dark); }
+  .t-magenta { --bg: var(--magenta); --fg: var(--cream); --hi: var(--yellow);  --seeds: var(--seeds-dark); }
+  .t-yellow  { --bg: var(--yellow);  --fg: var(--ink);   --hi: var(--magenta); --seeds: var(--seeds-dark); }
+  .t-cream   { --bg: var(--cream);   --fg: var(--ink);   --hi: var(--magenta); --seeds: var(--seeds-dark); }
+  .t-ink     { --bg: var(--ink);     --fg: var(--cream); --hi: var(--orange);  --seeds: var(--seeds-light); }
+  .t-orange, .t-magenta, .t-yellow, .t-cream, .t-ink {
+    background-color: var(--bg);
+    background-image: var(--seeds);
+    color: var(--fg);
+    --line: color-mix(in oklab, var(--fg) 30%, transparent);
+  }
+
+  /* ============ BASE ============ */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
+  body {
+    --fg: var(--ink);
+    background: var(--ink);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--t-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: var(--stroke) solid var(--fg); outline-offset: 4px; }
+  .display { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; line-height: .9; letter-spacing: -.005em; }
+  .kicker { font: 800 var(--t-micro)/1.4 var(--font-body); letter-spacing: .18em; text-transform: uppercase; }
+  /* máscara de revelação: folga extra para acentos (Í) e cedilha (Ç) do Anton */
+  .mask { display: block; overflow: hidden; padding: .28em .03em .34em; margin: -.28em -.03em -.34em; }
+  .mask > span { display: block; }
+
+  .demo {
+    position: absolute; inset: 0 0 auto; z-index: 6;
+    height: var(--demo-h); display: flex; align-items: center; justify-content: center;
+    padding-inline: var(--gutter); white-space: nowrap; overflow: hidden;
+    font: 800 var(--t-micro)/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase;
+  }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: .5em;
+    padding: .8em 1.15em; border-radius: var(--pill); border: 2px solid var(--ink);
+    font: 800 var(--t-micro)/1 var(--font-body); letter-spacing: .16em; text-transform: uppercase;
+    text-decoration: none; transition: transform var(--d-fast) var(--e-out);
+  }
+  .pill:hover { transform: translateY(-2px); }
+  .pill-cream { background: var(--cream); color: var(--ink); }
+  .pill-ink { background: var(--ink); color: var(--cream); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: .6em;
+    padding: 1.1em 1.7em; border-radius: var(--pill);
+    font: 800 var(--t-small)/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase;
+    text-decoration: none; transition: transform var(--d-fast) var(--e-out);
+  }
+  .btn:hover { transform: translateY(-3px) rotate(-1.5deg); }
+  .btn-ink { background: var(--ink); color: var(--cream); }
+  .btn-orange { background: var(--orange); color: var(--ink); }
+
+  /* ============ HERO ============ */
+  .hero {
+    position: relative; overflow: hidden;
+    height: calc(var(--vh) * 100); min-height: 36rem;
+    --lock-w: min(92vw, calc((var(--vh) * 100 - var(--demo-h) - 14rem) / 1.29));
+    --burger-w: calc(var(--lock-w) * .85);
+  }
+  .top {
+    position: absolute; inset: var(--demo-h) 0 auto; z-index: 5;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--s-2) var(--gutter);
+  }
+  .hero-stage {
+    height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: var(--s-2); padding: calc(4.5rem + var(--demo-h)) var(--gutter) var(--s-3); text-align: center;
+  }
+  .hero-kicker .intro, .hero-cta .intro { display: inline-flex; }
+  .lockup { display: flex; flex-direction: column; align-items: center; }
+  .lockup .m1 { font-size: calc(var(--lock-w) / 1.6); }
+  .lockup .m2 { font-size: calc(var(--lock-w) / 3.3); }
+  .burger-wrap {
+    position: relative; z-index: 2; display: block; width: var(--burger-w);
+    margin-block: calc(var(--burger-w) * -.13) calc(var(--burger-w) * -.1);
+  }
+  @media (min-aspect-ratio: 1/1) and (min-width: 600px) {
+    .hero {
+      --f: min(calc(92vw / 6.2), calc((var(--vh) * 100 - var(--demo-h) - 14rem) / 1.4));
+      --burger-w: calc(var(--f) * 1.7);
+    }
+    .lockup { flex-direction: row; font-size: var(--f); }
+    .lockup .m1, .lockup .m2 { font-size: 1em; }
+    .burger-wrap { margin: 0 calc(var(--burger-w) * -.12); }
+  }
+
+  .burger { display: block; width: 100%; height: auto; overflow: visible; }
+  .burger .o { stroke: var(--ink); stroke-width: 6; stroke-linejoin: round; }
+  .burger .bun { fill: var(--bun); }
+  .burger .bun-line { fill: none; stroke: var(--bun-dark); stroke-width: 6; stroke-linecap: round; }
+  .burger .bun-hi { fill: none; stroke: var(--bun-hi); stroke-width: 9; stroke-linecap: round; }
+  .burger .seeds ellipse { fill: var(--cream); stroke: var(--ink); stroke-width: 2.5; }
+  .burger .patty { fill: var(--patty); }
+  .burger .patty-dots { fill: var(--patty-dark); }
+  .burger .cheese { fill: var(--cheese); }
+  .burger .tomato { fill: var(--tomato); }
+  .burger .lettuce { fill: var(--lettuce); }
+  .burger .shadow { fill: var(--shadow); }
+
+  .badge { position: absolute; top: -2%; right: -4%; width: 30%; rotate: 12deg; overflow: visible; }
+  .badge-bg { fill: var(--yellow); stroke: var(--ink); stroke-width: 3; }
+  .badge-text { font: 800 10px var(--font-body); letter-spacing: .08em; text-transform: uppercase; fill: var(--ink); }
+  .badge-center { font: 24px var(--font-display); fill: var(--ink); }
+
+  /* legendas da montagem (só existem com animação) */
+  .captions { display: none; }
+  .js-motion .captions {
+    display: block; position: absolute; z-index: 3; height: 0;
+    left: var(--gutter); right: var(--gutter); bottom: var(--s-3);
+    color: var(--cream); pointer-events: none;
+  }
+  .cap { position: absolute; left: 0; bottom: 0; max-width: 30rem; opacity: 0; }
+  .cap-n { color: var(--yellow); }
+  .cap-t { display: block; font-size: var(--t-cap); margin-block: .12em .08em; }
+  .cap-d { font-size: var(--t-body); }
+  @media (min-aspect-ratio: 1/1) and (min-width: 600px) {
+    .js-motion .captions { right: auto; bottom: auto; top: 50%; width: min(36vw, 30rem); }
+    .cap { bottom: auto; top: 0; translate: 0 -50%; }
+  }
+
+  /* entrada da página (CSS puro, não depende das bibliotecas) */
+  @keyframes rise { from { transform: translateY(180%); } }
+  @keyframes drop { from { transform: translateY(-160px); opacity: 0; } }
+  @keyframes fade-up { from { transform: translateY(16px); opacity: 0; } }
+  @keyframes pop { from { transform: scale(0); } }
+  .js-motion .hero .mask > span { animation: rise var(--d-slow) var(--e-out) both; }
+  .js-motion .hero .m2 > span { animation-delay: .12s; }
+  .js-motion .hero .drop { animation: drop .75s var(--e-pop) both; animation-delay: calc(.3s + var(--k) * .09s); }
+  .js-motion .hero .intro { animation: fade-up var(--d-base) var(--e-out) .95s both; }
+  .js-motion .hero .badge-pop { transform-origin: 50px 50px; animation: pop var(--d-base) var(--e-pop) 1.1s both; }
+
+  /* ============ CARDÁPIO ============ */
+  .menu { display: grid; gap: var(--s-4); padding: var(--s-5) var(--gutter); }
+  .menu-head { display: grid; gap: var(--s-2); align-content: start; }
+  .menu-title { font-size: var(--t-h2); margin-bottom: .22em; }
+  .menu-note { max-width: 34ch; }
+  @media (min-width: 900px) {
+    .menu { grid-template-columns: 5fr 7fr; gap: var(--s-4); }
+    .menu-head { position: sticky; top: 14vh; align-self: start; }
+    .menu-title { font-size: clamp(4rem, 9vw, 9rem); }
+  }
+  .items { list-style: none; }
+  .item {
+    --rule: 100%;
+    padding-block: var(--s-3);
+    background: linear-gradient(var(--line), var(--line)) 0 0 / var(--rule) var(--stroke) no-repeat;
+  }
+  .item:last-child { border-bottom: var(--stroke) solid var(--line); }
+  .item-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; column-gap: var(--s-2); }
+  .item-name { font-size: var(--t-item); transition: transform var(--d-base) var(--e-out); }
+  .price { font-family: var(--font-display); font-size: var(--t-price); line-height: 1; text-align: right; white-space: nowrap; }
+  .price small { display: block; margin-bottom: .45em; font: 800 var(--t-micro)/1 var(--font-body); letter-spacing: .16em; text-transform: uppercase; }
+  .desc { display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem .6rem; margin-top: max(var(--s-1), calc(var(--t-item) * .3)); max-width: 46ch; }
+  .tag {
+    padding: .5em .75em; border-radius: var(--pill); background: var(--fg); color: var(--bg);
+    font: 800 var(--t-micro)/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase;
+  }
+  @media (hover: hover) { .item:hover .item-name { transform: translateX(.06em); } }
+
+  /* ============ FAIXA PARNAÍBA ============ */
+  .band { padding-block: var(--s-5); overflow: hidden; }
+  .band-head { display: grid; gap: var(--s-2); padding-inline: var(--gutter); max-width: 62rem; }
+  .band-title { font-size: var(--t-band); }
+  .tracks { margin-top: var(--s-4); font-size: var(--t-track); display: grid; gap: .08em; }
+  .track { display: flex; align-items: center; gap: .28em; width: max-content; white-space: nowrap; }
+  .track-outline { color: transparent; -webkit-text-stroke: max(2px, .012em) var(--fg); }
+  .sep { width: .34em; height: .17em; fill: var(--hi); flex: none; }
+
+  /* ============ RODAPÉ ============ */
+  .footer {
+    container-type: inline-size; overflow: hidden;
+    padding: var(--s-5) var(--gutter) calc(var(--s-4) + 3rem);
+  }
+  .footer-cta { display: grid; gap: var(--s-3); justify-items: start; }
+  .footer-title { font-size: var(--t-footer); }
+  .info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3) var(--s-2); margin-top: var(--s-5); }
+  @media (min-width: 900px) { .info { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .info dt { margin-bottom: var(--s-1); color: var(--hi); }
+  .info dd { font-size: var(--t-small); line-height: 1.5; }
+  .info a { text-decoration-thickness: 2px; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .wordmark {
+    margin-top: var(--s-5); font-size: calc((100vw - 2 * var(--gutter)) / 5.15); line-height: .82; white-space: nowrap;
+  }
+  @supports (font-size: 1cqw) { .wordmark { font-size: calc(100cqw / 5.15); } }
+  .fine { margin-top: var(--s-3); font-size: var(--t-micro); letter-spacing: .04em; max-width: 70ch; opacity: .85; }
+
+  /* botão flutuante de pedido */
+  .fab {
+    position: fixed; z-index: 20; right: var(--s-2); bottom: calc(var(--s-2) + env(safe-area-inset-bottom, 0px));
+    border-color: var(--cream); box-shadow: 0 .75rem 2rem rgba(0, 0, 0, .3);
+    padding: 1em 1.4em;
+    transition: transform var(--d-base) var(--e-out), opacity var(--d-base) var(--e-out);
+  }
+  .fab.is-hidden { transform: translateY(calc(100% + 2rem)); opacity: 0; pointer-events: none; }
+
+  @media (max-width: 599px) {
+    .menu, .band, .footer { padding-block: var(--s-4); }
+    .info, .wordmark { margin-top: var(--s-4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pill, .btn, .item-name { transition: none; }
+    .fab { transition: opacity var(--d-fast); }
+    .fab.is-hidden { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <!-- ============ HERO: o burger se desmonta e remonta com o scroll ============ -->
+  <section class="hero t-orange" id="hero">
+    <p class="demo t-ink">Proposta · cardápio digital demo</p>
+    <header class="top">
+      <a class="pill pill-cream" href="#hero">Vila Burguer</a>
+      <a class="pill pill-ink" href="https://menu.brendi.com.br/vila-burguer" target="_blank" rel="noopener">Pedir ↗</a>
+    </header>
+
+    <div class="hero-stage">
+      <p class="kicker hero-kicker"><span class="intro">Hamburgueria · Parnaíba–PI</span></p>
+
+      <h1 class="lockup display" aria-label="Vila Burguer">
+        <span class="mask m1"><span>Vila</span></span>
+        <span class="burger-wrap" aria-hidden="true">
+          <svg class="burger" viewBox="0 50 400 316" focusable="false">
+            <g class="layer"><g class="drop" style="--k:0">
+              <ellipse class="shadow" cx="200" cy="352" rx="150" ry="10"/>
+              <path class="o bun" d="M56 284H344C344 316 326 336 296 336H104C74 336 56 316 56 284Z"/>
+              <path class="bun-line" d="M82 316C94 326 106 329 120 329H280C294 329 306 326 318 316"/>
+            </g></g>
+            <g class="layer"><g class="drop" style="--k:1">
+              <path class="o patty" d="M72 240H328C346 240 358 252 358 265C358 278 346 290 328 290H72C54 290 42 278 42 265C42 252 54 240 72 240Z"/>
+              <g class="patty-dots"><circle cx="78" cy="274" r="3.5"/><circle cx="140" cy="282" r="3"/><circle cx="178" cy="276" r="3.5"/><circle cx="252" cy="281" r="3"/><circle cx="286" cy="274" r="3.5"/><circle cx="334" cy="270" r="3"/></g>
+            </g></g>
+            <g class="layer"><g class="drop" style="--k:2">
+              <path class="o cheese" d="M40 230H360L354 246H322V262A10 10 0 0 1 302 262V246H226V272A11 11 0 0 1 204 272V246H124V258A9 9 0 0 1 106 258V246H46Z"/>
+            </g></g>
+            <g class="layer"><g class="drop" style="--k:3">
+              <path class="o tomato" d="M58 214H342C352 214 356 219 356 224C356 229 352 234 342 234H58C48 234 44 229 44 224C44 219 48 214 58 214Z"/>
+            </g></g>
+            <g class="layer"><g class="drop" style="--k:4">
+              <path class="o lettuce" d="M44 204H356L358 214Q345 228 330 216Q315 228 300 216Q285 228 270 216Q255 228 240 216Q225 228 210 216Q195 228 180 216Q165 228 150 216Q135 228 120 216Q105 228 90 216Q75 228 60 216Q50 226 42 214Z"/>
+            </g></g>
+            <g class="layer"><g class="drop" style="--k:5">
+              <path class="o bun" d="M50 196C50 120 116 62 200 62C284 62 350 120 350 196C350 204 344 208 336 208H64C56 208 50 204 50 196Z"/>
+              <path class="bun-hi" d="M94 138C106 112 132 92 164 86"/>
+              <g class="seeds">
+                <ellipse cx="150" cy="104" rx="8" ry="3.6" transform="rotate(-24 150 104)"/>
+                <ellipse cx="204" cy="92" rx="8" ry="3.6" transform="rotate(8 204 92)"/>
+                <ellipse cx="256" cy="106" rx="8" ry="3.6" transform="rotate(26 256 106)"/>
+                <ellipse cx="116" cy="146" rx="8" ry="3.6" transform="rotate(-38 116 146)"/>
+                <ellipse cx="178" cy="134" rx="8" ry="3.6" transform="rotate(-6 178 134)"/>
+                <ellipse cx="234" cy="136" rx="8" ry="3.6" transform="rotate(14 234 136)"/>
+                <ellipse cx="292" cy="146" rx="8" ry="3.6" transform="rotate(36 292 146)"/>
+                <ellipse cx="148" cy="174" rx="8" ry="3.6" transform="rotate(-18 148 174)"/>
+                <ellipse cx="208" cy="168" rx="8" ry="3.6" transform="rotate(4 208 168)"/>
+                <ellipse cx="264" cy="176" rx="8" ry="3.6" transform="rotate(22 264 176)"/>
+              </g>
+            </g></g>
+          </svg>
+          <svg class="badge" viewBox="0 0 100 100" focusable="false">
+            <g class="badge-pop">
+              <defs><path id="badge-path" d="M50 50m-35 0a35 35 0 1 1 70 0a35 35 0 1 1-70 0"/></defs>
+              <circle class="badge-bg" cx="50" cy="50" r="47"/>
+              <text class="badge-text"><textPath href="#badge-path" textLength="214" lengthAdjust="spacing">Smash • Clássicos • Combos •</textPath></text>
+              <text class="badge-center" x="50" y="59" text-anchor="middle">PHB</text>
+            </g>
+          </svg>
+        </span>
+        <span class="mask m2"><span>Burguer</span></span>
+      </h1>
+
+      <div class="hero-cta"><a class="btn btn-ink intro" href="#burgers">Ver cardápio ↓</a></div>
+    </div>
+
+    <div class="captions" aria-hidden="true">
+      <p class="cap"><span class="kicker cap-n">01 / 04</span><span class="cap-t display">Pão</span><span class="cap-d">Selado na chapa.</span></p>
+      <p class="cap"><span class="kicker cap-n">02 / 04</span><span class="cap-t display">Salada<br>e tomate</span><span class="cap-d">Frescor pra equilibrar.</span></p>
+      <p class="cap"><span class="kicker cap-n">03 / 04</span><span class="cap-t display">Queijo</span><span class="cap-d">Derretendo por cima da carne.</span></p>
+      <p class="cap"><span class="kicker cap-n">04 / 04</span><span class="cap-t display">Carne</span><span class="cap-d">Feita na chapa, na hora.</span></p>
+      <p class="cap cap-final"><span class="cap-t display">Montado.</span><span class="cap-d">Agora escolhe o seu ↓</span></p>
+    </div>
+  </section>
+
+  <!--
+    ============ CARDÁPIO ============
+    Para editar: cada <li class="item"> é um produto (nome, preço e descrição).
+    Preços de referência dos apps de delivery (out/2026). Confirme com a casa.
+  -->
+  <section class="menu t-magenta" id="burgers" aria-labelledby="t-comecar">
+    <div class="menu-head">
+      <p class="kicker">01 — Burgers</p>
+      <h2 class="menu-title display reveal" id="t-comecar"><span class="mask"><span>Pra</span></span><span class="mask"><span>começar</span></span></h2>
+      <p class="menu-note">Preços “a partir de”. Adicionais e bebida você escolhe na hora do pedido.</p>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Porto</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 29</p>
+        </div>
+        <p class="desc"><span class="tag">Smash</span>Carne prensada na chapa, borda crocante.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Quadri</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 30</p>
+        </div>
+        <p class="desc"><span class="tag">Clássico</span>O clássico da casa, do jeito que tem que ser.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Igaraçu</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 34</p>
+        </div>
+        <p class="desc"><span class="tag">Frango</span>Frango empanado e crocante.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="menu t-yellow" id="casa" aria-labelledby="t-fome">
+    <div class="menu-head">
+      <p class="kicker">02 — Burgers da casa</p>
+      <h2 class="menu-title display reveal" id="t-fome"><span class="mask"><span>Fome de</span></span><span class="mask"><span>verdade</span></span></h2>
+      <p class="menu-note">Receitas que levam o nome da Vila e de Parnaíba.</p>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Vila</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 37</p>
+        </div>
+        <p class="desc"><span class="tag">O nome da casa</span>O burger que leva o nome da Vila.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Simplício</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 39</p>
+        </div>
+        <p class="desc"><span class="tag">Da casa</span>Receita da casa com nome de Parnaíba.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Delta</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 40</p>
+        </div>
+        <p class="desc"><span class="tag">Da casa</span>Grande como o Delta.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Big Vila</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 56</p>
+        </div>
+        <p class="desc"><span class="tag">O maior</span>A versão big do Vila, pra fome grande.</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ FAIXA DE CONTRASTE ============ -->
+  <section class="band t-cream" aria-labelledby="t-parnaiba">
+    <div class="band-head">
+      <p class="kicker">Feito em Parnaíba</p>
+      <h2 class="band-title display reveal" id="t-parnaiba"><span class="mask"><span>O cardápio tem</span></span><span class="mask"><span>nome de Parnaíba.</span></span></h2>
+    </div>
+    <div class="tracks display" aria-hidden="true">
+      <div class="track">
+        <span>Porto</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Delta</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Igaraçu</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Simplício</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Porto</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Delta</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Igaraçu</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Simplício</span>
+      </div>
+      <div class="track track-outline">
+        <span>Vila</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Quadri</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Big Vila</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>PHB</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Vila</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Quadri</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>Big Vila</span><svg class="sep" viewBox="0 0 20 10"><ellipse cx="10" cy="5" rx="9.5" ry="4.5"/></svg>
+        <span>PHB</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu t-orange" id="combos" aria-labelledby="t-combos">
+    <div class="menu-head">
+      <p class="kicker">03 — Combos</p>
+      <h2 class="menu-title display reveal" id="t-combos"><span class="mask"><span>Combos</span></span></h2>
+      <p class="menu-note">Pra matar a fome sozinho ou dividir com a galera.</p>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>PHB</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 49</p>
+        </div>
+        <p class="desc"><span class="tag">Combo</span>O combo com a sigla da cidade. Monte o seu no app.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Vila</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 52</p>
+        </div>
+        <p class="desc"><span class="tag">Combo</span>Burger Vila + batata P + refri lata.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Casal</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 80</p>
+        </div>
+        <p class="desc"><span class="tag">Pra 2</span>2 burgers + 1 batata M + 2 refris lata.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Família</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 99</p>
+        </div>
+        <p class="desc"><span class="tag">Pra 3</span>3 burgers + 2 batatas M + 1 Coca 1L.</p>
+      </li>
+    </ul>
+  </section>
+</main>
+
+<!-- ============ RODAPÉ ============ -->
+<footer class="footer t-ink" id="pedir">
+  <div class="footer-cta">
+    <p class="kicker">Pedidos pelo app oficial</p>
+    <h2 class="footer-title display reveal"><span class="mask"><span>Bateu</span></span><span class="mask"><span>a fome?</span></span></h2>
+    <a class="btn btn-orange" href="https://menu.brendi.com.br/vila-burguer" target="_blank" rel="noopener">Pedir agora ↗</a>
+  </div>
+
+  <dl class="info">
+    <div><dt class="kicker">Horário</dt><dd>Todos os dias<br>17h40 à meia-noite</dd></div>
+    <div><dt class="kicker">Endereço</dt><dd>Av. São Sebastião<br>Ideal 1, Loja 18<br>Parnaíba–PI</dd></div>
+    <div><dt class="kicker">Instagram</dt><dd><a href="https://www.instagram.com/vilaburguerphb/" target="_blank" rel="noopener">@vilaburguerphb</a></dd></div>
+    <div><dt class="kicker">Pedidos</dt><dd><a href="https://menu.brendi.com.br/vila-burguer" target="_blank" rel="noopener">menu.brendi.com.br</a></dd></div>
+  </dl>
+
+  <p class="wordmark display" aria-hidden="true">Vila Burguer</p>
+  <p class="fine">Proposta de cardápio digital para apresentação. Preços de referência coletados nos apps de delivery (out/2026); confirme valores, horário e endereço com a Vila Burguer.</p>
+</footer>
+
+<a class="pill pill-ink fab" href="https://menu.brendi.com.br/vila-burguer" target="_blank" rel="noopener">Pedir agora ↗</a>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+  const root = document.documentElement;
+  const hero = document.getElementById('hero');
+  const fab = document.querySelector('.fab');
+
+  // Botão flutuante "Pedir": escondido no topo e quando o botão do rodapé já está na tela
+  if (fab && 'IntersectionObserver' in window) {
+    const visible = new Map();
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => visible.set(e.target, e.isIntersecting));
+      fab.classList.toggle('is-hidden', [...visible.values()].some(Boolean));
+    });
+    [hero, document.querySelector('.footer-cta')].forEach(el => el && io.observe(el));
+  }
+
+  // Sem animação (movimento reduzido ou bibliotecas indisponíveis): a página fica estática
+  if (!root.classList.contains('js-motion') || !window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  // Scroll suave sincronizado com o ScrollTrigger
+  if (window.Lenis) {
+    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      const target = a && a.hash.length > 1 && document.querySelector(a.hash);
+      if (target) { e.preventDefault(); lenis.scrollTo(target); }
+    });
+  }
+
+  const css = getComputedStyle(root);
+  const INK = css.getPropertyValue('--ink').trim();
+  const MAGENTA = css.getPropertyValue('--magenta').trim();
+
+  // ---------- Hero: o burger desmonta, mostra cada camada e remonta ----------
+  const wrap = hero.querySelector('.burger-wrap');
+  const layers = gsap.utils.toArray(hero.querySelectorAll('.layer')); // 0 = pão de baixo … 5 = pão de cima
+  const caps = gsap.utils.toArray(hero.querySelectorAll('.cap:not(.cap-final)'));
+  const capFinal = hero.querySelector('.cap-final');
+  const OFF_Y = [120, 72, 24, -24, -72, -120];
+  const OFF_X = [-6, 10, -12, 14, -10, 8];
+  const ROT = [3, -4, 6, -7, 5, -6];
+  const FOCUS = [[5, 0], [4, 3], [2], [1]]; // camadas em destaque em cada legenda
+
+  gsap.matchMedia().add({
+    wide: '(min-aspect-ratio: 1/1) and (min-width: 600px)',
+    narrow: 'not all and (min-aspect-ratio: 1/1) and (min-width: 600px)'
+  }, ctx => {
+    const { wide } = ctx.conditions;
+    gsap.set(layers, { transformOrigin: '50% 50%' });
+
+    // Onde o burger fica enquanto está desmontado: à direita no desktop, mais acima no celular
+    const geo = () => {
+      const h = hero.getBoundingClientRect(), r = wrap.getBoundingClientRect();
+      const cx = r.left + r.width / 2 - gsap.getProperty(wrap, 'x') - h.left;
+      const cy = r.top + r.height / 2 - gsap.getProperty(wrap, 'y') - h.top;
+      const W = hero.clientWidth, H = hero.clientHeight;
+      const s = Math.min(wide ? 1.25 : 1.12, (wide ? .8 : .6) * H / (1.4 * wrap.offsetWidth));
+      return { x: (wide ? .66 * W : W / 2) - cx, y: (wide ? .5 : .4) * H - cy, s };
+    };
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut' },
+      scrollTrigger: { trigger: hero, start: 'top top', end: '+=220%', pin: true, scrub: 1, anticipatePin: 1, invalidateOnRefresh: true }
+    });
+    tl.to(hero.querySelector('.m1'), { xPercent: -130, opacity: 0, duration: 1.2 }, 0)
+      .to(hero.querySelector('.m2'), { xPercent: 130, opacity: 0, duration: 1.2 }, 0)
+      .to(hero.querySelectorAll('.hero-kicker, .hero-cta, .badge'), { opacity: 0, y: -24, duration: .6 }, 0)
+      .to(wrap, { x: () => geo().x, y: () => geo().y, scale: () => geo().s, duration: 1.6 }, .2)
+      .to(hero, { backgroundColor: INK, duration: 1.2 }, .4)
+      .to(layers, { y: i => OFF_Y[i], x: i => OFF_X[i], rotation: i => ROT[i], duration: 1.6, ease: 'power3.inOut', stagger: .04 }, .6);
+
+    caps.forEach((cap, i) => {
+      const t = 2.4 + i * 1.5;
+      const focus = FOCUS[i].map(k => layers[k]);
+      tl.fromTo(cap, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .45, ease: 'power3.out' }, t)
+        .to(focus, { scale: 1.1, duration: .45 }, t)
+        .to(focus, { scale: 1, duration: .45 }, t + 1.05)
+        .to(cap, { opacity: 0, y: -40, duration: .45, ease: 'power2.in' }, t + 1.05);
+    });
+
+    tl.to(layers, { y: 0, x: 0, rotation: 0, duration: 1.4, ease: 'power3.inOut', stagger: { each: .05, from: 'end' } }, 8.4)
+      .to(hero, { backgroundColor: MAGENTA, duration: 1 }, 8.6)
+      .fromTo(capFinal, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .5, ease: 'power3.out' }, 9.4)
+      .to({}, { duration: .6 });
+  });
+
+  // ---------- Títulos: a linha sobe de dentro da máscara ----------
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.from(el.querySelectorAll('.mask > span'), {
+      yPercent: 180, duration: .9, ease: 'power3.out', stagger: .08,
+      scrollTrigger: { trigger: el, start: 'top 85%' }
+    });
+  });
+
+  // ---------- Itens do cardápio ----------
+  gsap.utils.toArray('.item').forEach(item => {
+    gsap.timeline({ scrollTrigger: { trigger: item, start: 'top 88%' } })
+      .from(item, { '--rule': '0%', duration: .9, ease: 'power3.out' })
+      .from(item.querySelectorAll('.item-name .mask > span'), { yPercent: 180, duration: .9, ease: 'power3.out' }, 0)
+      .from(item.querySelectorAll('.price, .desc'), { opacity: 0, y: 16, duration: .6, ease: 'power3.out', stagger: .07 }, .15);
+  });
+
+  // ---------- Faixa: nomes de Parnaíba correm com o scroll ----------
+  gsap.utils.toArray('.track').forEach((track, i) => {
+    gsap.fromTo(track, { xPercent: i % 2 ? -30 : 0 }, {
+      xPercent: i % 2 ? 0 : -30, ease: 'none',
+      scrollTrigger: { trigger: track.closest('section'), start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+  });
+
+  // ---------- Marca gigante do rodapé ----------
+  gsap.from('.wordmark', {
+    yPercent: 35, opacity: 0, ease: 'none',
+    scrollTrigger: { trigger: '.wordmark', start: 'top bottom', end: 'bottom bottom', scrub: true }
+  });
+
+  if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>
