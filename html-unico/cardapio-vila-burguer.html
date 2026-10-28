@@ -242,6 +242,7 @@
   .item-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; column-gap: var(--s-2); }
   .item-name { font-size: var(--t-item); transition: transform var(--d-base) var(--e-out); }
   .price { font-family: var(--font-display); font-size: var(--t-price); line-height: 1; text-align: right; white-space: nowrap; }
+  .price s { text-decoration-thickness: .14em; }
   .price small { display: block; margin-bottom: .45em; font: 800 var(--t-micro)/1 var(--font-body); letter-spacing: .16em; text-transform: uppercase; }
   .desc { display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem .6rem; margin-top: max(var(--s-1), calc(var(--t-item) * .3)); max-width: 46ch; }
   .tag {
@@ -377,11 +378,11 @@
   <!--
     ============ CARDÁPIO ============
     Para editar: cada <li class="item"> é um produto (nome, preço e descrição).
-    Preços de referência dos apps de delivery (out/2026). Confirme com a casa.
+    Preços do cardápio da Vila Burguer na Brendi (out/2026). Confirme com a casa.
   -->
   <section class="menu t-magenta" id="burgers" aria-labelledby="t-comecar">
     <div class="menu-head">
-      <p class="kicker">01 — Burgers</p>
+      <p class="kicker">01 — Smash, frango e kids</p>
       <h2 class="menu-title display reveal" id="t-comecar"><span class="mask"><span>Pra</span></span><span class="mask"><span>começar</span></span></h2>
       <p class="menu-note">Preços “a partir de”. Adicionais e bebida você escolhe na hora do pedido.</p>
     </div>
@@ -395,28 +396,49 @@
       </li>
       <li class="item">
         <div class="item-row">
-          <h3 class="item-name display"><span class="mask"><span>Quadri</span></span></h3>
-          <p class="price"><small>a partir de</small>R$ 30</p>
+          <h3 class="item-name display"><span class="mask"><span>Pedral</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 35</p>
         </div>
-        <p class="desc"><span class="tag">Clássico</span>O clássico da casa, do jeito que tem que ser.</p>
+        <p class="desc"><span class="tag">Smash</span>Smash da casa, carne prensada na chapa.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Decreto</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 37</p>
+        </div>
+        <p class="desc"><span class="tag">Smash</span>Pão brioche, 2 carnes de 80 g, creme cheddar e bacon.</p>
       </li>
       <li class="item">
         <div class="item-row">
           <h3 class="item-name display"><span class="mask"><span>Igaraçu</span></span></h3>
-          <p class="price"><small>a partir de</small>R$ 34</p>
+          <p class="price"><small>a partir de</small>R$ 32</p>
         </div>
         <p class="desc"><span class="tag">Frango</span>Frango empanado e crocante.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Portinho</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 18</p>
+        </div>
+        <p class="desc"><span class="tag">Kids</span>O burger da criançada.</p>
       </li>
     </ul>
   </section>
 
   <section class="menu t-yellow" id="casa" aria-labelledby="t-fome">
     <div class="menu-head">
-      <p class="kicker">02 — Burgers da casa</p>
+      <p class="kicker">02 — Linha clássica</p>
       <h2 class="menu-title display reveal" id="t-fome"><span class="mask"><span>Fome de</span></span><span class="mask"><span>verdade</span></span></h2>
       <p class="menu-note">Receitas que levam o nome da Vila e de Parnaíba.</p>
     </div>
     <ul class="items">
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Quadri</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 30</p>
+        </div>
+        <p class="desc"><span class="tag">Clássico</span>Pão brioche, blend de 140 g, cheddar e maionese Vila.</p>
+      </li>
       <li class="item">
         <div class="item-row">
           <h3 class="item-name display"><span class="mask"><span>Vila</span></span></h3>
@@ -427,9 +449,16 @@
       <li class="item">
         <div class="item-row">
           <h3 class="item-name display"><span class="mask"><span>Simplício</span></span></h3>
-          <p class="price"><small>a partir de</small>R$ 39</p>
+          <p class="price"><small>a partir de</small>R$ 37</p>
         </div>
         <p class="desc"><span class="tag">Da casa</span>Receita da casa com nome de Parnaíba.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Vila 2.0</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 39</p>
+        </div>
+        <p class="desc"><span class="tag">Clássico</span>Pão australiano, blend especial, 2 fatias de cheddar, cebola caramelizada, bacon e maionese Vila.</p>
       </li>
       <li class="item">
         <div class="item-row">
@@ -443,7 +472,7 @@
           <h3 class="item-name display"><span class="mask"><span>Big Vila</span></span></h3>
           <p class="price"><small>a partir de</small>R$ 56</p>
         </div>
-        <p class="desc"><span class="tag">O maior</span>A versão big do Vila, pra fome grande.</p>
+        <p class="desc"><span class="tag">O maior</span>Três carnes, pra fome grande.</p>
       </li>
     </ul>
   </section>
@@ -487,31 +516,83 @@
     <ul class="items">
       <li class="item">
         <div class="item-row">
-          <h3 class="item-name display"><span class="mask"><span>PHB</span></span></h3>
-          <p class="price"><small>a partir de</small>R$ 49</p>
-        </div>
-        <p class="desc"><span class="tag">Combo</span>O combo com a sigla da cidade. Monte o seu no app.</p>
-      </li>
-      <li class="item">
-        <div class="item-row">
           <h3 class="item-name display"><span class="mask"><span>Vila</span></span></h3>
-          <p class="price"><small>a partir de</small>R$ 52</p>
+          <p class="price"><small>promo · de <s>R$ 46</s></small>R$ 39</p>
         </div>
         <p class="desc"><span class="tag">Combo</span>Burger Vila + batata P + refri lata.</p>
       </li>
       <li class="item">
         <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Igaraçu</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 40</p>
+        </div>
+        <p class="desc"><span class="tag">Combo</span>Igaraçu + batata P + refri lata.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Quadri</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 40</p>
+        </div>
+        <p class="desc"><span class="tag">Combo</span>Quadri + batata P + refri lata.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Vila 2.0</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 48</p>
+        </div>
+        <p class="desc"><span class="tag">Combo</span>Vila 2.0 + batata P + refri lata.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>PHB</span></span></h3>
+          <p class="price"><small>a partir de</small>R$ 49</p>
+        </div>
+        <p class="desc"><span class="tag">Combo</span>O combo com a sigla da cidade.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
           <h3 class="item-name display"><span class="mask"><span>Casal</span></span></h3>
-          <p class="price"><small>a partir de</small>R$ 80</p>
+          <p class="price"><small>promo · de <s>R$ 129</s></small>R$ 80</p>
         </div>
         <p class="desc"><span class="tag">Pra 2</span>2 burgers + 1 batata M + 2 refris lata.</p>
       </li>
       <li class="item">
         <div class="item-row">
           <h3 class="item-name display"><span class="mask"><span>Família</span></span></h3>
-          <p class="price"><small>a partir de</small>R$ 99</p>
+          <p class="price"><small>promo · de <s>R$ 169</s></small>R$ 99</p>
         </div>
-        <p class="desc"><span class="tag">Pra 3</span>3 burgers + 2 batatas M + 1 Coca 1L.</p>
+        <p class="desc"><span class="tag">Pra 3</span>3 burgers + 2 batatas M + 1 Coca 1 L.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="menu t-magenta" id="porcoes" aria-labelledby="t-porcoes">
+    <div class="menu-head">
+      <p class="kicker">04 — Acompanhamentos</p>
+      <h2 class="menu-title display reveal" id="t-porcoes"><span class="mask"><span>Porções</span></span></h2>
+      <p class="menu-note">Pra pedir junto com o burger ou dividir na mesa.</p>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Batata P</span></span></h3>
+          <p class="price"><small>porção</small>R$ 15</p>
+        </div>
+        <p class="desc"><span class="tag">150 g</span>Batata frita sequinha.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Batata M</span></span></h3>
+          <p class="price"><small>porção</small>R$ 17</p>
+        </div>
+        <p class="desc"><span class="tag">200 g</span>Batata frita pra dividir.</p>
+      </li>
+      <li class="item">
+        <div class="item-row">
+          <h3 class="item-name display"><span class="mask"><span>Onion rings</span></span></h3>
+          <p class="price"><small>porção</small>R$ 22</p>
+        </div>
+        <p class="desc"><span class="tag">Porção</span>Anéis de cebola empanados.</p>
       </li>
     </ul>
   </section>
@@ -533,7 +614,7 @@
   </dl>
 
   <p class="wordmark display" aria-hidden="true">Vila Burguer</p>
-  <p class="fine">Proposta de cardápio digital para apresentação. Preços de referência coletados nos apps de delivery (out/2026); confirme valores, horário e endereço com a Vila Burguer.</p>
+  <p class="fine">Proposta de cardápio digital para apresentação. Preços do cardápio da Vila Burguer na Brendi (out/2026); confirme valores, horário e endereço com a Vila Burguer.</p>
 </footer>
 
 <a class="pill pill-ink fab" href="https://menu.brendi.com.br/vila-burguer" target="_blank" rel="noopener">Pedir agora ↗</a>
