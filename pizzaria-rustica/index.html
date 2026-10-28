@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pizzaria Rústica – Parnaíba</title>
+<meta name="description" content="Pizzaria Rústica em Parnaíba-PI: pizzas artesanais, cardápio completo e pedidos pelo WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbf6ef;
+    --surface: #ffffff;
+    --ink: #2a1a12;
+    --muted: #7a6558;
+    --brand: #c0392b;
+    --brand-dark: #962d22;
+    --accent: #e8a33d;
+    --green: #25d366;
+    --line: #eadfd3;
+    --radius: 16px;
+    --shadow: 0 10px 30px rgba(42, 26, 18, .10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+  h1, h2, h3 { font-family: "Playfair Display", Georgia, serif; line-height: 1.1; }
+
+  /* Faixa de demonstração — remover quando o cliente aprovar */
+  .demo-bar { background: var(--ink); color: #fff; font-size: 13px; text-align: center; padding: 8px 16px; }
+  .demo-bar strong { color: var(--accent); }
+
+  /* Navegação */
+  header.nav { position: sticky; top: 0; z-index: 50; background: rgba(251, 246, 239, .92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo { font-family: "Playfair Display", serif; font-weight: 900; font-size: 24px; color: var(--brand); display: flex; align-items: center; gap: 8px; }
+  .logo span { color: var(--ink); }
+  .nav ul { display: flex; gap: 28px; list-style: none; font-weight: 500; }
+  .nav ul a:hover { color: var(--brand); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; font-weight: 600; border: 0; cursor: pointer; font-size: 15px; transition: transform .15s, background .15s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-brand { background: var(--brand); color: #fff; }
+  .btn-brand:hover { background: var(--brand-dark); }
+  .btn-ghost { background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.5); }
+  .btn-wa { background: var(--green); color: #fff; }
+  .menu-toggle { display: none; background: none; border: 0; font-size: 28px; cursor: pointer; color: var(--ink); }
+
+  /* Hero */
+  .hero { position: relative; min-height: 88vh; display: grid; place-items: center; color: #fff; text-align: center; overflow: hidden;
+    background: linear-gradient(rgba(20,10,5,.55), rgba(20,10,5,.75)), url("https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1800&q=80") center/cover, #3a1f14; }
+  .hero-content { padding: 80px 16px; max-width: 780px; animation: rise .9s ease-out both; }
+  .hero .tag { display: inline-block; background: var(--accent); color: var(--ink); padding: 6px 16px; border-radius: 999px; font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  .hero h1 { font-size: clamp(44px, 8vw, 88px); margin: 20px 0 16px; }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero p { font-size: clamp(17px, 2.2vw, 21px); opacity: .92; margin-bottom: 32px; }
+  .hero .actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  @keyframes rise { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+
+  /* Destaques */
+  .features { margin-top: -60px; position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .feature { background: var(--surface); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); text-align: center; }
+  .feature .ico { font-size: 34px; }
+  .feature h3 { font-family: Inter, sans-serif; font-size: 16px; margin: 8px 0 4px; }
+  .feature p { color: var(--muted); font-size: 14px; }
+
+  section { padding: 96px 0; }
+  .section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+  .eyebrow { color: var(--brand); font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: 13px; }
+  .section-head h2 { font-size: clamp(34px, 5vw, 50px); margin: 8px 0 12px; }
+  .section-head p { color: var(--muted); }
+
+  /* Sobre */
+  .about { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .about-img { border-radius: 24px; aspect-ratio: 4/5; box-shadow: var(--shadow);
+    background: url("https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=900&q=80") center/cover, #7a3b24; }
+  .about h2 { font-size: clamp(32px, 4.5vw, 46px); margin: 8px 0 18px; }
+  .about p { color: var(--muted); margin-bottom: 14px; }
+  .stats { display: flex; gap: 32px; margin-top: 28px; flex-wrap: wrap; }
+  .stats strong { display: block; font-family: "Playfair Display", serif; font-size: 38px; color: var(--brand); }
+  .stats span { color: var(--muted); font-size: 14px; }
+
+  /* Cardápio */
+  #cardapio { background: var(--surface); }
+  .tabs { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 36px; }
+  .tab { padding: 10px 20px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); cursor: pointer; font-weight: 600; font-size: 14px; color: var(--ink); }
+  .tab.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .item { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); transition: border-color .15s; }
+  .item:hover { border-color: var(--accent); }
+  .item h3 { font-family: Inter, sans-serif; font-size: 17px; }
+  .item p { color: var(--muted); font-size: 14px; }
+  .item .price { font-weight: 700; color: var(--brand); white-space: nowrap; }
+  .add { background: var(--brand); color: #fff; border: 0; width: 40px; height: 40px; border-radius: 50%; font-size: 22px; cursor: pointer; flex-shrink: 0; }
+  .add:hover { background: var(--brand-dark); }
+  .menu-note { text-align: center; color: var(--muted); font-size: 13px; margin-top: 24px; }
+
+  /* Galeria */
+  .gallery { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 200px; gap: 12px; }
+  .gallery div { border-radius: 14px; background-size: cover; background-position: center; background-color: #c9a080; }
+  .gallery div:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+
+  /* Depoimentos */
+  .reviews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .review { background: var(--surface); padding: 28px; border-radius: var(--radius); box-shadow: var(--shadow); }
+  .review .stars { color: var(--accent); letter-spacing: 2px; }
+  .review p { margin: 12px 0 16px; font-style: italic; }
+  .review strong { font-size: 14px; }
+
+  /* Unidades */
+  #unidades { background: var(--ink); color: #fff; }
+  #unidades .section-head p { color: #c9b8ab; }
+  .units { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .unit { background: #3a271d; border-radius: var(--radius); overflow: hidden; }
+  .unit iframe { width: 100%; height: 240px; border: 0; display: block; filter: saturate(.8); }
+  .unit-body { padding: 24px; }
+  .unit-body h3 { font-size: 24px; margin-bottom: 10px; }
+  .unit-body p { color: #d8c7ba; margin-bottom: 6px; font-size: 15px; }
+  .unit-body .btn { margin-top: 14px; }
+
+  /* CTA */
+  .cta { text-align: center; background: linear-gradient(135deg, var(--brand), #e0603f); color: #fff; border-radius: 28px; padding: 64px 24px; }
+  .cta h2 { font-size: clamp(32px, 5vw, 48px); margin-bottom: 12px; }
+  .cta p { opacity: .9; margin-bottom: 28px; }
+  .cta .btn { background: #fff; color: var(--brand); }
+
+  footer { padding: 40px 0; text-align: center; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+  footer .social { display: flex; gap: 16px; justify-content: center; margin-bottom: 12px; }
+  footer .social a { font-weight: 600; color: var(--brand); }
+
+  /* Carrinho */
+  .cart-fab { position: fixed; right: 20px; bottom: 20px; z-index: 60; background: var(--green); color: #fff; border: 0; border-radius: 999px; padding: 16px 22px; font-weight: 700; font-size: 15px; box-shadow: 0 10px 25px rgba(0,0,0,.25); cursor: pointer; display: flex; align-items: center; gap: 10px; }
+  .cart-fab .count { background: #fff; color: var(--green); border-radius: 999px; min-width: 24px; height: 24px; display: grid; place-items: center; font-size: 13px; }
+  .drawer-bg { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 70; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(400px, 100%); background: var(--surface); z-index: 80; transform: translateX(100%); transition: transform .25s; display: flex; flex-direction: column; }
+  .open .drawer-bg { opacity: 1; pointer-events: auto; }
+  .open .drawer { transform: none; }
+  .drawer header { padding: 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+  .drawer header h3 { font-size: 22px; }
+  .drawer .close { background: none; border: 0; font-size: 28px; cursor: pointer; color: var(--ink); }
+  .cart-list { flex: 1; overflow: auto; padding: 20px; }
+  .cart-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .qty { display: flex; align-items: center; gap: 8px; }
+  .qty button { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg); cursor: pointer; font-weight: 700; color: var(--ink); }
+  .drawer footer { border: 0; padding: 20px; border-top: 1px solid var(--line); text-align: left; color: var(--ink); }
+  .drawer footer input, .drawer footer select { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 10px; font: inherit; }
+  .total { display: flex; justify-content: space-between; font-weight: 700; font-size: 18px; margin-bottom: 14px; }
+  .drawer footer .btn { width: 100%; justify-content: center; }
+  .empty { color: var(--muted); text-align: center; padding: 40px 0; }
+
+  @media (max-width: 860px) {
+    .nav ul { display: none; position: absolute; top: 68px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--bg); border-bottom: 1px solid var(--line); }
+    .nav ul.show { display: flex; }
+    .nav ul a { display: block; padding: 14px 16px; }
+    .menu-toggle { display: block; }
+    .nav .btn-brand { display: none; }
+    .features { grid-template-columns: repeat(2, 1fr); }
+    .about, .units, .menu-grid { grid-template-columns: 1fr; }
+    .reviews { grid-template-columns: 1fr; }
+    .gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
+    section { padding: 72px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-bar"><strong>Proposta de site</strong> — versão de demonstração para apresentação à Pizzaria Rústica. Preços e textos são ilustrativos.</div>
+
+<header class="nav">
+  <div class="wrap">
+    <a href="#inicio" class="logo">🍕 Rústica<span>.</span></a>
+    <ul id="navLinks">
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#cardapio">Cardápio</a></li>
+      <li><a href="#galeria">Galeria</a></li>
+      <li><a href="#unidades">Unidades</a></li>
+    </ul>
+    <a href="#cardapio" class="btn btn-brand">Peça agora</a>
+    <button class="menu-toggle" aria-label="Abrir menu" onclick="document.getElementById('navLinks').classList.toggle('show')">☰</button>
+  </div>
+</header>
+
+<section class="hero" id="inicio">
+  <div class="hero-content">
+    <span class="tag">Parnaíba · Piauí</span>
+    <h1>Pizza de verdade, <em>sabor rústico</em></h1>
+    <p>Massa artesanal, ingredientes selecionados e forno quente. Peça pelo WhatsApp e receba quentinha em casa.</p>
+    <div class="actions">
+      <a href="#cardapio" class="btn btn-brand">Ver cardápio</a>
+      <a href="#" class="btn btn-ghost js-wa">💬 Pedir no WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap features">
+  <div class="feature"><div class="ico">🔥</div><h3>Forno quente</h3><p>Borda crocante e massa leve</p></div>
+  <div class="feature"><div class="ico">🛵</div><h3>Delivery</h3><p>Entregamos em Parnaíba</p></div>
+  <div class="feature"><div class="ico">📍</div><h3>2 unidades</h3><p>Fátima e São Francisco</p></div>
+  <div class="feature"><div class="ico">⭐</div><h3>Bem avaliada</h3><p>Clientes que voltam sempre</p></div>
+</div>
+
+<section id="sobre">
+  <div class="wrap about">
+    <div class="about-img" role="img" aria-label="Pizza saindo do forno"></div>
+    <div>
+      <span class="eyebrow">Nossa história</span>
+      <h2>Tradição que se sente em cada fatia</h2>
+      <p>A Pizzaria Rústica faz parte da vida de Parnaíba há anos. Reunir a família, comemorar com os amigos ou matar a fome depois da praia: toda ocasião combina com uma boa pizza.</p>
+      <p>Nossa massa descansa o tempo certo e recebe recheio generoso, feito com carinho do jeito que o parnaibano gosta.</p>
+      <div class="stats">
+        <div><strong>+10</strong><span>anos de história</span></div>
+        <div><strong>30+</strong><span>sabores</span></div>
+        <div><strong>2</strong><span>unidades</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cardapio">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Cardápio</span>
+      <h2>Escolha sua favorita</h2>
+      <p>Toque no <strong>+</strong> para montar seu pedido e enviar direto pelo WhatsApp.</p>
+    </div>
+    <div class="tabs" id="tabs"></div>
+    <div class="menu-grid" id="menuGrid"></div>
+    <p class="menu-note">Preços ilustrativos (pizza grande). Valores reais serão definidos com a pizzaria.</p>
+  </div>
+</section>
+
+<section id="galeria">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Galeria</span>
+      <h2>Feito para dar água na boca</h2>
+    </div>
+    <div class="gallery">
+      <div style="background-image:url('https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=900&q=80')"></div>
+      <div style="background-image:url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80')"></div>
+      <div style="background-image:url('https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=600&q=80')"></div>
+      <div style="background-image:url('https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=600&q=80')"></div>
+      <div style="background-image:url('https://images.unsplash.com/photo-1528137871618-79d2761e3fd5?auto=format&fit=crop&w=600&q=80')"></div>
+    </div>
+  </div>
+</section>
+
+<section id="avaliacoes" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Avaliações</span>
+      <h2>Quem prova, recomenda</h2>
+      <p>Espaço para depoimentos reais de clientes (Google / Instagram).</p>
+    </div>
+    <div class="reviews">
+      <div class="review"><div class="stars">★★★★★</div><p>“Espaço reservado para um depoimento real de cliente.”</p><strong>Cliente da Rústica</strong></div>
+      <div class="review"><div class="stars">★★★★★</div><p>“Espaço reservado para um depoimento real de cliente.”</p><strong>Cliente da Rústica</strong></div>
+      <div class="review"><div class="stars">★★★★★</div><p>“Espaço reservado para um depoimento real de cliente.”</p><strong>Cliente da Rústica</strong></div>
+    </div>
+  </div>
+</section>
+
+<section id="unidades">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" style="color:var(--accent)">Onde estamos</span>
+      <h2>Nossas unidades</h2>
+      <p>Venha nos visitar ou peça delivery.</p>
+    </div>
+    <div class="units" id="units"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap cta">
+    <h2>Bateu a fome?</h2>
+    <p>Peça agora pelo WhatsApp. É rápido e fácil.</p>
+    <a href="#" class="btn js-wa">💬 Fazer pedido</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="social">
+      <a href="#" id="igLink" target="_blank" rel="noopener">Instagram</a>
+      <a href="#" class="js-wa">WhatsApp</a>
+    </div>
+    <p>© <span id="year"></span> Pizzaria Rústica · Parnaíba – PI</p>
+  </div>
+</footer>
+
+<button class="cart-fab" id="cartFab">🛒 Meu pedido <span class="count" id="cartCount">0</span></button>
+<div id="cartRoot">
+  <div class="drawer-bg" id="drawerBg"></div>
+  <aside class="drawer" aria-label="Carrinho">
+    <header><h3>Seu pedido</h3><button class="close" id="closeCart" aria-label="Fechar">×</button></header>
+    <div class="cart-list" id="cartList"></div>
+    <footer>
+      <div class="total"><span>Total</span><span id="cartTotal">R$ 0,00</span></div>
+      <input id="custName" placeholder="Seu nome">
+      <input id="custAddr" placeholder="Endereço de entrega (ou 'retirada')">
+      <select id="custPay">
+        <option>Pix</option><option>Cartão na entrega</option><option>Dinheiro</option>
+      </select>
+      <button class="btn btn-wa" id="sendOrder">💬 Enviar pedido no WhatsApp</button>
+    </footer>
+  </aside>
+</div>
+
+<script>
+  // ===== CONFIGURAÇÃO — edite aqui com os dados confirmados da pizzaria =====
+  const CONFIG = {
+    whatsapp: "5586000000000",            // TROCAR: número do WhatsApp com DDI+DDD, só dígitos
+    instagram: "https://instagram.com/rusticaphb",
+    unidades: [
+      { nome: "Unidade Fátima", endereco: "Av. Nossa Senhora de Fátima, 802 – N. Sra. de Fátima", telefone: "(86) 3322-3309", horario: "Ter a Dom · 18h às 23h30" },
+      { nome: "Unidade São Francisco", endereco: "Av. São Sebastião, 1012 – São Francisco", telefone: "(86) 3322-3354", horario: "Ter a Dom · 18h às 23h30" }
+    ]
+  };
+
+  const MENU = {
+    "Pizzas Tradicionais": [
+      ["Mussarela", "Molho de tomate, mussarela e orégano", 45],
+      ["Calabresa", "Calabresa fatiada, cebola e azeitonas", 49],
+      ["Portuguesa", "Presunto, ovo, cebola, ervilha e mussarela", 54],
+      ["Frango com Catupiry", "Frango desfiado e catupiry original", 55],
+      ["Marguerita", "Mussarela, tomate e manjericão fresco", 52],
+      ["Quatro Queijos", "Mussarela, provolone, parmesão e catupiry", 58]
+    ],
+    "Especiais da Casa": [
+      ["Rústica", "Carne de sol, queijo coalho, cebola roxa e manteiga da terra", 68],
+      ["Camarão", "Camarão ao alho, catupiry e cheiro-verde", 79],
+      ["Nordestina", "Charque, macaxeira, queijo coalho e pimenta biquinho", 66],
+      ["Pepperoni", "Pepperoni artesanal e mussarela", 62]
+    ],
+    "Pizzas Doces": [
+      ["Chocolate com Morango", "Chocolate ao leite e morangos frescos", 52],
+      ["Romeu e Julieta", "Goiabada cascão e queijo", 48],
+      ["Banana com Canela", "Banana, açúcar e canela", 45]
+    ],
+    "Bebidas": [
+      ["Refrigerante 2L", "Coca-Cola, Guaraná ou Fanta", 14],
+      ["Suco natural 1L", "Caju, acerola ou maracujá", 15],
+      ["Água mineral", "500 ml", 4]
+    ]
+  };
+  // ==========================================================================
+
+  const brl = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const waLink = text => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`;
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+  document.getElementById("igLink").href = CONFIG.instagram;
+  document.querySelectorAll(".js-wa").forEach(a => {
+    a.href = waLink("Olá! Gostaria de fazer um pedido na Pizzaria Rústica 🍕");
+    a.target = "_blank"; a.rel = "noopener";
+  });
+
+  // Unidades com mapa
+  document.getElementById("units").innerHTML = CONFIG.unidades.map(u => `
+    <div class="unit">
+      <iframe loading="lazy" title="Mapa ${esc(u.nome)}"
+        src="https://maps.google.com/maps?q=${encodeURIComponent(u.endereco + ", Parnaíba - PI")}&output=embed"></iframe>
+      <div class="unit-body">
+        <h3>${esc(u.nome)}</h3>
+        <p>📍 ${esc(u.endereco)}</p>
+        <p>📞 ${esc(u.telefone)}</p>
+        <p>🕒 ${esc(u.horario)}</p>
+        <a class="btn btn-brand" target="_blank" rel="noopener"
+           href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(u.endereco + ", Parnaíba - PI")}">Como chegar</a>
+      </div>
+    </div>`).join("");
+
+  // Cardápio com abas
+  const tabsEl = document.getElementById("tabs");
+  const gridEl = document.getElementById("menuGrid");
+  const cats = Object.keys(MENU);
+  function showCat(cat) {
+    tabsEl.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.cat === cat));
+    gridEl.innerHTML = MENU[cat].map(([nome, desc, preco]) => `
+      <div class="item">
+        <div><h3>${esc(nome)}</h3><p>${esc(desc)}</p></div>
+        <span class="price">${brl(preco)}</span>
+        <button class="add" aria-label="Adicionar ${esc(nome)}" data-nome="${esc(nome)}" data-preco="${preco}">+</button>
+      </div>`).join("");
+  }
+  tabsEl.innerHTML = cats.map(c => `<button class="tab" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
+  tabsEl.addEventListener("click", e => { if (e.target.dataset.cat) showCat(e.target.dataset.cat); });
+  showCat(cats[0]);
+
+  // Carrinho
+  const cart = new Map();
+  const root = document.getElementById("cartRoot");
+  const openCart = () => root.classList.add("open");
+  const closeCart = () => root.classList.remove("open");
+  document.getElementById("cartFab").onclick = openCart;
+  document.getElementById("closeCart").onclick = closeCart;
+  document.getElementById("drawerBg").onclick = closeCart;
+
+  gridEl.addEventListener("click", e => {
+    const b = e.target.closest(".add"); if (!b) return;
+    const key = b.dataset.nome;
+    const cur = cart.get(key) || { preco: Number(b.dataset.preco), qtd: 0 };
+    cur.qtd++; cart.set(key, cur); renderCart();
+    b.textContent = "✓"; setTimeout(() => (b.textContent = "+"), 700);
+  });
+
+  function renderCart() {
+    let total = 0, count = 0;
+    const rows = [...cart].map(([nome, { preco, qtd }]) => {
+      total += preco * qtd; count += qtd;
+      return `<div class="cart-row">
+        <div><strong>${esc(nome)}</strong><br><small>${brl(preco)}</small></div>
+        <div class="qty"><button data-k="${esc(nome)}" data-d="-1">−</button>${qtd}<button data-k="${esc(nome)}" data-d="1">+</button></div>
+      </div>`;
+    });
+    document.getElementById("cartList").innerHTML = rows.join("") || '<p class="empty">Seu carrinho está vazio.<br>Adicione itens do cardápio 🍕</p>';
+    document.getElementById("cartTotal").textContent = brl(total);
+    document.getElementById("cartCount").textContent = count;
+  }
+  document.getElementById("cartList").addEventListener("click", e => {
+    const k = e.target.dataset.k; if (!k) return;
+    const item = cart.get(k); item.qtd += Number(e.target.dataset.d);
+    if (item.qtd <= 0) cart.delete(k);
+    renderCart();
+  });
+
+  document.getElementById("sendOrder").onclick = () => {
+    if (!cart.size) { alert("Adicione pelo menos um item ao pedido."); return; }
+    let total = 0;
+    const linhas = [...cart].map(([nome, { preco, qtd }]) => { total += preco * qtd; return `• ${qtd}x ${nome} — ${brl(preco * qtd)}`; });
+    const msg = [
+      "*Novo pedido – Pizzaria Rústica* 🍕", "", ...linhas, "",
+      `*Total:* ${brl(total)}`,
+      `*Nome:* ${document.getElementById("custName").value || "-"}`,
+      `*Endereço:* ${document.getElementById("custAddr").value || "-"}`,
+      `*Pagamento:* ${document.getElementById("custPay").value}`
+    ].join("\n");
+    window.open(waLink(msg), "_blank");
+  };
+  renderCart();
+</script>
+</body>
+</html>
