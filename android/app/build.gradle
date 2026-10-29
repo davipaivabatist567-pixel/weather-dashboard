@@ -1,0 +1,46 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.davi.meutiktok'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.davi.meutiktok'
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+    }
+
+    // Chave fixa para que cada APK novo instale por cima do anterior.
+    signingConfigs {
+        fixed {
+            storeFile file('meutiktok.keystore')
+            storePassword 'meutiktok'
+            keyAlias 'meutiktok'
+            keyPassword 'meutiktok'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.fixed
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+// O painel do app é o mesmo arquivo meu-tiktok.html da raiz do repositório.
+tasks.register('copyDashboard', Copy) {
+    from rootProject.file('../meu-tiktok.html')
+    into 'src/main/assets'
+    rename { 'index.html' }
+}
+preBuild.dependsOn copyDashboard
