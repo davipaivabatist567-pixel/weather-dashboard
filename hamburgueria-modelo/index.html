@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardápio Chapa Burger</title>
+<meta name="description" content="Modelo de cardápio digital para hamburgueria: burger que se abre em camadas e pedido pelo WhatsApp.">
+<meta name="theme-color" content="#0F0E0D">
+<script>try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-motion'); } catch (e) {}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Barlow:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ TOKENS ============ */
+  :root {
+    /* cor — marca */
+    --black: #0F0E0D;
+    --red: #E3261B;
+    --bone: #F2EADB;
+    --mustard: #F6B91A;
+    --glow: rgba(227, 38, 27, .42);
+    /* textura de aço */
+    --hatch-dark: repeating-linear-gradient(45deg, rgba(242, 234, 219, .035) 0 2px, transparent 2px 12px);
+    --hatch-light: repeating-linear-gradient(45deg, rgba(15, 14, 13, .04) 0 2px, transparent 2px 12px);
+
+    /* tipo */
+    --font-display: "Big Shoulders Display", "Impact", "Arial Narrow", sans-serif;
+    --font-body: "Barlow", system-ui, sans-serif;
+    --t-h2: clamp(3.5rem, 19vw, 9rem);
+    --t-item: clamp(3rem, 15vw, 7rem);
+    --t-price: clamp(1.75rem, 3.6vw, 3rem);
+    --t-cap: clamp(2.5rem, 11vw, 6rem);
+    --t-track: clamp(4.5rem, 18vw, 13rem);
+    --t-footer: clamp(4.5rem, 26vw, 14rem);
+    --t-body: clamp(1rem, 1.05vw, 1.125rem);
+    --t-small: .9rem;
+    --t-micro: .72rem;
+
+    /* espaço */
+    --s-1: .5rem; --s-2: 1rem; --s-3: 2rem;
+    --s-4: 4rem; --s-5: 8rem; --s-6: 12rem;
+    --gutter: clamp(1.25rem, 5vw, 6rem);
+    --demo-h: 2rem;
+    --stroke: 4px;
+
+    /* movimento */
+    --e-out: cubic-bezier(.16, 1, .3, 1);
+    --e-pop: cubic-bezier(.34, 1.56, .64, 1);
+    --d-fast: .25s; --d-base: .6s; --d-slow: 1.2s;
+
+    --vh: 1vh;
+  }
+  @supports (height: 1svh) { :root { --vh: 1svh; } }
+
+  .t-black { --bg: var(--black); --fg: var(--bone);  --hi: var(--mustard); --tex: var(--hatch-dark); }
+  .t-bone  { --bg: var(--bone);  --fg: var(--black); --hi: var(--red);     --tex: var(--hatch-light); }
+  .t-red   { --bg: var(--red);   --fg: var(--black); --hi: var(--bone);    --tex: var(--hatch-light); }
+  .t-black, .t-bone, .t-red {
+    background-color: var(--bg); background-image: var(--tex); color: var(--fg);
+    --line: color-mix(in oklab, var(--fg) 25%, transparent);
+  }
+
+  /* ============ BASE ============ */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
+  body {
+    --fg: var(--bone);
+    background: var(--black); color: var(--bone);
+    font-family: var(--font-body); font-size: var(--t-body); line-height: 1.6;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--fg); outline-offset: 4px; }
+  .display { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; line-height: .85; }
+  .kicker { font: 700 var(--t-micro)/1.4 var(--font-body); letter-spacing: .2em; text-transform: uppercase; }
+  /* máscara de revelação, com folga para acentos e o Ç */
+  .mask { display: block; overflow: hidden; padding: .28em .03em .34em; margin: -.28em -.03em -.34em; }
+  .mask > span { display: block; }
+
+  .demo {
+    position: absolute; inset: 0 0 auto; z-index: 6; height: var(--demo-h);
+    display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden;
+    background: var(--red); color: var(--black);
+  }
+  .tag-btn {
+    display: inline-flex; align-items: center; gap: .5em; padding: .85em 1.2em;
+    border: 2px solid currentColor; text-decoration: none;
+    font: 700 var(--t-micro)/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase;
+    transition: transform var(--d-fast) var(--e-out);
+  }
+  .tag-btn:hover { transform: translateY(-2px); }
+  .tag-bone { background: var(--bone); color: var(--black); border-color: var(--bone); }
+  .tag-mustard { background: var(--mustard); color: var(--black); border-color: var(--mustard); }
+  .btn {
+    display: inline-flex; align-items: center; gap: .6em; padding: 1.15em 1.8em;
+    font: 700 var(--t-small)/1 var(--font-body); letter-spacing: .16em; text-transform: uppercase; text-decoration: none;
+    box-shadow: 6px 6px 0 var(--red);
+    transition: transform var(--d-fast) var(--e-out), box-shadow var(--d-fast) var(--e-out);
+  }
+  .btn:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--red); }
+  .btn-bone { background: var(--bone); color: var(--black); }
+  .btn-mustard { background: var(--mustard); color: var(--black); }
+
+  /* ============ HERO: o burger se abre camada por camada ============ */
+  .hero {
+    position: relative; overflow: hidden; height: calc(var(--vh) * 100); min-height: 36rem;
+    --f: min(calc(92vw / 2.42), calc((var(--vh) * 100 - 15rem) / 1.55));
+    --bw: calc(var(--f) * 1.05);
+  }
+  @media (max-aspect-ratio: 1/1), (max-width: 599px) {
+    .hero { --bw: min(86vw, calc(var(--vh) * 44)); }
+  }
+  .top {
+    position: absolute; inset: var(--demo-h) 0 auto; z-index: 5;
+    display: flex; justify-content: space-between; align-items: center; padding: var(--s-2) var(--gutter);
+  }
+  .hero-stage {
+    height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: var(--s-2); padding: calc(4.5rem + var(--demo-h)) var(--gutter) var(--s-3); text-align: center;
+  }
+  .hero-kicker { color: var(--mustard); }
+  .hero-kicker .intro, .hero-cta .intro { display: inline-flex; }
+  .lockup { display: flex; flex-direction: column; align-items: center; }
+  .lockup .word { font-size: var(--f); }
+  .burger-wrap {
+    position: relative; z-index: 2; display: block; width: var(--bw);
+    margin-top: calc(var(--f) * -.32 - var(--bw) * .07);
+  }
+  .burger-wrap::before {
+    content: ""; position: absolute; z-index: -1; inset: 25% -12% 0;
+    background: radial-gradient(closest-side, var(--glow), transparent);
+  }
+  /* cada camada é uma imagem recortada, posicionada no mesmo quadro */
+  .stack { position: relative; display: block; aspect-ratio: 1; }
+  .stack .layer { position: absolute; display: block; }
+  .stack img { display: block; width: 100%; height: auto; }
+
+  /* legendas e nomes das camadas (só existem com animação) */
+  .captions, .lbl { display: none; }
+  .js-motion .captions {
+    display: block; position: absolute; z-index: 3; left: var(--gutter); right: var(--gutter);
+    top: calc(var(--demo-h) + 4.75rem); pointer-events: none;
+  }
+  .cap { position: absolute; left: 0; top: 0; max-width: 30rem; opacity: 0; }
+  .cap .kicker { color: var(--mustard); }
+  .cap-t { display: block; font-size: var(--t-cap); margin-block: .12em .08em; }
+  .js-motion .lbl {
+    display: flex; position: absolute; z-index: 3; align-items: center; gap: .5em; translate: 0 -50%; opacity: 0;
+    font: 900 clamp(.9rem, 3.9vw, 1.75rem)/1 var(--font-display); text-transform: uppercase; color: var(--bone); pointer-events: none;
+  }
+  .lbl::before { content: ""; flex: none; width: 1.1em; height: 3px; background: var(--mustard); }
+  @media (min-aspect-ratio: 1/1) and (min-width: 600px) {
+    .js-motion .captions { right: auto; top: 50%; width: min(26vw, 22rem); }
+    .cap { translate: 0 -50%; }
+  }
+
+  /* entrada da página (CSS puro) */
+  @keyframes rise { from { transform: translateY(180%); } }
+  @keyframes drop { from { transform: translateY(-160px); opacity: 0; } }
+  @keyframes fade-up { from { transform: translateY(16px); opacity: 0; } }
+  .js-motion .hero .mask > span { animation: rise var(--d-slow) var(--e-out) both; }
+  .js-motion .hero .drop { animation: drop .7s var(--e-pop) both; animation-delay: calc(.3s + var(--k) * .1s); }
+  .js-motion .hero .intro { animation: fade-up var(--d-base) var(--e-out) .95s both; }
+
+  /* ============ CARDÁPIO ============ */
+  .menu { display: grid; gap: var(--s-4); padding: var(--s-5) var(--gutter); }
+  .menu-head { display: grid; gap: var(--s-2); align-content: start; }
+  .menu-title { font-size: var(--t-h2); margin-bottom: .2em; }
+  .menu-note { max-width: 40ch; }
+  .menu-note strong { color: var(--red); }
+  @media (min-width: 900px) {
+    .menu { grid-template-columns: 5fr 7fr; }
+    .menu-head { position: sticky; top: 14vh; align-self: start; }
+    .menu-title { font-size: clamp(4.5rem, 9vw, 9rem); }
+  }
+  .items { list-style: none; }
+  .item {
+    --rule: 100%;
+    display: grid; grid-template-columns: var(--ph) 1fr auto; grid-template-areas: "ph name price" "ph desc desc" "ph order order";
+    column-gap: var(--s-2); align-items: end; padding-block: var(--s-3);
+    --ph: clamp(7rem, 30vw, 13rem);
+    background: linear-gradient(var(--line), var(--line)) 0 0 / var(--rule) var(--stroke) no-repeat;
+  }
+  .item:last-of-type { border-bottom: var(--stroke) solid var(--line); }
+  .ph { grid-area: ph; position: relative; align-self: center; }
+  .ph img { display: block; width: 100%; height: auto; filter: drop-shadow(0 .9rem 1rem rgba(15, 14, 13, .35)); transition: transform var(--d-base) var(--e-out); }
+  @media (hover: hover) { .item:hover .ph img { transform: rotate(-4deg) scale(1.04); } }
+  .item .x { position: absolute; left: -.15em; top: -.2em; font-size: clamp(1.75rem, 7vw, 3rem); color: transparent; -webkit-text-stroke: max(2px, .03em) var(--red); }
+  .item .item-name { grid-area: name; }
+  .item .price { grid-area: price; }
+  .item-name { font-size: clamp(2.4rem, 10vw, 6rem); transition: transform var(--d-base) var(--e-out); }
+  .price { font: 900 var(--t-price)/1 var(--font-display); white-space: nowrap; }
+  .desc { grid-area: desc; margin-top: var(--s-1); max-width: 44ch; }
+  @media (hover: hover) { .item:hover .item-name { transform: translateX(.05em) skewX(-4deg); } }
+  .sides { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1) var(--s-2); margin-top: var(--s-3); }
+  .sides ul { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-1); }
+  .sides li { padding: .6em 1em; border: 2px solid var(--black); font-weight: 700; }
+
+  .rows { list-style: none; }
+  .row {
+    display: grid; grid-template-columns: 1fr auto; column-gap: var(--s-2); align-items: end;
+    padding-block: var(--s-2) var(--s-3); border-top: 2px solid var(--line);
+  }
+  .row:last-child { border-bottom: 2px solid var(--line); }
+  .row-name { font-size: clamp(1.9rem, 7.5vw, 3.25rem); line-height: .9; }
+  .row .desc, .row .order { grid-column: 1 / -1; }
+  .row .desc { margin-top: .4rem; }
+  .row .order { margin-top: var(--s-1); }
+  .row .order .add { box-shadow: 3px 3px 0 var(--red); }
+  @media (max-width: 380px) { .item { --ph: 6rem; } .item-name { font-size: 2.1rem; } }
+  .menu + .menu { padding-top: 0; }
+  @media (min-width: 900px) { .menu + .menu { padding-top: var(--s-4); } }
+
+  /* ============ FAIXA ============ */
+  .band { overflow: hidden; padding-block: var(--s-4); }
+  .tracks { display: grid; gap: .04em; font-size: var(--t-track); }
+  .track { display: flex; align-items: center; gap: .3em; width: max-content; white-space: nowrap; }
+  .track-outline { color: transparent; -webkit-text-stroke: max(2px, .012em) var(--black); }
+  .star { width: .45em; height: .45em; fill: var(--bone); flex: none; }
+
+  /* ============ RODAPÉ ============ */
+  .footer { container-type: inline-size; overflow: hidden; padding: var(--s-5) var(--gutter) calc(var(--s-4) + 3rem); }
+  .footer-cta { display: grid; gap: var(--s-3); justify-items: start; }
+  .footer-title { font-size: var(--t-footer); }
+  .alt { font-weight: 700; text-underline-offset: 4px; }
+  .info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3) var(--s-2); margin-top: var(--s-5); }
+  @media (min-width: 900px) { .info { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .info dt { margin-bottom: var(--s-1); color: var(--mustard); }
+  .info dd { font-size: var(--t-small); line-height: 1.5; }
+  .info a { text-decoration-thickness: 2px; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .wordmark { margin-top: var(--s-5); font-size: calc((100vw - 2 * var(--gutter)) / 2.42); line-height: .8; white-space: nowrap; color: var(--red); }
+  @supports (font-size: 1cqw) { .wordmark { font-size: calc(100cqw / 2.42); } }
+  .fine { margin-top: var(--s-3); font-size: var(--t-micro); max-width: 75ch; opacity: .8; }
+
+  .fab {
+    position: fixed; z-index: 20; right: var(--s-2); bottom: calc(var(--s-2) + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 .75rem 2rem rgba(0, 0, 0, .45); padding: 1em 1.3em;
+    transition: transform var(--d-base) var(--e-out), opacity var(--d-base) var(--e-out);
+  }
+  .fab.is-hidden { transform: translateY(calc(100% + 2rem)); opacity: 0; pointer-events: none; }
+
+  /* ============ PEDIDO ============ */
+  .order { justify-self: start; margin-top: var(--s-2); }
+  .item .order { grid-area: order; }
+  .order .add, .stepper button {
+    border: 2px solid var(--black); background: var(--black); color: var(--bone); cursor: pointer; text-decoration: none;
+    font: 700 var(--t-micro)/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase;
+  }
+  .order .add { display: inline-flex; padding: 1em 1.2em; box-shadow: 4px 4px 0 var(--red); transition: transform var(--d-fast) var(--e-out); }
+  .order .add:hover { transform: translate(-2px, -2px); }
+  .stepper { display: none; align-items: center; border: 2px solid var(--black); background: var(--bone); }
+  .order.has .add { display: none; }
+  .order.has .stepper, .cart .stepper { display: inline-flex; }
+  .stepper button { width: 2.75rem; height: 2.75rem; font-size: 1.25rem; letter-spacing: 0; }
+  .stepper output { min-width: 2.5rem; text-align: center; font: 900 1.5rem/1 var(--font-display); }
+  .sides ul { gap: var(--s-1); }
+  .sides .side { display: flex; align-items: center; gap: var(--s-2); padding: .4em .4em .4em 1em; }
+  .side .order { margin: 0; }
+  .side .order .add { padding: .8em 1em; box-shadow: none; }
+  .fab.has-items { background: var(--red); color: var(--bone); border-color: var(--red); }
+
+  .sheet-bg { position: fixed; inset: 0; z-index: 40; display: grid; align-items: end; justify-items: center; background: rgba(15, 14, 13, .65); }
+  .sheet-bg[hidden] { display: none; }
+  .sheet {
+    width: min(560px, 100%); max-height: 92vh; overflow: auto; overscroll-behavior: contain;
+    padding: var(--s-3) var(--gutter) calc(var(--s-3) + env(safe-area-inset-bottom, 0px)); border-top: 6px solid var(--red);
+  }
+  @media (min-width: 700px) { .sheet-bg { align-items: center; } }
+  .sheet-head { display: flex; justify-content: space-between; align-items: center; }
+  .sheet-head h2 { font-size: clamp(2.5rem, 11vw, 3.75rem); }
+  .x-close { width: 2.75rem; height: 2.75rem; border: 2px solid var(--black); background: none; color: var(--black); font-size: 1.6rem; cursor: pointer; }
+  .cart { list-style: none; margin-block: var(--s-2); }
+  .cart li { display: flex; justify-content: space-between; align-items: center; gap: var(--s-2); padding-block: .75rem; border-bottom: 2px solid var(--line); }
+  .cart li div { display: grid; }
+  .cart li span { font-size: var(--t-small); }
+  .cart .empty { color: var(--black); opacity: .75; }
+  .cart-total { display: flex; justify-content: space-between; margin-bottom: var(--s-3); font: 900 1.75rem/1 var(--font-display); text-transform: uppercase; }
+  .checkout { display: grid; gap: var(--s-2); }
+  .checkout label, .checkout legend { display: grid; gap: .4rem; font: 700 var(--t-micro)/1.2 var(--font-body); letter-spacing: .16em; text-transform: uppercase; }
+  .checkout label[hidden] { display: none; }
+  .checkout input:not([type=radio]), .checkout select, .checkout textarea {
+    width: 100%; padding: .8em .9em; border: 2px solid var(--black); border-radius: 0; background: #fff; color: var(--black);
+    font: 400 1rem var(--font-body); letter-spacing: 0; text-transform: none;
+  }
+  .seg { display: flex; flex-wrap: wrap; gap: var(--s-1); border: 0; }
+  .seg legend { width: 100%; margin-bottom: .4rem; }
+  .seg label { display: flex; align-items: center; gap: .5rem; padding: .75em 1em; border: 2px solid var(--black); cursor: pointer; }
+  .seg input { accent-color: var(--red); width: 1.1rem; height: 1.1rem; }
+  .checkout .btn { justify-content: center; box-shadow: 6px 6px 0 var(--black); }
+  .sheet-note { font-size: var(--t-small); opacity: .8; }
+
+  @media (max-width: 599px) {
+    .menu, .footer { padding-block: var(--s-4); }
+    .info, .wordmark { margin-top: var(--s-4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tag-btn, .btn, .item-name { transition: none; }
+    .fab { transition: opacity var(--d-fast); }
+    .fab.is-hidden { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section class="hero t-black" id="hero">
+    <p class="demo kicker">Modelo · cardápio digital interativo</p>
+    <header class="top">
+      <a class="tag-btn tag-bone" href="#hero">Chapa Burger</a>
+      <a class="tag-btn tag-mustard" href="https://wa.me/?text=Ol%C3%A1!%20Vim%20pelo%20card%C3%A1pio%20digital%20e%20quero%20fazer%20um%20pedido." target="_blank" rel="noopener">Pedir ↗</a>
+    </header>
+
+    <div class="hero-stage">
+      <p class="kicker hero-kicker"><span class="intro">Hamburgueria artesanal</span></p>
+      <h1 class="lockup display" aria-label="Chapa Burger">
+        <span class="mask word"><span>Chapa</span></span>
+        <span class="burger-wrap" aria-hidden="true">
+          <span class="stack">
+            <span class="layer" style="left:9.4%;top:70.2%;width:80.5%"><img class="drop" style="--k:0" src="img/camada-0.webp" alt="" width="805" height="248"></span>
+            <span class="layer" style="left:8.5%;top:56.5%;width:80.3%"><img class="drop" style="--k:1" src="img/camada-1.webp" alt="" width="803" height="200"></span>
+            <span class="layer" style="left:1.8%;top:49.6%;width:93.7%"><img class="drop" style="--k:2" src="img/camada-2.webp" alt="" width="937" height="154"></span>
+            <span class="layer" style="left:6.5%;top:43.3%;width:84.7%"><img class="drop" style="--k:3" src="img/camada-3.webp" alt="" width="847" height="91"></span>
+            <span class="layer" style="left:1.8%;top:33.3%;width:98.2%"><img class="drop" style="--k:4" src="img/camada-4.webp" alt="" width="982" height="183"></span>
+            <span class="layer" style="left:3.2%;top:3.3%;width:93.1%"><img class="drop" style="--k:5" src="img/camada-5.webp" alt="" width="931" height="344"></span>
+          </span>
+        </span>
+      </h1>
+      <div class="hero-cta"><a class="btn btn-bone intro" href="#burgers">Ver cardápio ↓</a></div>
+    </div>
+
+    <div class="captions" aria-hidden="true">
+      <p class="cap cap-a"><span class="kicker">O burger da casa, aberto</span><span class="cap-t display">Camada<br>por camada.</span></p>
+      <p class="cap cap-b"><span class="kicker">Fechou.</span><span class="cap-t display">Agora é<br>com você.</span><span>Escolha o seu ↓</span></p>
+    </div>
+    <p class="lbl" aria-hidden="true">Pão selado</p>
+    <p class="lbl" aria-hidden="true">Carne + cheddar</p>
+    <p class="lbl" aria-hidden="true">Bacon</p>
+    <p class="lbl" aria-hidden="true">Tomate e cebola roxa</p>
+    <p class="lbl" aria-hidden="true">Alface + molho</p>
+    <p class="lbl" aria-hidden="true">Pão com gergelim</p>
+  </section>
+
+  <!--
+    ============ CARDÁPIO ============
+    Modelo: nome, produtos e preços são FICTÍCIOS. Para usar com um cliente, troque pelos dados da casa.
+    Cada produto é um <li class="item"> (com foto) ou <li class="row"> (lista).
+    O botão de pedido usa data-item (nome) e data-price (preço em reais).
+  -->
+  <section class="menu t-bone" id="burgers" aria-labelledby="t-peso">
+    <div class="menu-head">
+      <p class="kicker">01 — Burgers da casa</p>
+      <h2 class="menu-title display reveal" id="t-peso"><span class="mask"><span>Escolha</span></span><span class="mask"><span>o peso.</span></span></h2>
+      <p class="menu-note">Pão brioche selado na chapa e blend de 150 g. Toque em <strong>+ Adicionar</strong> e monte seu pedido.</p>
+    </div>
+    <ul class="items">
+        <li class="item">
+          <figure class="ph"><img src="img/simples.webp" alt="Burger Clássico, 1 carne com cheddar" width="712" height="617" loading="lazy"><span class="x display" aria-hidden="true">1×</span></figure>
+          <h3 class="item-name display"><span class="mask"><span>Clássico</span></span></h3>
+          <p class="price">R$ 22</p>
+          <p class="desc">1 carne de 150 g, cheddar e maionese da casa.</p>
+          <div class="order" data-item="Clássico" data-price="22"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Cl%C3%A1ssico.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="item">
+          <figure class="ph"><img src="img/duplo.webp" alt="Burger Duplo Bacon, 2 carnes com cheddar" width="717" height="646" loading="lazy"><span class="x display" aria-hidden="true">2×</span></figure>
+          <h3 class="item-name display"><span class="mask"><span>Duplo Bacon</span></span></h3>
+          <p class="price">R$ 29</p>
+          <p class="desc">2 carnes, cheddar em dobro e bacon crocante.</p>
+          <div class="order" data-item="Duplo Bacon" data-price="29"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Duplo%20Bacon.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="item">
+          <figure class="ph"><img src="img/triplo.webp" alt="Burger Triplo, 3 carnes com cheddar" width="653" height="661" loading="lazy"><span class="x display" aria-hidden="true">3×</span></figure>
+          <h3 class="item-name display"><span class="mask"><span>Triplo</span></span></h3>
+          <p class="price">R$ 35</p>
+          <p class="desc">3 carnes, cheddar e cebola caramelizada.</p>
+          <div class="order" data-item="Triplo" data-price="35"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Triplo.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="item">
+          <figure class="ph"><img src="img/bruto.webp" alt="Burger Monstro, 4 carnes com cheddar" width="593" height="665" loading="lazy"><span class="x display" aria-hidden="true">4×</span></figure>
+          <h3 class="item-name display"><span class="mask"><span>Monstro</span></span></h3>
+          <p class="price">R$ 42</p>
+          <p class="desc">4 carnes, cheddar, bacon e molho especial. Pra quem aguenta.</p>
+          <div class="order" data-item="Monstro" data-price="42"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Monstro.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+    </ul>
+  </section>
+
+  <section class="menu t-bone" id="smash" aria-labelledby="t-smash">
+    <div class="menu-head">
+      <p class="kicker">02 — Smash, frango e kids</p>
+      <h2 class="menu-title display reveal" id="t-smash"><span class="mask"><span>Na</span></span><span class="mask"><span>chapa.</span></span></h2>
+      <p class="menu-note">Carne prensada na chapa até a borda ficar crocante.</p>
+    </div>
+    <ul class="rows">
+        <li class="row">
+          <h3 class="row-name display">Smash Simples</h3>
+          <p class="price">R$ 18</p>
+          <p class="desc">1 smash de 80 g, cheddar e picles.</p>
+          <div class="order" data-item="Smash Simples" data-price="18"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Smash%20Simples.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Smash Duplo</h3>
+          <p class="price">R$ 24</p>
+          <p class="desc">2 smash de 80 g, cheddar em dobro e cebola na chapa.</p>
+          <div class="order" data-item="Smash Duplo" data-price="24"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Smash%20Duplo.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Salada</h3>
+          <p class="price">R$ 24</p>
+          <p class="desc">Carne, queijo, alface, tomate e cebola roxa.</p>
+          <div class="order" data-item="Salada" data-price="24"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Salada.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Frango Crispy</h3>
+          <p class="price">R$ 26</p>
+          <p class="desc">Frango empanado crocante, alface e maionese verde.</p>
+          <div class="order" data-item="Frango Crispy" data-price="26"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Frango%20Crispy.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Kids</h3>
+          <p class="price">R$ 16</p>
+          <p class="desc">Burger pequeno com queijo. Pra criançada.</p>
+          <div class="order" data-item="Kids" data-price="16"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Kids.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+    </ul>
+  </section>
+
+  <!-- ============ FAIXA DE CONTRASTE ============ -->
+  <section class="band t-red" aria-label="Feito na chapa">
+    <div class="tracks display" aria-hidden="true">
+      <div class="track">
+        <span>Feito na chapa</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Artesanal</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Feito na chapa</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Artesanal</span>
+      </div>
+      <div class="track track-outline">
+        <span>Clássico</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Duplo Bacon</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Triplo</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Monstro</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Clássico</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Duplo Bacon</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Triplo</span><svg class="star" viewBox="0 0 20 20"><path d="M10 0L12.6 7.4L20 10L12.6 12.6L10 20L7.4 12.6L0 10L7.4 7.4Z"/></svg>
+        <span>Monstro</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu t-bone" id="combos" aria-labelledby="t-combos">
+    <div class="menu-head">
+      <p class="kicker">03 — Combos</p>
+      <h2 class="menu-title display reveal" id="t-combos"><span class="mask"><span>Combos</span></span></h2>
+      <p class="menu-note">Burger, batata e refri num preço só.</p>
+    </div>
+    <ul class="rows">
+        <li class="row">
+          <h3 class="row-name display">Combo Smash</h3>
+          <p class="price">R$ 30</p>
+          <p class="desc">Smash Duplo + batata P + refri lata.</p>
+          <div class="order" data-item="Combo Smash" data-price="30"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Combo%20Smash.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Combo Clássico</h3>
+          <p class="price">R$ 34</p>
+          <p class="desc">Clássico + batata P + refri lata.</p>
+          <div class="order" data-item="Combo Clássico" data-price="34"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Combo%20Cl%C3%A1ssico.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Combo Duplo Bacon</h3>
+          <p class="price">R$ 40</p>
+          <p class="desc">Duplo Bacon + batata P + refri lata.</p>
+          <div class="order" data-item="Combo Duplo Bacon" data-price="40"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Combo%20Duplo%20Bacon.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Combo Casal</h3>
+          <p class="price">R$ 69</p>
+          <p class="desc">2 Clássicos + batata M + 2 refris lata.</p>
+          <div class="order" data-item="Combo Casal" data-price="69"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Combo%20Casal.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Combo Família</h3>
+          <p class="price">R$ 119</p>
+          <p class="desc">4 burgers Clássico + 2 batatas M + refri 2 L.</p>
+          <div class="order" data-item="Combo Família" data-price="119"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Combo%20Fam%C3%ADlia.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+    </ul>
+  </section>
+
+  <section class="menu t-bone" id="porcoes" aria-labelledby="t-porcoes">
+    <div class="menu-head">
+      <p class="kicker">04 — Porções</p>
+      <h2 class="menu-title display reveal" id="t-porcoes"><span class="mask"><span>Pra</span></span><span class="mask"><span>dividir.</span></span></h2>
+      <p class="menu-note">Pra pedir junto com o burger ou dividir na mesa.</p>
+    </div>
+    <ul class="rows">
+        <li class="row">
+          <h3 class="row-name display">Batata P</h3>
+          <p class="price">R$ 14</p>
+          <p class="desc">Batata frita sequinha, 150 g.</p>
+          <div class="order" data-item="Batata P" data-price="14"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Batata%20P.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Batata M</h3>
+          <p class="price">R$ 19</p>
+          <p class="desc">Batata frita, 300 g. Dá pra dividir.</p>
+          <div class="order" data-item="Batata M" data-price="19"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Batata%20M.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Batata Cheddar e Bacon</h3>
+          <p class="price">R$ 26</p>
+          <p class="desc">Batata M coberta de cheddar cremoso e bacon.</p>
+          <div class="order" data-item="Batata Cheddar e Bacon" data-price="26"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Batata%20Cheddar%20e%20Bacon.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Onion Rings</h3>
+          <p class="price">R$ 22</p>
+          <p class="desc">Anéis de cebola empanados, 12 unidades.</p>
+          <div class="order" data-item="Onion Rings" data-price="22"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Onion%20Rings.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Nuggets</h3>
+          <p class="price">R$ 18</p>
+          <p class="desc">10 unidades com molho à escolha.</p>
+          <div class="order" data-item="Nuggets" data-price="18"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Nuggets.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+    </ul>
+  </section>
+
+  <section class="menu t-bone" id="bebidas" aria-labelledby="t-bebidas">
+    <div class="menu-head">
+      <p class="kicker">05 — Bebidas e sobremesas</p>
+      <h2 class="menu-title display reveal" id="t-bebidas"><span class="mask"><span>Pra</span></span><span class="mask"><span>fechar.</span></span></h2>
+      <p class="menu-note">Gelada pra acompanhar e um doce no final.</p>
+    </div>
+    <ul class="rows">
+        <li class="row">
+          <h3 class="row-name display">Refri lata</h3>
+          <p class="price">R$ 6</p>
+          <p class="desc">350 ml. Pergunte os sabores.</p>
+          <div class="order" data-item="Refri lata" data-price="6"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Refri%20lata.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Refri 1 L</h3>
+          <p class="price">R$ 10</p>
+          <p class="desc">Pergunte os sabores.</p>
+          <div class="order" data-item="Refri 1 L" data-price="10"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Refri%201%20L.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Refri 2 L</h3>
+          <p class="price">R$ 14</p>
+          <p class="desc">Pergunte os sabores.</p>
+          <div class="order" data-item="Refri 2 L" data-price="14"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Refri%202%20L.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Suco natural</h3>
+          <p class="price">R$ 9</p>
+          <p class="desc">500 ml. Laranja, maracujá ou acerola.</p>
+          <div class="order" data-item="Suco natural" data-price="9"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Suco%20natural.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Água</h3>
+          <p class="price">R$ 4</p>
+          <p class="desc">500 ml, com ou sem gás.</p>
+          <div class="order" data-item="Água" data-price="4"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20%C3%81gua.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Milkshake</h3>
+          <p class="price">R$ 16</p>
+          <p class="desc">400 ml. Chocolate, morango ou ninho.</p>
+          <div class="order" data-item="Milkshake" data-price="16"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Milkshake.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+        <li class="row">
+          <h3 class="row-name display">Brownie</h3>
+          <p class="price">R$ 12</p>
+          <p class="desc">Brownie de chocolate com calda.</p>
+          <div class="order" data-item="Brownie" data-price="12"><a class="add" href="https://wa.me/?text=Ol%C3%A1%21%20Quero%20pedir%201x%20Brownie.%20Vim%20pelo%20card%C3%A1pio%20digital." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a></div>
+        </li>
+    </ul>
+  </section>
+</main>
+
+<!-- ============ RODAPÉ ============ -->
+<footer class="footer t-black" id="pedir">
+  <div class="footer-cta">
+    <p class="kicker" style="color: var(--mustard)">Todos os dias · 18h às 23h</p>
+    <h2 class="footer-title display reveal"><span class="mask"><span>Fome</span></span><span class="mask"><span>de burger?</span></span></h2>
+    <a class="btn btn-mustard" href="https://wa.me/?text=Ol%C3%A1!%20Vim%20pelo%20card%C3%A1pio%20digital%20e%20quero%20fazer%20um%20pedido." target="_blank" rel="noopener">Pedir no WhatsApp ↗</a>
+  </div>
+  <dl class="info">
+    <div><dt class="kicker">Endereço</dt><dd>Rua Exemplo, 123<br>Centro · Sua cidade</dd></div>
+    <div><dt class="kicker">Horário</dt><dd>Todos os dias<br>18h às 23h</dd></div>
+    <div><dt class="kicker">WhatsApp</dt><dd>(00) 00000-0000</dd></div>
+    <div><dt class="kicker">Instagram</dt><dd>@suahamburgueria</dd></div>
+  </dl>
+  <p class="wordmark display" aria-hidden="true">Chapa</p>
+  <p class="fine">Modelo de cardápio digital. Nome, produtos, preços, endereço e contatos são fictícios.</p>
+</footer>
+
+<a class="tag-btn tag-mustard fab" href="https://wa.me/?text=Ol%C3%A1!%20Vim%20pelo%20card%C3%A1pio%20digital%20e%20quero%20fazer%20um%20pedido." target="_blank" rel="noopener">WhatsApp ↗</a>
+
+<div class="sheet-bg" id="sheet" hidden>
+  <div class="sheet t-bone" role="dialog" aria-modal="true" aria-labelledby="sheet-t">
+    <div class="sheet-head">
+      <h2 class="display" id="sheet-t">Seu pedido</h2>
+      <button type="button" class="x-close" aria-label="Fechar">×</button>
+    </div>
+    <ul class="cart"></ul>
+    <p class="cart-total"><span>Total</span><strong>R$ 0,00</strong></p>
+    <form class="checkout">
+      <label>Seu nome<input name="nome" autocomplete="name" required></label>
+      <fieldset class="seg">
+        <legend>Como quer receber?</legend>
+        <label><input type="radio" name="modo" value="Entrega" checked> Entrega</label>
+        <label><input type="radio" name="modo" value="Retirada"> Retirada</label>
+      </fieldset>
+      <label class="addr">Endereço de entrega<input name="endereco" autocomplete="street-address" required></label>
+      <label>Pagamento
+        <select name="pag"><option>Pix</option><option>Cartão na entrega</option><option>Dinheiro</option></select>
+      </label>
+      <label>Observações<textarea name="obs" rows="2" placeholder="Sem cebola, troco pra 50..."></textarea></label>
+      <button class="btn btn-mustard" type="submit">Enviar pedido no WhatsApp ↗</button>
+      <p class="sheet-note">O WhatsApp abre com o pedido já escrito. É só tocar em enviar.</p>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+  const root = document.documentElement;
+  const hero = document.getElementById('hero');
+  const WHATS = ''; // número da casa com DDI e DDD, só dígitos, ex.: '55' + DDD + número. Vazio = o WhatsApp pergunta para quem enviar
+  const wa = text => `https://wa.me/${WHATS}?text=${encodeURIComponent(text)}`;
+  const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  let lenis = null;
+
+  // ============ PEDIDO PELO WHATSAPP ============
+  const cart = new Map(); // nome -> { price, qty }
+  const fab = document.querySelector('.fab');
+  const footerCta = document.querySelector('.footer-cta .btn');
+  const sheet = document.getElementById('sheet');
+  const cartList = sheet.querySelector('.cart');
+  const cartTotal = sheet.querySelector('.cart-total strong');
+  const form = sheet.querySelector('form');
+
+  const totals = () => {
+    let count = 0, sum = 0, open = false;
+    cart.forEach(({ price, qty }) => { count += qty; if (price == null) open = true; else sum += price * qty; });
+    return { count, label: open ? (sum ? `${brl(sum)} + a confirmar` : 'a confirmar') : brl(sum) };
+  };
+  const stepper = name => `<span class="stepper"><button type="button" data-step="-1" aria-label="Tirar um ${esc(name)}">−</button><output>0</output><button type="button" data-step="1" aria-label="Mais um ${esc(name)}">+</button></span>`;
+
+  // cada produto: "+ Adicionar" vira contador (– 1 +) depois do primeiro toque
+  const controls = [...document.querySelectorAll('.order')];
+  controls.forEach(el => {
+    el.innerHTML = `<button type="button" class="add" data-step="1">+ Adicionar</button>${stepper(el.dataset.item)}`;
+    el.addEventListener('click', e => {
+      const btn = e.target.closest('[data-step]');
+      if (!btn) return;
+      const hadFocus = btn.classList.contains('add');
+      change(el.dataset.item, el.dataset.price ? Number(el.dataset.price) : null, Number(btn.dataset.step));
+      if (hadFocus) el.querySelector('[data-step="1"]:not(.add)').focus();
+    });
+  });
+
+  function change(name, price, step) {
+    const item = cart.get(name) || { price, qty: 0 };
+    item.qty = Math.max(0, item.qty + step);
+    if (item.qty) cart.set(name, item); else cart.delete(name);
+    paint();
+  }
+
+  function paint() {
+    controls.forEach(el => {
+      const qty = cart.get(el.dataset.item)?.qty || 0;
+      el.classList.toggle('has', qty > 0);
+      el.querySelector('output').textContent = qty;
+    });
+    const { count, label } = totals();
+    cartList.innerHTML = [...cart].map(([name, { price, qty }]) => `
+      <li data-item="${esc(name)}">
+        <div><strong>${esc(name)}</strong><span>${price == null ? 'preço a confirmar' : brl(price * qty)}</span></div>
+        ${stepper(name).replace('<output>0</output>', `<output>${qty}</output>`)}
+      </li>`).join('') || '<li class="empty">Seu pedido está vazio. Escolha um burger no cardápio.</li>';
+    cartTotal.textContent = label;
+    fab.textContent = count ? `Ver pedido (${count}) · ${label}` : 'WhatsApp ↗';
+    fab.classList.toggle('has-items', count > 0);
+    syncFab();
+  }
+
+  cartList.addEventListener('click', e => {
+    const btn = e.target.closest('[data-step]');
+    const li = btn && btn.closest('li');
+    if (li) change(li.dataset.item, null, Number(btn.dataset.step));
+  });
+
+  // botão flutuante: some no topo e perto do botão do rodapé, a não ser que já tenha pedido
+  const seen = new Map();
+  function syncFab() {
+    fab.classList.toggle('is-hidden', !cart.size && [...seen.values()].some(Boolean));
+  }
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => seen.set(e.target, e.isIntersecting));
+      syncFab();
+    });
+    [hero, document.querySelector('.footer-cta')].forEach(el => el && io.observe(el));
+  }
+
+  // tela do pedido
+  let lastFocus = null;
+  const openSheet = () => {
+    lastFocus = document.activeElement;
+    sheet.hidden = false;
+    document.body.style.overflow = 'hidden';
+    if (lenis) lenis.stop();
+    sheet.querySelector('.x-close').focus();
+  };
+  const closeSheet = () => {
+    sheet.hidden = true;
+    document.body.style.overflow = '';
+    if (lenis) lenis.start();
+    if (lastFocus) lastFocus.focus();
+  };
+  [fab, footerCta].forEach(a => a.addEventListener('click', e => {
+    if (!cart.size) return; // sem itens: o link abre o WhatsApp direto
+    e.preventDefault();
+    openSheet();
+  }));
+  sheet.querySelector('.x-close').addEventListener('click', closeSheet);
+  sheet.addEventListener('click', e => { if (e.target === sheet) closeSheet(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !sheet.hidden) closeSheet(); });
+
+  const address = form.querySelector('.addr');
+  form.addEventListener('change', () => {
+    const delivery = form.elements.modo.value === 'Entrega';
+    address.hidden = !delivery;
+    address.querySelector('input').required = delivery;
+  });
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!cart.size) return;
+    const d = new FormData(form);
+    const lines = [...cart].map(([name, { price, qty }]) => `• ${qty}x ${name}${price == null ? ' (preço a confirmar)' : ` — ${brl(price * qty)}`}`);
+    const msg = [
+      '*Pedido – Chapa Burger* 🍔', '', ...lines, '',
+      `*Total:* ${totals().label}`,
+      `*Nome:* ${d.get('nome')}`,
+      d.get('modo') === 'Entrega' ? `*Entrega:* ${d.get('endereco')}` : '*Retirada no balcão*',
+      `*Pagamento:* ${d.get('pag')}`,
+      ...(d.get('obs') ? [`*Obs.:* ${d.get('obs')}`] : []),
+      '', '_Pedido feito pelo cardápio digital._'
+    ].join('\n');
+    window.open(wa(msg), '_blank', 'noopener');
+  });
+  paint();
+
+  // ============ HERO: o burger da casa se abre camada por camada ============
+  const motionOK = root.classList.contains('js-motion') && window.gsap && window.ScrollTrigger;
+  if (!motionOK) return; // movimento reduzido ou sem bibliotecas: o burger fica montado, parado
+
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  if (window.Lenis) {
+    lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      const target = a && a.hash.length > 1 && document.querySelector(a.hash);
+      if (target) { e.preventDefault(); lenis.scrollTo(target); }
+    });
+  }
+
+  const wrap = hero.querySelector('.burger-wrap');
+  const layers = gsap.utils.toArray(hero.querySelectorAll('.stack .layer')); // 0 = pão de baixo … 5 = pão de cima
+  const labels = gsap.utils.toArray(hero.querySelectorAll('.lbl'));        // mesma ordem das camadas
+  const capA = hero.querySelector('.cap-a'), capB = hero.querySelector('.cap-b');
+  const SPREAD = 0.13;                          // distância entre camadas, em fração da largura do burger
+  const TILT = [1.5, -2, 2.5, -1.5, 2, -2.5];   // leve inclinação de cada camada no ar
+
+  // nomes à direita do burger, na altura de cada camada (e sem encavalar um no outro)
+  const placeLabels = () => {
+    const h = hero.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+    const left = w.right - h.left + 10, room = hero.clientWidth - left - 16;
+    const items = labels.map((l, i) => {
+      l.style.left = `${left}px`;
+      l.style.maxWidth = `${room}px`;
+      const r = layers[i].getBoundingClientRect();
+      return { l, y: r.top - h.top + r.height / 2, half: l.offsetHeight / 2 };
+    }).sort((a, b) => a.y - b.y);
+    items.forEach((it, k) => {
+      if (k) it.y = Math.max(it.y, items[k - 1].y + items[k - 1].half + it.half + 6);
+      it.l.style.top = `${it.y}px`;
+    });
+  };
+
+  gsap.matchMedia().add({
+    wide: '(min-aspect-ratio: 1/1) and (min-width: 600px)',
+    narrow: 'not all and (min-aspect-ratio: 1/1) and (min-width: 600px)'
+  }, ctx => {
+    const { wide } = ctx.conditions;
+
+    // onde o burger se abre: no centro no desktop, à esquerda no celular (nomes à direita)
+    const geo = () => {
+      const h = hero.getBoundingClientRect(), r = wrap.getBoundingClientRect();
+      const cx = r.left + r.width / 2 - gsap.getProperty(wrap, 'x') - h.left;
+      const cy = r.top + r.height / 2 - gsap.getProperty(wrap, 'y') - h.top;
+      const W = hero.clientWidth, H = hero.clientHeight, bw = wrap.offsetWidth;
+      const s = wide ? Math.min(1.25, .84 * H / (1.52 * bw)) : Math.min(.56 * W / bw, .6 * H / (1.52 * bw));
+      return { x: (wide ? .5 * W : .05 * W + s * bw / 2) - cx, y: (wide ? .52 : .6) * H - cy, s };
+    };
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut' },
+      onUpdate: placeLabels,
+      scrollTrigger: { trigger: hero, start: 'top top', end: '+=220%', pin: true, scrub: 1, anticipatePin: 1, invalidateOnRefresh: true, onRefresh: placeLabels }
+    });
+    tl.to(hero.querySelector('.word'), { opacity: .1, scale: .92, duration: 1 }, 0)
+      .to(hero.querySelectorAll('.hero-kicker, .hero-cta'), { opacity: 0, y: -20, duration: .5 }, 0)
+      .to(wrap, { x: () => geo().x, y: () => geo().y, scale: () => geo().s, duration: 1.4 }, .2)
+      .fromTo(capA, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .5, ease: 'power3.out' }, .8)
+      .to(layers, { y: i => (2.5 - i) * SPREAD * wrap.offsetWidth, rotation: i => TILT[i], duration: 1.4, ease: 'power3.inOut', stagger: { each: .05, from: 'end' } }, .9)
+      .fromTo([...labels].reverse(), { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: .4, ease: 'power3.out', stagger: .18 }, 1.9)
+      .to(labels, { opacity: 0, duration: .4 }, 4.2)
+      .to(capA, { opacity: 0, y: -30, duration: .4, ease: 'power2.in' }, 4.2)
+      .to(layers, { y: 0, rotation: 0, duration: 1.2, ease: 'power3.inOut', stagger: { each: .05 } }, 4.4)
+      .fromTo(capB, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .5, ease: 'power3.out' }, 5.4)
+      .to({}, { duration: .6 });
+  });
+
+  // ---------- títulos: a linha sobe de dentro da máscara ----------
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.from(el.querySelectorAll('.mask > span'), {
+      yPercent: 180, duration: .9, ease: 'power3.out', stagger: .08,
+      scrollTrigger: { trigger: el, start: 'top 85%' }
+    });
+  });
+
+  // ---------- itens do cardápio ----------
+  gsap.utils.toArray('.item').forEach(item => {
+    gsap.timeline({ scrollTrigger: { trigger: item, start: 'top 88%' } })
+      .from(item, { '--rule': '0%', duration: .9, ease: 'power3.out' })
+      .from(item.querySelectorAll('.item-name .mask > span'), { yPercent: 180, duration: .9, ease: 'power3.out' }, 0)
+      .from(item.querySelectorAll('.ph, .price, .desc, .order'), { opacity: 0, y: 16, duration: .6, ease: 'power3.out', stagger: .07 }, .15);
+  });
+
+  gsap.utils.toArray('.row').forEach(row => {
+    gsap.from(row.children, { opacity: 0, y: 16, duration: .6, ease: 'power3.out', stagger: .06, scrollTrigger: { trigger: row, start: 'top 90%' } });
+  });
+
+  // ---------- faixa: as palavras correm com o scroll ----------
+  gsap.utils.toArray('.track').forEach((track, i) => {
+    gsap.fromTo(track, { xPercent: i % 2 ? -30 : 0 }, {
+      xPercent: i % 2 ? 0 : -30, ease: 'none',
+      scrollTrigger: { trigger: track.closest('section'), start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+  });
+
+  // ---------- marca gigante do rodapé ----------
+  gsap.from('.wordmark', {
+    yPercent: 30, opacity: 0, ease: 'none',
+    scrollTrigger: { trigger: '.wordmark', start: 'top bottom', end: 'bottom bottom', scrub: true }
+  });
+
+  if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>
