@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Conectar TikTok</title>
+<meta name="theme-color" content="#0b0b10">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <div class="card">
+    <h1 id="title">Quase lá!</h1>
+    <div id="ok" hidden>
+      <p>Copie o código abaixo e cole no GitHub para terminar a conexão:</p>
+      <p id="code" class="code"></p>
+      <button id="copy" class="primary">Copiar código</button>
+      <ol>
+        <li>Toque em <b>Abrir GitHub Actions</b> abaixo.</li>
+        <li>Toque em <b>Run workflow</b>.</li>
+        <li>Cole o código no campo e toque em <b>Run workflow</b> de novo.</li>
+        <li>Em 1–2 minutos chega a notificação “TikTok conectado ✅”.</li>
+      </ol>
+      <p><a id="gh" target="_blank" rel="noopener">Abrir GitHub Actions →</a></p>
+      <p class="muted small">Faça isso logo: o código expira em poucos minutos.</p>
+    </div>
+    <p id="err" class="muted" hidden></p>
+    <p><a href="./">← Voltar para o painel</a></p>
+  </div>
+</main>
+<script>
+  const q = new URLSearchParams(location.search);
+  const code = q.get('code');
+  let expected = null;
+  try { expected = localStorage.getItem('oauth_state'); } catch {}
+  const [owner] = location.hostname.split('.');
+  const repo = location.pathname.split('/').filter(Boolean)[0];
+  document.getElementById('gh').href = `https://github.com/${owner}/${repo}/actions/workflows/tiktok.yml`;
+
+  if (q.get('error') || !code) {
+    document.getElementById('title').textContent = 'Não deu certo';
+    const err = document.getElementById('err');
+    err.hidden = false;
+    err.textContent = q.get('error_description') || q.get('error') || 'O TikTok não enviou o código. Tente conectar de novo.';
+  } else if (expected && q.get('state') !== expected) {
+    document.getElementById('title').textContent = 'Link inválido';
+    const err = document.getElementById('err');
+    err.hidden = false;
+    err.textContent = 'Esse retorno não veio do botão “Conectar TikTok” deste aparelho. Tente de novo pelo painel.';
+  } else {
+    document.getElementById('ok').hidden = false;
+    document.getElementById('code').textContent = code;
+    document.getElementById('copy').onclick = async (e) => {
+      try { await navigator.clipboard.writeText(code); e.target.textContent = 'Copiado ✓'; }
+      catch { getSelection().selectAllChildren(document.getElementById('code')); }
+    };
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+name: TikTok – painel e notificações
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # a cada 15 min (o GitHub pode atrasar alguns minutos)
+  workflow_dispatch:
+    inputs:
+      code:
+        description: 'Código do TikTok (só na primeira vez, copiado da página de conexão)'
+        required: false
+  push:
+    branches: [main]
+    paths: ['site/**', 'scripts/**', '.github/workflows/tiktok.yml']
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: tiktok
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+      TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+      TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+      TIKTOK_LAST_MILESTONE: ${{ vars.TIKTOK_LAST_MILESTONE }}
+      NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+      PAGES_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+      GH_TOKEN: ${{ secrets.GH_PAT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Conectar conta do TikTok
+        if: ${{ inputs.code != '' }}
+        env:
+          TIKTOK_CODE: ${{ inputs.code }}
+        run: node scripts/tiktok.mjs auth
+
+      - name: Buscar visualizações e notificar
+        id: sync
+        run: node scripts/tiktok.mjs sync
+
+      # O TikTok pode trocar o refresh token; guardamos o novo para a próxima execução.
+      - name: Salvar refresh token
+        if: always()
+        run: |
+          if [ -s "$RUNNER_TEMP/refresh_token" ]; then
+            if [ -z "$GH_TOKEN" ]; then echo "::error::Falta o secret GH_PAT"; exit 1; fi
+            gh secret set TIKTOK_REFRESH_TOKEN --repo "$GITHUB_REPOSITORY" < "$RUNNER_TEMP/refresh_token"
+            rm -f "$RUNNER_TEMP/refresh_token"
+            echo "Refresh token atualizado."
+          fi
+
+      - name: Salvar último marco notificado
+        if: ${{ steps.sync.outputs.milestone != '' }}
+        run: gh variable set TIKTOK_LAST_MILESTONE --repo "$GITHUB_REPOSITORY" --body "${{ steps.sync.outputs.milestone }}"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
