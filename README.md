@@ -9,6 +9,12 @@ Painel para o celular com todas as visualizações da sua conta do TikTok, e uma
   as visualizações de cada um, seguidores e curtidas.
 - **Atualização**: um GitHub Actions roda a cada ~15 minutos, busca os números,
   publica o painel e manda a notificação pelo app gratuito **ntfy**.
+- **App Android (APK)**: baixe no celular em
+  <https://github.com/davipaivabatist567-pixel/weather-dashboard/releases/download/apk-latest/MeuTikTok.apk>.
+  O app mostra o painel e, a cada ~15 minutos, confere os números e manda a
+  notificação sozinho (com o app instalado, o ntfy é opcional). Na instalação,
+  permita "instalar apps desconhecidos" e, ao abrir, permita notificações.
+  O APK é montado automaticamente pelo GitHub (`.github/workflows/android.yml`).
 
 > O TikTok Studio não tem uma forma oficial de ser lido por outros apps. Por isso
 > o painel usa a API oficial, que exige criar um "app de desenvolvedor"
