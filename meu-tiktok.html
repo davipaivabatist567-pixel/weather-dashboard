@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meu TikTok</title>
+<meta name="theme-color" content="#0b0b10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Meu TikTok">
+<style>
+:root {
+  --bg: #0b0b10;
+  --card: #16161f;
+  --line: #262633;
+  --text: #f4f4f7;
+  --muted: #9a9aab;
+  --pink: #fe2c55;
+  --cyan: #25f4ee;
+  --green: #3ddc84;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body {
+  font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+}
+main { max-width: 720px; margin: 0 auto; }
+h1 { font-size: 20px; margin: 0; }
+h2 { font-size: 16px; margin: 0; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.who { display: flex; align-items: center; gap: 12px; min-width: 0; }
+#avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--pink); }
+.icon-btn {
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line);
+  background: var(--card); color: var(--text); font-size: 22px; cursor: pointer;
+}
+.icon-btn.spin { animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+.card > * + * { margin-top: 10px; }
+.hero { text-align: center; padding: 24px 16px; background: linear-gradient(160deg, #1d1220, var(--card) 60%, #0f1c1f); }
+.big { font-size: clamp(40px, 13vw, 64px); font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
+#delta { color: var(--green); min-height: 18px; }
+.progress { height: 10px; background: #0f0f15; border-radius: 99px; overflow: hidden; }
+.progress span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--cyan), var(--pink)); transition: width 0.6s; }
+.stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
+@media (min-width: 560px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+.stats .card { margin: 0; }
+.stat p:last-child { font-size: 22px; font-weight: 700; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.tabs { display: flex; background: #0f0f15; border-radius: 99px; padding: 3px; }
+.tabs button { border: 0; background: none; color: var(--muted); padding: 6px 12px; border-radius: 99px; font-size: 13px; cursor: pointer; }
+.tabs button.on { background: var(--line); color: var(--text); }
+#chart { width: 100%; height: 140px; display: block; }
+#videos { list-style: none; padding: 0; margin: 0; }
+#videos li + li { border-top: 1px solid var(--line); }
+#videos a { display: flex; gap: 12px; padding: 10px 0; color: inherit; text-decoration: none; align-items: center; }
+#videos img { width: 54px; height: 72px; border-radius: 8px; object-fit: cover; background: #0f0f15; flex: none; }
+.v-body { min-width: 0; flex: 1; }
+.v-title { overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-size: 14px; }
+.v-meta { display: flex; gap: 12px; font-size: 13px; color: var(--muted); margin-top: 4px; flex-wrap: wrap; }
+.v-views { font-weight: 700; color: var(--text); }
+.v-gain { color: var(--green); }
+.primary {
+  width: 100%; padding: 14px; border: 0; border-radius: 14px; font-size: 16px; font-weight: 700;
+  background: var(--pink); color: #fff; cursor: pointer;
+}
+.code {
+  font-family: ui-monospace, monospace; font-size: 13px; word-break: break-all;
+  background: #0f0f15; border: 1px solid var(--line); border-radius: 10px; padding: 12px;
+}
+ol { padding-left: 20px; margin: 0; }
+ol li + li { margin-top: 6px; }
+a { color: var(--cyan); }
+.demo{background:#2a1f05;border-color:#5c4410;color:#ffd77a;font-size:14px}
+</style>
+</head>
+<body>
+<main id="app">
+  <header class="top">
+    <div class="who">
+      <img id="avatar" alt="" hidden>
+      <div>
+        <h1 id="name">Meu TikTok</h1>
+        <p id="updated" class="muted">Carregando…</p>
+      </div>
+    </div>
+    <button id="refresh" class="icon-btn" aria-label="Atualizar">↻</button>
+  </header>
+
+  <section id="demo" class="card demo" hidden>Modo demonstração: estes números são de exemplo. Depois de configurar (veja o README), aqui aparecem os seus números reais.</section>
+
+  <section id="setup" class="card" hidden>
+    <h2>Conectar sua conta</h2>
+    <p class="muted">Siga o passo a passo do README para criar o app no TikTok e cadastrar os secrets no GitHub. Depois toque abaixo:</p>
+    <button id="connect" class="primary">Conectar TikTok</button>
+    <p id="setup-msg" class="muted small"></p>
+  </section>
+
+  <section id="dash" hidden>
+    <div class="card hero">
+      <p class="muted">Visualizações totais</p>
+      <p id="total" class="big">0</p>
+      <p id="delta" class="small"></p>
+      <div class="progress"><span id="bar"></span></div>
+      <p id="next" class="muted small"></p>
+    </div>
+
+    <div class="stats">
+      <div class="card stat"><p class="muted">Seguidores</p><p id="followers">0</p></div>
+      <div class="card stat"><p class="muted">Curtidas</p><p id="likes">0</p></div>
+      <div class="card stat"><p class="muted">Comentários</p><p id="comments">0</p></div>
+      <div class="card stat"><p class="muted">Vídeos</p><p id="count">0</p></div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <h2>Visualizações ao longo do tempo</h2>
+      </div>
+      <svg id="chart" viewBox="0 0 320 120" preserveAspectRatio="none" role="img" aria-label="Gráfico de visualizações"></svg>
+      <p id="chart-note" class="muted small"></p>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <h2>Seus vídeos</h2>
+        <div class="tabs" role="tablist">
+          <button data-sort="views" class="on">Mais vistos</button>
+          <button data-sort="recent">Recentes</button>
+        </div>
+      </div>
+      <ul id="videos"></ul>
+    </div>
+  </section>
+</main>
+<script>
+const SITE = 'https://davipaivabatist567-pixel.github.io/weather-dashboard/';
+
+// Exemplo mostrado enquanto o painel publicado ainda não tem dados.
+function demoData() {
+  const history = [];
+  let views = 900;
+  for (let i = 0; i < 96; i++) {
+    views += Math.round(3 + Math.random() * 6);
+    history.push({ t: new Date(Date.now() - (96 - i) * 15 * 60e3).toISOString(), views });
+  }
+  const now = Date.now() / 1000;
+  return {
+    demo: true, connected: true, step: 100, updatedAt: new Date().toISOString(), history,
+    user: { display_name: 'Exemplo', follower_count: 321, likes_count: 4567 },
+    totals: { views, comments: 26 },
+    videos: [
+      { id: '1', title: 'Meu vídeo que viralizou 🔥', view_count: views - 520, like_count: 160, comment_count: 18, create_time: now - 86400 * 5 },
+      { id: '2', title: 'Bastidores da gravação', view_count: 340, like_count: 41, comment_count: 5, create_time: now - 86400 * 2 },
+      { id: '3', title: 'Respondendo comentários', view_count: 180, like_count: 22, comment_count: 3, create_time: now - 86400 },
+    ],
+  };
+}
+
+const $ = (id) => document.getElementById(id);
+const fmt = (n) => Number(n || 0).toLocaleString('pt-BR');
+const short = (n) => Intl.NumberFormat('pt-BR', { notation: 'compact', maximumFractionDigits: 1 }).format(n || 0);
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+};
+
+let data = null;
+let sortBy = store.get('sort') || 'views';
+
+function ago(iso) {
+  const min = Math.round((Date.now() - new Date(iso)) / 60000);
+  if (min < 1) return 'agora mesmo';
+  if (min < 60) return `há ${min} min`;
+  const h = Math.round(min / 60);
+  return h < 24 ? `há ${h} h` : `há ${Math.round(h / 24)} dias`;
+}
+
+function renderSetup() {
+  $('setup').hidden = false;
+  $('dash').hidden = true;
+  $('updated').textContent = 'Conta ainda não conectada';
+  const { clientKey, redirectUri } = data?.config || {};
+  if (!clientKey) {
+    $('connect').disabled = true;
+    $('setup-msg').textContent = 'Falta cadastrar o secret TIKTOK_CLIENT_KEY no GitHub e rodar o workflow de novo.';
+    return;
+  }
+  $('connect').onclick = () => {
+    const state = crypto.getRandomValues(new Uint32Array(2)).join('');
+    store.set('oauth_state', state);
+    const url = new URL('https://www.tiktok.com/v2/auth/authorize/');
+    url.search = new URLSearchParams({
+      client_key: clientKey,
+      scope: 'user.info.basic,user.info.profile,user.info.stats,video.list',
+      response_type: 'code',
+      redirect_uri: redirectUri,
+      state,
+    });
+    location.href = url;
+  };
+}
+
+function renderChart(history) {
+  const svg = $('chart');
+  const points = history.slice(-200);
+  if (points.length < 2) {
+    svg.innerHTML = '';
+    $('chart-note').textContent = 'O gráfico aparece depois de algumas atualizações.';
+    return;
+  }
+  const W = 320, H = 120, P = 6;
+  const vals = points.map((p) => p.views);
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const span = max - min || 1;
+  const xy = points.map((p, i) => [
+    P + (i / (points.length - 1)) * (W - 2 * P),
+    H - P - ((p.views - min) / span) * (H - 2 * P),
+  ]);
+  const line = xy.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join('');
+  svg.innerHTML = `
+    <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fe2c55" stop-opacity=".45"/><stop offset="1" stop-color="#fe2c55" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${line}L${W - P},${H}L${P},${H}Z" fill="url(#g)"/>
+    <path d="${line}" fill="none" stroke="#fe2c55" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`;
+  $('chart-note').textContent =
+    `${new Date(points[0].t).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} → agora · ` +
+    `de ${short(min)} a ${short(max)}`;
+}
+
+function gainSince(history, hours) {
+  if (!history.length) return 0;
+  const cutoff = Date.now() - hours * 3600e3;
+  const base = history.find((p) => new Date(p.t) >= cutoff) || history[0];
+  return history[history.length - 1].views - base.views;
+}
+
+function renderVideos() {
+  const list = [...data.videos].sort((a, b) =>
+    sortBy === 'recent' ? b.create_time - a.create_time : (b.view_count || 0) - (a.view_count || 0));
+  $('videos').innerHTML = '';
+  for (const v of list) {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = v.share_url || '#';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.alt = '';
+    img.onerror = () => { img.onerror = null; img.removeAttribute('src'); };
+    img.src = v.cover_image_url || '';
+    const body = document.createElement('div');
+    body.className = 'v-body';
+    const title = document.createElement('div');
+    title.className = 'v-title';
+    title.textContent = v.title || v.video_description || 'Sem título';
+    const meta = document.createElement('div');
+    meta.className = 'v-meta';
+    meta.innerHTML = `<span class="v-views">▶ ${fmt(v.view_count)}</span><span>♥ ${short(v.like_count)}</span>` +
+      `<span>💬 ${short(v.comment_count)}</span><span>${new Date(v.create_time * 1000).toLocaleDateString('pt-BR')}</span>`;
+    body.append(title, meta);
+    a.append(img, body);
+    li.append(a);
+    $('videos').append(li);
+  }
+  if (!list.length) $('videos').innerHTML = '<li class="muted small">Nenhum vídeo encontrado.</li>';
+}
+
+function renderDash() {
+  $('setup').hidden = true;
+  $('dash').hidden = false;
+  const { user, totals, history = [], step = 100 } = data;
+  $('name').textContent = user.display_name || 'Meu TikTok';
+  if (user.avatar_url) { $('avatar').src = user.avatar_url; $('avatar').hidden = false; }
+  $('updated').textContent = `Atualizado ${ago(data.updatedAt)}`;
+
+  $('total').textContent = fmt(totals.views);
+  $('followers').textContent = fmt(user.follower_count);
+  $('likes').textContent = fmt(user.likes_count);
+  $('comments').textContent = fmt(totals.comments);
+  $('count').textContent = fmt(data.videos.length);
+
+  const parts = [];
+  const day = gainSince(history, 24);
+  if (day > 0) parts.push(`+${fmt(day)} nas últimas 24 h`);
+  const seen = Number(store.get('last_seen_views'));
+  if (seen && totals.views > seen) parts.push(`+${fmt(totals.views - seen)} desde sua última visita`);
+  $('delta').textContent = parts.join(' · ');
+  store.set('last_seen_views', totals.views);
+
+  const into = totals.views % step;
+  $('bar').style.width = `${(into / step) * 100}%`;
+  $('next').textContent = `Faltam ${fmt(step - into)} para a próxima notificação (${fmt(totals.views - into + step)})`;
+
+  renderChart(history);
+  renderVideos();
+}
+
+async function load() {
+  $('refresh').classList.add('spin');
+  try {
+    try {
+      const res = await fetch(`${SITE}data.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(res.status);
+      data = await res.json();
+    } catch {
+      data = demoData();
+    }
+    $('demo').hidden = !data.demo;
+    data.connected ? renderDash() : renderSetup();
+  } catch {
+    if (!data) $('updated').textContent = 'Não consegui carregar os dados. Tente de novo.';
+  } finally {
+    $('refresh').classList.remove('spin');
+  }
+}
+
+document.querySelectorAll('.tabs button').forEach((b) => {
+  b.classList.toggle('on', b.dataset.sort === sortBy);
+  b.onclick = () => {
+    sortBy = b.dataset.sort;
+    store.set('sort', sortBy);
+    document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x === b));
+    renderVideos();
+  };
+});
+$('refresh').onclick = load;
+document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+setInterval(load, 5 * 60 * 1000);
+load();
+
+</script>
+</body>
+</html>

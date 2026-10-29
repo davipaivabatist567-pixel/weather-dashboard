@@ -81,6 +81,7 @@ No repositório: **Settings → Secrets and variables → Actions → New reposi
 - O login do TikTok dura 1 ano; depois, repita o passo 6.
 
 ## Arquivos
+- `meu-tiktok.html` – o painel inteiro num único arquivo HTML (abre direto no navegador; mostra exemplo até o site estar configurado).
 - `site/` – o painel (HTML/CSS/JS, funciona como app no celular).
 - `scripts/tiktok.mjs` – busca os dados na API do TikTok e envia as notificações.
 - `.github/workflows/tiktok.yml` – roda o script a cada 15 min e publica o site.

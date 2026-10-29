@@ -90,7 +90,7 @@ function renderVideos() {
     const img = document.createElement('img');
     img.loading = 'lazy';
     img.alt = '';
-    img.onerror = () => { img.style.visibility = 'hidden'; };
+    img.onerror = () => { img.onerror = null; img.removeAttribute('src'); };
     img.src = v.cover_image_url || '';
     const body = document.createElement('div');
     body.className = 'v-body';
