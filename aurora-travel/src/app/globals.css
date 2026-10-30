@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/* ============ IDENTIDADE AURORA ============ */
+@theme {
+  --color-white: #ffffff;
+  --color-navy: #101d2c;
+  --color-navy-800: #182a3d;
+  --color-navy-700: #24384e;
+  --color-sky: #dceaf5;
+  --color-mist: #f4f5f7;
+  --color-gold: #c5a46d;
+  /* dourado escurecido para texto pequeno sobre fundo claro (contraste AA) */
+  --color-gold-ink: #8a6b37;
+  --color-danger: #b42318;
+
+  --font-display: var(--font-instrument-serif), "Iowan Old Style", "Times New Roman", serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+
+  --ease-aurora: cubic-bezier(0.22, 0.8, 0.2, 1);
+  --animate-scroll-cue: scroll-cue 2.4s var(--ease-aurora) infinite;
+
+  @keyframes scroll-cue {
+    0% { transform: scaleY(0); transform-origin: top; }
+    45% { transform: scaleY(1); transform-origin: top; }
+    55% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+}
+
+/* rótulo pequeno em caixa alta, usado em toda a página */
+@utility eyebrow {
+  font-size: 0.72rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+/* sublinhado que cresce ao passar o mouse (links de texto) */
+@utility link-line {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 0.6s var(--ease-aurora);
+  &:hover, &:focus-visible, :where(.group):hover &, :where(.group):focus-visible & { background-size: 100% 1px; }
+}
+
+@layer base {
+  html {
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+  body {
+    background: var(--color-white);
+    color: var(--color-navy);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--color-sky); color: var(--color-navy); }
+  :focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+}
+
+/* ============ ENTRADAS AO ROLAR ============ */
+/* Só esconde quando o JavaScript está ativo e o sistema não pede movimento reduzido. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 2rem, 0);
+    transition:
+      opacity 1s var(--ease-aurora),
+      transform 1.2s var(--ease-aurora);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .js [data-reveal][data-shown] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* abertura da página */
+  .hero-photo { animation: hero-zoom 3.2s var(--ease-aurora) both; }
+  .hero-line > span { animation: hero-rise 1.4s var(--ease-aurora) both; animation-delay: var(--d, 0ms); }
+  .hero-fade { animation: hero-fade 1.2s var(--ease-aurora) both; animation-delay: var(--d, 0ms); }
+}
+@keyframes hero-zoom { from { transform: scale(1.12); } }
+@keyframes hero-rise { from { transform: translate3d(0, 110%, 0); } }
+@keyframes hero-fade { from { opacity: 0; transform: translate3d(0, 1rem, 0); } }
+
+/* linha do título: máscara com folga para acentos e descendentes */
+.hero-line { display: block; overflow: hidden; padding-block: 0.08em 0.14em; margin-block: -0.08em -0.14em; }
+.hero-line > span { display: block; }
+
+/* ============ DIÁLOGOS ============ */
+dialog.aurora-dialog { max-width: none; max-height: none; }
+dialog.aurora-dialog::backdrop { background: rgb(16 29 44 / 0.72); backdrop-filter: blur(4px); }
+@media (prefers-reduced-motion: no-preference) {
+  dialog.aurora-dialog[open] { animation: dialog-in 0.6s var(--ease-aurora); }
+  dialog.aurora-dialog[open]::backdrop { animation: backdrop-in 0.4s ease-out; }
+}
+@keyframes dialog-in { from { opacity: 0; transform: translate3d(0, 1.5rem, 0); } }
+@keyframes backdrop-in { from { opacity: 0; } }
+
+/* campo de data: ícone do calendário na cor da marca */
+input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.55; cursor: pointer; }
+
+/* com um diálogo aberto, a página de trás não rola */
+html:has(dialog[open]), html.menu-open { overflow: hidden; }
+
+/* campo com sugestões (destino): esconde a seta que o Chrome desenha */
+input[list]::-webkit-calendar-picker-indicator { display: none !important; }

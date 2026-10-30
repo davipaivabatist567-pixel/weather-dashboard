@@ -15,3 +15,8 @@ As versões para editar ficam nas pastas de cada estabelecimento (`index.html`).
 Depois de editar, gere de novo:
 
     python3 tools/gerar-html-unico.py vila-burguer baru-burgers sorveteria-araujo bruthus-burger
+
+## site-aurora-travel.html
+Site de demonstração da agência fictícia Aurora Travel (projeto em `aurora-travel/`, Next.js).
+Gerado com `npm run build && npm run arquivo-unico` dentro de `aurora-travel/`. Funciona sem internet,
+exceto as fotos, que carregam do Unsplash até serem baixadas com `npm run fotos`.
