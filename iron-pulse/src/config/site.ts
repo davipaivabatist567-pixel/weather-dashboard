@@ -1,13 +1,18 @@
 /**
- * Configurações da IRON PULSE FITNESS: tudo o que muda de uma academia para outra fica aqui.
+ * Configurações do site da academia: tudo o que muda de uma academia para outra fica aqui.
  * Antes de publicar comercialmente, troque os dados de demonstração e mude `isDemo` para false.
  */
 export const site = {
-  name: "Iron Pulse Fitness",
-  shortName: "Iron Pulse",
+  /**
+   * Nome da academia (ex.: "Iron Pulse Fitness"). Vazio = site sem marca, para vídeos e demonstrações:
+   * o logotipo mostra só "Academia" e as frases falam em "a academia".
+   */
+  name: "",
+  /** Nome curto para o logotipo e a assinatura do rodapé (ex.: "Iron Pulse"). Vazio = usa `name`. */
+  shortName: "",
   slogan: "Supere seus limites.",
   description:
-    "Iron Pulse Fitness: academia com musculação, treinamento funcional, condicionamento e acompanhamento profissional. Seu próximo nível começa aqui.",
+    "Academia com musculação, treinamento funcional, condicionamento e acompanhamento profissional. Seu próximo nível começa aqui.",
 
   /** Enquanto for `true`, o site identifica preços, equipe, endereço e contatos como demonstrativos. */
   isDemo: true,
@@ -60,6 +65,13 @@ export const site = {
     { label: "Contato", href: "#contato" },
   ],
 } as const;
+
+/** Nome em destaque (logotipo, rodapé, título da aba). */
+export const brand = site.shortName || site.name || "Academia";
+/** Como as frases se referem à academia: "a equipe da …", "autorizo a …". */
+export const brandRef = site.name || "academia";
+/** Início das mensagens de WhatsApp. */
+export const hello = site.name ? `Olá, ${site.name}!` : "Olá!";
 
 export const fullAddress = `${site.address.street}, ${site.address.district}, ${site.address.city} - ${site.address.state}`;
 export const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;

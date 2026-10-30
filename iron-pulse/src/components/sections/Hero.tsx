@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Photo } from "@/components/ui/Photo";
 import { Parallax } from "@/components/ui/Parallax";
 import { arrowClass, buttonClass } from "@/components/ui/button";
+import { site } from "@/config/site";
 
 const delay = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
 
@@ -34,7 +35,7 @@ export function Hero() {
 
         <p className="tag hero-fade flex items-center gap-3 text-white" style={delay(150)}>
           <span className="size-2 bg-lime" aria-hidden="true" />
-          Iron Pulse Fitness Club
+          {site.name || "Academia de alta performance"}
         </p>
 
         <h1

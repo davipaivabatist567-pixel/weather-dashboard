@@ -1,4 +1,4 @@
-import { fullAddress, site } from "../config/site";
+import { brandRef, fullAddress, site } from "../config/site";
 
 /** Política de privacidade (MODELO): revise com a assessoria jurídica da academia antes de publicar. */
 export const privacyNotice = site.isDemo
@@ -12,7 +12,7 @@ export const privacySections: { title: string; text: string }[] = [
   },
   {
     title: "Para que usamos",
-    text: `Somente para a equipe da ${site.name} entrar em contato sobre a sua matrícula, tirar dúvidas e combinar uma visita. Não usamos seus dados para outras finalidades sem o seu consentimento.`,
+    text: `Somente para a equipe da ${brandRef} entrar em contato sobre a sua matrícula, tirar dúvidas e combinar uma visita. Não usamos seus dados para outras finalidades sem o seu consentimento.`,
   },
   {
     title: "Compartilhamento",

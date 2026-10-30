@@ -2,7 +2,7 @@
 
 import { useId, useRef, useState, type ReactNode } from "react";
 import { ArrowUpRight, ChevronDown, CircleAlert, CircleCheck, LoaderCircle, MessageCircle } from "lucide-react";
-import { site } from "@/config/site";
+import { brandRef, site } from "@/config/site";
 import { contactTimes, objectives } from "@/data/content";
 import {
   emptyLead,
@@ -325,7 +325,7 @@ function Consent({ checked, error, onChange }: { checked: boolean; error?: strin
           className="mt-0.5 size-5 shrink-0 cursor-pointer accent-lime"
         />
         <span>
-          Autorizo a {site.name} a usar estes dados para entrar em contato sobre a minha matrícula, conforme a{" "}
+          Autorizo a {brandRef} a usar estes dados para entrar em contato sobre a minha matrícula, conforme a{" "}
           <PrivacyLink className="font-semibold text-white underline decoration-lime underline-offset-4 hover:text-lime">
             Política de privacidade
           </PrivacyLink>
@@ -347,7 +347,7 @@ function Result({ status, values, whatsappHref, onEdit }: { status: Status; valu
   const content = {
     sent: {
       title: `Recebemos seus dados, ${first}!`,
-      text: `A equipe da ${site.name} vai entrar em contato pelo número ${values.telefone}, no período escolhido (${values.horario.toLowerCase()}). Se preferir adiantar a conversa, chame no WhatsApp.`,
+      text: `A equipe da ${brandRef} vai entrar em contato pelo número ${values.telefone}, no período escolhido (${values.horario.toLowerCase()}). Se preferir adiantar a conversa, chame no WhatsApp.`,
     },
     local: {
       title: `Tudo certo com seus dados, ${first}.`,

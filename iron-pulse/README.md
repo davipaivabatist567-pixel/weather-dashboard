@@ -3,6 +3,10 @@
 Site de uma academia **fictícia**, criado pela DP Web Studio para demonstração (vídeos no TikTok, portfólio).
 Next.js 16 (App Router) + React 19 + TypeScript + Tailwind CSS 4 + Lucide, exportado como site estático.
 
+**Sem marca por padrão:** `name` está vazio em `src/config/site.ts`, então o logotipo mostra só "Academia" e as
+frases falam em "a academia" (bom para vídeos). Para usar um nome, preencha `name` (ex.: `"Iron Pulse Fitness"`)
+e, se quiser um nome mais curto no logotipo e no rodapé, `shortName` (ex.: `"Iron Pulse"`).
+
 ## Comandos
 
 ```bash

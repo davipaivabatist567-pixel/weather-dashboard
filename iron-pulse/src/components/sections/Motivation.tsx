@@ -18,7 +18,7 @@ export function Motivation() {
       <div className="mx-auto flex min-h-[max(36rem,90svh)] max-w-[90rem] flex-col justify-center px-5 py-28 sm:px-8 lg:px-12">
         <Reveal as="p" className="tag flex items-center gap-3 text-lime">
           <span className="size-2 bg-lime" aria-hidden="true" />
-          Mentalidade Iron Pulse
+          Mentalidade de atleta
         </Reveal>
         <Reveal
           as="h2"

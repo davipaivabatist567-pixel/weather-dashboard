@@ -1,5 +1,5 @@
 /*
- * Iron Pulse Fitness: interações da versão HTML pura (sem React).
+ * Site da academia: interações da versão HTML pura (sem React).
  * DADOS e ICONES são inseridos pelo gerador (scripts/html-puro.mjs) a partir de src/config e src/data.
  */
 (() => {
@@ -331,7 +331,7 @@
 
   function mensagem(v) {
     return [
-      `Olá, ${site.name}! Quero fazer minha matrícula.`,
+      `${site.hello} Quero fazer minha matrícula.`,
       "",
       `*Nome:* ${v.nome.trim()}`,
       `*Telefone:* ${v.telefone}`,
@@ -347,7 +347,7 @@
     const textos = {
       sent: [
         `Recebemos seus dados, ${nome}!`,
-        `A equipe da ${site.name} vai entrar em contato pelo número ${v.telefone}, no período escolhido (${v.horario.toLowerCase()}). Se preferir adiantar a conversa, chame no WhatsApp.`,
+        `A equipe da ${site.brandRef} vai entrar em contato pelo número ${v.telefone}, no período escolhido (${v.horario.toLowerCase()}). Se preferir adiantar a conversa, chame no WhatsApp.`,
       ],
       local: [
         `Tudo certo com seus dados, ${nome}.`,

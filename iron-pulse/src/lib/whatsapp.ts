@@ -1,4 +1,4 @@
-import { site } from "@/config/site";
+import { hello, site } from "@/config/site";
 
 /** Link do WhatsApp com a mensagem já escrita. Sem número configurado, o WhatsApp pergunta para quem enviar. */
 export function whatsappUrl(text: string) {
@@ -6,4 +6,4 @@ export function whatsappUrl(text: string) {
 }
 
 export const greetingUrl = () =>
-  whatsappUrl(`Olá, ${site.name}! Vim pelo site e quero saber mais sobre a academia.`);
+  whatsappUrl(`${hello} Vim pelo site e quero saber mais sobre a academia.`);

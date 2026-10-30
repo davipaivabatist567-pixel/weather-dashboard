@@ -21,7 +21,7 @@ registerHooks({
     }
   },
 });
-const { site } = await import("../src/config/site.ts");
+const { site, brandRef, hello } = await import("../src/config/site.ts");
 const { modalities } = await import("../src/data/content.ts");
 const { plans } = await import("../src/data/plans.ts");
 const { privacyNotice, privacySections } = await import("../src/data/privacy.ts");
@@ -78,7 +78,7 @@ const icons = Object.fromEntries(await Promise.all(iconNames.map(async (n) => [n
 
 // 5) interações em JavaScript puro
 const data = {
-  site: { name: site.name, whatsapp: site.phone.whatsapp, isDemo: site.isDemo, leadEndpoint: site.leadEndpoint },
+  site: { brandRef, hello, whatsapp: site.phone.whatsapp, isDemo: site.isDemo, leadEndpoint: site.leadEndpoint },
   modalidades: modalities.map((m) => m.title),
   planos: plans.map((p) => p.name),
   privacidade: { aviso: privacyNotice, secoes: privacySections },

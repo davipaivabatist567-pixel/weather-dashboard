@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
-import { site } from "@/config/site";
+import { brand, site } from "@/config/site";
 import { greetingUrl } from "@/lib/whatsapp";
 import { Logo } from "@/components/ui/Logo";
 import { buttonClass } from "@/components/ui/button";
@@ -89,7 +89,7 @@ export function Header() {
         }`}
       >
         <div className="mx-auto flex h-18 max-w-[90rem] items-center justify-between gap-6 px-5 sm:px-8 lg:h-20 lg:px-12">
-          <a href="#inicio" aria-label={`${site.name}, voltar ao início`} onClick={(e) => open && goTo(e)}>
+          <a href="#inicio" aria-label={`${brand}, voltar ao início`} onClick={(e) => open && goTo(e)}>
             <Logo />
           </a>
 

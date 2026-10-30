@@ -1,5 +1,5 @@
 import { MessageCircle } from "lucide-react";
-import { site } from "@/config/site";
+import { hello, site } from "@/config/site";
 import { team } from "@/data/content";
 import { whatsappUrl } from "@/lib/whatsapp";
 import { Photo } from "@/components/ui/Photo";
@@ -49,7 +49,7 @@ export function Team() {
                   <h3 className="display mt-2 text-[1.6rem]">{m.name}</h3>
                   <p className="mt-3 leading-relaxed text-steel">{m.bio}</p>
                   <a
-                    href={whatsappUrl(`Olá, ${site.name}! Vim pelo site e quero saber sobre treinos com ${m.name}.`)}
+                    href={whatsappUrl(`${hello} Vim pelo site e quero saber sobre treinos com ${m.name}.`)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-6 inline-flex min-h-11 items-center gap-2 self-start text-sm font-semibold text-white transition-colors hover:text-lime"

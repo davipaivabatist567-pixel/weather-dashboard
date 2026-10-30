@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Geist_Mono } from "next/font/google";
-import { site } from "@/config/site";
+import { brand, site } from "@/config/site";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -17,9 +17,9 @@ const mono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${site.name} | ${site.slogan}`,
+  title: `${brand} | ${site.slogan}`,
   description: site.description,
-  openGraph: { title: site.name, description: site.description, locale: "pt_BR", type: "website" },
+  openGraph: { title: brand, description: site.description, locale: "pt_BR", type: "website" },
 };
 
 export const viewport: Viewport = { themeColor: "#080A0D" };

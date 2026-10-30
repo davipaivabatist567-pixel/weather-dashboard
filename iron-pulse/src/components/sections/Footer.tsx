@@ -1,5 +1,5 @@
 import { ArrowUp, ArrowUpRight } from "lucide-react";
-import { fullAddress, site } from "@/config/site";
+import { brand, fullAddress, site } from "@/config/site";
 import { greetingUrl } from "@/lib/whatsapp";
 import { Logo } from "@/components/ui/Logo";
 import { PrivacyLink } from "@/components/Privacy";
@@ -74,7 +74,7 @@ export function Footer() {
         aria-hidden="true"
         className="display mt-16 select-none overflow-hidden whitespace-nowrap text-center text-[12.2vw] leading-[0.8] text-transparent [-webkit-text-stroke:1px_rgb(255_255_255/0.12)] [font-stretch:125%]"
       >
-        Iron Pulse
+        {brand}
       </p>
 
       <div className="mt-8 border-t border-white/10">
@@ -82,12 +82,13 @@ export function Footer() {
           <div className="grid gap-1.5">
             {site.isDemo && (
               <p>
-                <strong className="font-semibold text-white">Projeto demonstrativo.</strong> Iron Pulse Fitness é uma
-                marca fictícia; preços, equipe, endereço e contatos são ilustrativos.
+                <strong className="font-semibold text-white">Projeto demonstrativo.</strong>{" "}
+                {site.name ? `${site.name} é uma marca fictícia` : "A academia é fictícia"}; preços, equipe, endereço e
+                contatos são ilustrativos.
               </p>
             )}
             <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
-              <span>© {site.name}</span>
+              <span>© {brand}</span>
               <PrivacyLink className="inline-flex min-h-10 items-center underline decoration-white/30 underline-offset-4 hover:text-white">
                 Política de privacidade
               </PrivacyLink>

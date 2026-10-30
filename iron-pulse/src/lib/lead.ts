@@ -1,4 +1,4 @@
-import { site } from "@/config/site";
+import { hello, site } from "@/config/site";
 import { contactTimes, objectives } from "@/data/content";
 import { plans } from "@/data/plans";
 
@@ -74,7 +74,7 @@ export function validateLead(v: LeadValues): LeadErrors {
 
 export function leadMessage(v: LeadValues) {
   return [
-    `Olá, ${site.name}! Quero fazer minha matrícula.`,
+    `${hello} Quero fazer minha matrícula.`,
     "",
     `*Nome:* ${v.nome.trim()}`,
     `*Telefone:* ${v.telefone}`,
