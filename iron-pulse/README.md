@@ -3,9 +3,9 @@
 Site de uma academia **fictícia**, criado pela DP Web Studio para demonstração (vídeos no TikTok, portfólio).
 Next.js 16 (App Router) + React 19 + TypeScript + Tailwind CSS 4 + Lucide, exportado como site estático.
 
-**Sem marca por padrão:** `name` está vazio em `src/config/site.ts`, então o logotipo mostra só "Academia" e as
-frases falam em "a academia" (bom para vídeos). Para usar um nome, preencha `name` (ex.: `"Iron Pulse Fitness"`)
-e, se quiser um nome mais curto no logotipo e no rodapé, `shortName` (ex.: `"Iron Pulse"`).
+**Com ou sem marca:** com `name` preenchido em `src/config/site.ts` o site usa a marca Iron Pulse (monograma "IP"
+no logotipo). Deixando `name` e `shortName` vazios, o logotipo mostra só "Academia" e as frases falam em
+"a academia", para vídeos sem nome de empresa (as fotos da arte ainda mostram o "IP" nos halteres e na camiseta).
 
 ## Comandos
 
@@ -26,7 +26,7 @@ npm run lint
 | **Planos**: nomes, preços, benefícios, plano em destaque | `src/data/plans.ts` |
 | Pilares, espaços da estrutura, modalidades, objetivos, horários de contato, equipe, perguntas frequentes | `src/data/content.ts` |
 | Política de privacidade | `src/data/privacy.ts` |
-| Fotos (id de cada foto no Unsplash e enquadramento) | `src/data/photos.ts` |
+| Fotos (quais são da academia, id das do Unsplash e enquadramento) | `src/data/photos.ts` |
 | Cores e fontes | `src/app/globals.css` (bloco `@theme`) e `src/app/layout.tsx` |
 
 As respostas das perguntas frequentes usam os dados configurados (planos, modalidades, telefone e horários),
@@ -52,10 +52,14 @@ então continuam coerentes quando eles mudam.
 6. Se quiser, preencher `studio.url` com o portfólio da DP Web Studio: o crédito no rodapé vira link.
 
 ## Fotos
-As 10 fotos são do Unsplash (licença Unsplash: uso comercial livre). Aparecem em preto e branco com contraste
-dramático (a cor volta um pouco ao passar o mouse). Enquanto não forem baixadas, carregam do Unsplash; se alguma
-falhar, entra um fundo grafite no lugar. `npm run fotos` baixa todas, gera WebP em 640/1280/1920 px em
-`public/photos/` e passa o site a usar as cópias locais.
+Abertura, estrutura (musculação, cardio, pesos livres, funcional e vestiários), motivacional e o terceiro perfil
+da equipe usam imagens da arte da Iron Pulse, recortadas em `public/photos/<chave>-640.webp` e `-1280.webp`
+(`own: true` em `src/data/photos.ts`). A arte original era pequena (cada imagem com uns 500 px de largura), então
+as fotos foram ampliadas; para mais nitidez, troque esses arquivos pelas imagens em tamanho maior, com o mesmo nome.
+
+Os outros dois perfis da equipe vêm do Unsplash (licença Unsplash: uso comercial livre), em preto e branco.
+Enquanto não forem baixadas, carregam do Unsplash; se falharem, entra um fundo grafite no lugar.
+`npm run fotos` baixa as do Unsplash e passa o site a usar as cópias locais.
 
 ## Versão em HTML puro
 `npm run html` usa o HTML e o CSS do `next build` e troca o React pelas interações de `scripts/html-puro/app.js`

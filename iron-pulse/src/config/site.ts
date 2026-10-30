@@ -7,9 +7,9 @@ export const site = {
    * Nome da academia (ex.: "Iron Pulse Fitness"). Vazio = site sem marca, para vídeos e demonstrações:
    * o logotipo mostra só "Academia" e as frases falam em "a academia".
    */
-  name: "",
+  name: "Iron Pulse Fitness",
   /** Nome curto para o logotipo e a assinatura do rodapé (ex.: "Iron Pulse"). Vazio = usa `name`. */
-  shortName: "",
+  shortName: "Iron Pulse",
   slogan: "Supere seus limites.",
   description:
     "Academia com musculação, treinamento funcional, condicionamento e acompanhamento profissional. Seu próximo nível começa aqui.",

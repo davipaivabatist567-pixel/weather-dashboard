@@ -15,7 +15,7 @@ export const spaces: { title: string; text: string; photo: PhotoKey }[] = [
   { title: "Cardio", text: "Esteiras e equipamentos aeróbicos para aquecer, condicionar e acelerar.", photo: "cardio" },
   { title: "Pesos livres", text: "Halteres, barras e anilhas para quem gosta de treinar pesado.", photo: "pesos" },
   { title: "Treinamento funcional", text: "Espaço livre com cordas, kettlebells e acessórios para treinos dinâmicos.", photo: "funcional" },
-  { title: "Ambiente interno", text: "Iluminação, ventilação e espaço pensados para você treinar bem.", photo: "ambiente" },
+  { title: "Vestiários", text: "Armários, bancadas e iluminação aconchegante: conforto e praticidade para o seu dia.", photo: "vestiarios" },
 ];
 
 export type Modality = { icon: LucideIcon; title: string; text: string };

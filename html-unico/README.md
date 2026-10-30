@@ -24,10 +24,10 @@ com `npm run fotos`.
 
 ## site-iron-pulse.html
 Site de demonstração da academia fictícia Iron Pulse Fitness (projeto em `iron-pulse/`, Next.js), em HTML puro.
-Gerado com `npm run build && npm run html` dentro de `iron-pulse/`. Funciona sem internet, exceto as fotos, que
-carregam do Unsplash até serem baixadas com `npm run fotos`.
+Gerado com `npm run build && npm run html` dentro de `iron-pulse/`. As imagens da academia vão embutidas; só duas
+fotos da equipe carregam do Unsplash (precisam de internet).
 
 ## site-academia-sem-marca.html
 O mesmo site de academia **sem nome de empresa** (o logotipo mostra só "Academia"), para gravar vídeos de
-demonstração. É o resultado atual de `npm run build && npm run html` em `iron-pulse/`, com `name` vazio em
-`src/config/site.ts`. O arquivo `site-iron-pulse.html` acima é a versão anterior, com o nome Iron Pulse Fitness.
+demonstração. Gerado como o de cima, mas com `name` e `shortName` vazios em `src/config/site.ts`. As fotos da
+arte ainda mostram o monograma "IP" nos halteres e na camiseta do treinador.

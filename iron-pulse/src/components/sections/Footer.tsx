@@ -92,7 +92,7 @@ export function Footer() {
               <PrivacyLink className="inline-flex min-h-10 items-center underline decoration-white/30 underline-offset-4 hover:text-white">
                 Política de privacidade
               </PrivacyLink>
-              <span>Fotografias: Unsplash</span>
+              <span>Imagens ilustrativas · Fotos da equipe: Unsplash</span>
             </p>
           </div>
           <div className="flex items-center justify-between gap-6 lg:justify-end">

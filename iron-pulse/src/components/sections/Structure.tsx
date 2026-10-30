@@ -46,7 +46,7 @@ export function Structure() {
               <Photo
                 name={s.photo}
                 sizes={sizes[i]}
-                className="photo-mono group-hover:scale-[1.06] group-hover:[filter:grayscale(0.35)_contrast(1.1)_brightness(0.9)]"
+                className="transition-transform duration-[1400ms] ease-pulse group-hover:scale-[1.06]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
               <span

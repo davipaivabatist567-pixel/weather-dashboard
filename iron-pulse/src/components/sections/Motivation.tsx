@@ -9,7 +9,7 @@ export function Motivation() {
     <section aria-labelledby="motivacao-title" className="relative isolate overflow-hidden bg-ink">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <Parallax strength={0.14} className="absolute inset-x-0 -inset-y-[14%]">
-          <Photo name="motivacao" sizes="100vw" className="photo-mono" />
+          <Photo name="motivacao" sizes="100vw" />
         </Parallax>
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(8_10_13/0.85)_0%,rgb(8_10_13/0.55)_45%,rgb(8_10_13/0.92)_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(50%_60%_at_15%_80%,rgb(198_255_0/0.12),transparent_70%)]" />

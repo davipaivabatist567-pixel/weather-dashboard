@@ -14,11 +14,11 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="relative isolate flex min-h-[max(40rem,100svh)] flex-col overflow-hidden bg-ink"
     >
-      {/* foto de fundo: preto e branco, zoom de entrada e movimento suave na rolagem */}
+      {/* foto de fundo: zoom de entrada e movimento suave na rolagem */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <Parallax strength={0.18} className="absolute inset-x-0 -inset-y-[12%]">
           <div className="hero-photo absolute inset-0">
-            <Photo name="hero" sizes="100vw" priority className="photo-mono" />
+            <Photo name="hero" sizes="100vw" priority />
           </div>
         </Parallax>
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgb(8_10_13/0.92)_0%,rgb(8_10_13/0.65)_45%,rgb(8_10_13/0.15)_100%)]" />
