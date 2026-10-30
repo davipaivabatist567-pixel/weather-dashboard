@@ -21,3 +21,8 @@ Site de demonstração da agência fictícia Aurora Travel, em HTML puro (sem Re
 O projeto fica em `aurora-travel/` (Next.js); este arquivo é gerado com `npm run build && npm run html`
 dentro dessa pasta. Funciona sem internet, exceto as fotos, que carregam do Unsplash até serem baixadas
 com `npm run fotos`.
+
+## site-iron-pulse.html
+Site de demonstração da academia fictícia Iron Pulse Fitness (projeto em `iron-pulse/`, Next.js), em HTML puro.
+Gerado com `npm run build && npm run html` dentro de `iron-pulse/`. Funciona sem internet, exceto as fotos, que
+carregam do Unsplash até serem baixadas com `npm run fotos`.
