@@ -9,10 +9,17 @@ Next.js 16 (App Router) + React 19 + TypeScript + Tailwind CSS 4 + Lucide, expor
 npm install
 npm run dev            # http://localhost:3000
 npm run build          # gera a pasta out/ (site estático, hospede em qualquer lugar: Vercel, Netlify, GitHub Pages...)
-npm run arquivo-unico  # depois do build: gera aurora-travel.html, um arquivo só, que abre direto no celular
+npm run html           # depois do build: gera aurora-travel.html, versão em HTML puro num arquivo só
 npm run fotos          # baixa e otimiza as fotos do Unsplash para public/photos (veja abaixo)
 npm run lint
 ```
+
+## Versão em HTML puro
+`npm run html` gera `aurora-travel.html`: o mesmo site num arquivo só (~300 KB), sem React nem Next.js no navegador.
+Usa o HTML e o CSS que o `next build` gerou e troca o React pelas interações de `scripts/html-puro/app.js`
+(menu, janelas dos destinos, planejador com validação e WhatsApp, perguntas, animações). Fontes, ícone e fotos
+baixadas vão dentro do arquivo; abre direto no celular e funciona sem internet, exceto as fotos que ainda vêm do
+Unsplash. Depois de editar o projeto, rode `npm run build && npm run html` de novo.
 
 ## Onde editar
 
@@ -50,7 +57,7 @@ src/
                   Feature, WhyAurora, Testimonials, Faq, Footer)
     ui/           peças reutilizáveis (Photo, Reveal, Dialog, SectionHeading, Logo, button)
     PlannerContext.tsx  liga cartões de destino/experiência ao planejador
-scripts/          baixar-fotos.mjs e arquivo-unico.mjs
+scripts/          baixar-fotos.mjs, html-puro.mjs e html-puro/app.js
 ```
 
 ## O que o site faz

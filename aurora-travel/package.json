@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "fotos": "node scripts/baixar-fotos.mjs",
-    "arquivo-unico": "node scripts/arquivo-unico.mjs"
+    "html": "node --experimental-strip-types --no-warnings scripts/html-puro.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.65.0",
